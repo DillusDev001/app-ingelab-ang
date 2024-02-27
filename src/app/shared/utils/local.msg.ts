@@ -1,0 +1,1 @@
+export const msgErrorConexion = 'No se encuentra al servidor.';

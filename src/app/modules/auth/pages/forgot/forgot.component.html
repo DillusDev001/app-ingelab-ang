@@ -1,0 +1,46 @@
+<div class="relative flex w-screen h-screen">
+
+    <div class="grid grid-cols-3 items-center w-3/5 h-max m-auto gap-3 rounded-lg border border-gray-200 shadow-lg p-5">
+        <img class="h-full" src="./../../../../../assets/draw_forgot_password.svg" alt="">
+
+        <form [formGroup]="formForgot" class="w-full my-auto h-max flex flex-col gap-5 p-5 col-span-2">
+            <h1 class="text-2xl text-color_text font-bold">¿Has olvidado tu contraseña?</h1>
+            <p class="text-sm text-color_text font-regular">Por favor ingresa tu usuario, luego selecciona la pregunta
+                de verificación y responde a la pregunta, luego haz click en verificar y sigue las instrucciones.</p>
+
+            <app-custom-input [id]="'id_user'" [label]="'Usuario'" [type]="'email'" autocomplete="'email'"
+                [control]="formForgot.controls.email" [icon]="'fa-solid fa-circle-user fa-lg'">
+            </app-custom-input>
+
+            <app-custom-drop-box [control]="formForgot.controls.pregunta" [label]="'Pregunta de verificación...'"
+                [data]="dataPregunta"></app-custom-drop-box>
+
+            <app-custom-input [id]="'id_respuesta'" [label]="'Respuesta'" [type]="'text'" autocomplete="'text'"
+                [control]="formForgot.controls.respuesta" [icon]="'fa-solid fa-comment-dots fa-lg'">
+            </app-custom-input>
+
+            <app-custom-input [id]="'id_password'" [label]="'Nueva contraseña'" [type]="'password'"
+                autocomplete="'text'" [control]="formForgot.controls.password" [icon]="'fa-solid fa-lock fa-lg'">
+            </app-custom-input>
+
+            <app-custom-button (click)="onClickValidar()" [valid]="formForgot.valid" [label]="'Validar'"
+                [type]="'accept'"></app-custom-button>
+
+            <a (click)="onClickLogin()" class="w-max text-sm text-color-text underline cursor-pointer">
+                ¿Quieres iniciarsesión?
+            </a>
+
+        </form>
+    </div>
+
+    <app-custom-alert-confirmation *ngIf="alertConfirmacion" [msgAlert]="'Desea eliminar?'"
+        [strBtn1]="'Si, estoy seguro'" [strBtn2]="'Jamás'" (alerConfirmationEven)="listenAlertConfirmation($event)">
+    </app-custom-alert-confirmation>
+
+    <app-custom-alert-info *ngIf="alertInfo" [msgAlert]="msgAlert">
+    </app-custom-alert-info>
+
+    <app-custom-alert-error *ngIf="alertError" [msgAlert]="msgAlert" (alertInfoEvent)="listenAlertError($event)">
+    </app-custom-alert-error>
+
+</div>
