@@ -12,8 +12,12 @@
                 [control]="formForgot.controls.email" [icon]="'fa-solid fa-circle-user fa-lg'">
             </app-custom-input>
 
-            <app-custom-drop-box [control]="formForgot.controls.pregunta" [label]="'Pregunta de verificación...'"
-                [data]="dataPregunta"></app-custom-drop-box>
+            <app-custom-drop-box 
+                [id]="'id_pregunta'"
+                [label]="'Pregunta de verificación...'"
+                [control]="formForgot.controls.pregunta" 
+                [data]="dataPregunta">
+            </app-custom-drop-box>
 
             <app-custom-input [id]="'id_respuesta'" [label]="'Respuesta'" [type]="'text'" autocomplete="'text'"
                 [control]="formForgot.controls.respuesta" [icon]="'fa-solid fa-comment-dots fa-lg'">

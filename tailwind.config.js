@@ -5,12 +5,14 @@ module.exports = {
   ],
   theme: {
     colors: {
+      // <<<<<< Text >>>>>> //
       // 'color-': '#', // primary-
       'color-white': '#FCFCFF',
 
       // <<<<<< Text >>>>>> //
       'color-text': '#2b6273', // primary-700
-      'color-text-unfocus': '#e5e7eb', // gray-200
+      'color-text-unfocus': '#9ca3af', // gray-400
+      'color-text-gray': '#9ca3af', // gray-400
       'color-subtitle': '#',
       'color-body': '#',
       'color-click': '#',
@@ -31,6 +33,7 @@ module.exports = {
 
       // <<<<<< Icon >>>>>> //
       'color-icon-1': '#3494a6', // primary-500
+      'color-icon-unfocus': '#e5e7eb', // gray-200
       'color-icon-red': '#d62246', // red-600
 
       // <<<<<< Color >>>>>> //
@@ -39,6 +42,15 @@ module.exports = {
 
       'color-info': '#2b59c3', // info-700
       'color-info-hover': '#2a4ba3', // info-800
+
+      // <<<<<< Divide >>>>>> //
+      'color-divide': '#3494a6', // primary-500
+
+      // <<<<<< bg submenu >>>>>> //
+      'color-bg-submenu': '#f0fafb', // primary-50
+
+      // <<<<<< bg >>>>>> //
+      'color-bg': '#eff1f7',
 
       //'color_text': '#264a7e', // blue-700
 

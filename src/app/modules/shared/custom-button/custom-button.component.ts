@@ -7,11 +7,14 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CustomButtonComponent implements OnInit {
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
+  @Input() id!: String;
   @Input() label!: String;
   @Input() type!: String;
+  @Input() icon!: string;
+  @Input() class!: string;
   @Input() valid!: boolean;
 
-  class!: string;
+  classBtn!: string;
 
   /**
    * type -> accept (Guardar, Confirmar)
@@ -27,11 +30,11 @@ export class CustomButtonComponent implements OnInit {
 
     switch (this.type) {
       case 'accept':
-        this.class = 'bg-color-button-1 hover:bg-color-button-1-hover text-white';
+        this.class = this.class + ' bg-color-button-1 hover:bg-color-button-1-hover text-white';
         break;
 
       case 'cancel':
-        this.class = 'bg-color-button-2 hover:bg-color-button-2-hover text-color-text-button-2 border-2 border-color-border';
+        this.class = this.class + ' bg-color-button-2 hover:bg-color-button-2-hover text-color-text-button-2 border-2 border-color-border';
         break;
     }
 

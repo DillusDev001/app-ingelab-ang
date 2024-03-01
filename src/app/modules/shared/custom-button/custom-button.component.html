@@ -1,3 +1,11 @@
-<button [ngClass]="{'cursor-not-allowed': !valid}" type="button" [class]="class" class="w-full font-medium text-sm px-8 py-2 rounded-lg">
-    {{ label }}
+<button 
+    [id]="id"
+    class="flex gap-3 items-center font-medium text-sm px-4 ite py-1 rounded-lg"
+    type="button" 
+    [ngClass]="{ 'cursor-not-allowed': !valid }" 
+    [class]="class" >
+    <span class="p-1" class="" >
+        <i [class]="icon"></i>
+    </span>
+    <p>{{ label }}</p>
 </button>

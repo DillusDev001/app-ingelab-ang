@@ -1,0 +1,15 @@
+<div class="flex p-2 w-full h-max items-center gap-4" [ngClass]="{'cursor-pointer': submenu}" (click)="OnClickMenu()">
+
+    <span class="p-1" [ngClass]="{'text-color-icon-1': selected == label, 'text-color-text-gray': selected != label}" >
+        <i [class]="icon"></i>
+    </span>
+
+    <p class="font-medium text-lg grow" [ngClass]="{'text-color-icon-1': selected == label, 'text-color-text-gray': selected != label}">{{ label }}</p>
+
+    <span *ngIf="submenu" class="hidden p-1 transition-all transform duration-500"
+        [class]="class"
+        [ngClass]="{'text-color-icon-1': selected == label, 'text-color-text-gray': selected != label}" >
+        <i class="fa-solid fa-caret-up fa-lg"></i>
+    </span>
+
+</div>

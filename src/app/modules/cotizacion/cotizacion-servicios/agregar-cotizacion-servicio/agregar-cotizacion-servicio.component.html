@@ -1,0 +1,194 @@
+<form class="flex flex-col gap-4 w-full h-max overflow-auto">
+    
+    <!-- Title -->
+    <app-custom-title
+        class="w-full text-center"
+        [id]="'id_titlte'"
+        [label]="'FORMULARIO DE COTIZACIÓN DE SERVICIO'"
+        [class]="'uppercase w-full h-full text-3xl'">
+    </app-custom-title>
+    <br>
+
+    <!-- Fecha/Codigo -->
+    <div class="flex gap-2">
+        <!-- Fecha -->
+        <app-custom-label0
+            [id] = "''"
+            [label] = "'Fecha'"
+            [text] = "fechaNow">
+        </app-custom-label0>
+
+        <div class="flex-grow"></div>
+
+        <!-- Codigo Cotizacion -->
+        <app-custom-label0
+            [id] = "''"
+            [label] = "'Código de cotización'"
+            [text] = "formCotizacion.controls.cod_cotizacion.value">
+        </app-custom-label0>
+    </div>
+
+    <!-- Técnico -->
+    <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+        <!-- Subtitle / Cabecera -->
+        <div class="flex w-full mb-2">
+            <app-custom-sub-title
+                [id]="''"
+                [label]="'Datos del Técnico'"
+                [class]="''">
+            </app-custom-sub-title>
+        </div>
+
+        <div class="flex gap-4 flex-wrap ">
+            <!-- Técnico / Nombre -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Técnico'"
+                [text]="userLogeado.nombres + ' ' + userLogeado.apellidos"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Técnico / Celular -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Celular'"
+                [text]="'+' + userLogeado.code + ' ' + userLogeado.celular"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Técnico / Rol -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Rol'"
+                [text]="userLogeado.rol"
+                [class]="''" >
+            </app-custom-label1>
+        </div>
+    </div>
+
+    <!-- Cliente -->
+    <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+        <!-- Subtitle / Cabecera -->
+        <div class="flex gap-4 w-full mb-2">
+            <app-custom-sub-title
+                [id]="''"
+                [label]="'Datos del Cliente'"
+                [class]="''">
+            </app-custom-sub-title>
+
+            <app-custom-icon
+                [icon]="'fa-solid fa-magnifying-glass fa-lg cursor-pointer'" 
+                [class]="'h-full '">
+            </app-custom-icon>
+        </div>
+
+        <!-- Persona -->
+        <div class="flex gap-4 flex-wrap ">
+            <!-- Persona / Nombre -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Nombre'"
+                [text]="personaC.nombre_completo"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Persona / Email -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Email'"
+                [text]="personaC.email"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Persona / Celular -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Celular'"
+                [text]="personaC.celular"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Razon -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Empresa'"
+                [text]="empresaC.razon"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Nit -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'NIT'"
+                [text]="empresaC.nit"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Direccion -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Dirección'"
+                [text]="empresaC.direccion"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Telefono -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Teléfono'"
+                [text]="empresaC.telefono"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Web -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Web'"
+                [text]="empresaC.web"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Nit -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Nit'"
+                [text]="empresaC.nit"
+                [class]="''" >
+            </app-custom-label1>
+
+            <!-- Empresa / Lugar -->
+            <app-custom-label1
+                [id]="''"
+                [label]="'Lugar'"
+                [text]="empresaC.pais + ' - '+ empresaC.ciudad"
+                [class]="''" >
+            </app-custom-label1>
+        </div>
+        
+    </div>
+
+    <!-- Observacion -->
+    <app-custom-input 
+        [id]="'id_user'" 
+        [label]="'Observaciones'" 
+        [type]="'text'" 
+        [autocomplete]="''"
+        [class]="''"
+        [control]="formCotizacion.controls.observacion" 
+        [icon]="''">
+    </app-custom-input>
+
+    <!-- Muestras -->
+    <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full p-2" style="height: 50vh;">
+        <!-- Subtitle / Cabecera -->
+        <div class="flex gap-4 w-full mb-2">
+            <app-custom-sub-title
+                [id]="''"
+                [label]="'Servicio'"
+                [class]="''">
+            </app-custom-sub-title>
+        </div>
+
+    </div>
+
+</form>

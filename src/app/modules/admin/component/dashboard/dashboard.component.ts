@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { Usuario } from 'src/app/shared/interfaces/app/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { goLogin } from 'src/app/shared/utils/local.router';
+import { goAdminCotizacionLaboratorio, goAdminGraficosGeneral, goAdminHome, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
 @Component({
@@ -42,6 +42,11 @@ export class DashboardComponent implements OnInit {
   // SideBar
   open: boolean = false;
 
+  menuSelected: string = 'Inicio';
+  subMenuSelected: string = '';
+
+  title: string = this.menuSelected;
+
 
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
@@ -71,6 +76,46 @@ export class DashboardComponent implements OnInit {
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   onClickSideBar(sw: boolean) {
     this.open = sw;
+  }
+
+  onClickSetMenuSelected(event: string) {
+    this.menuSelected = event;
+    this.subMenuSelected = '';
+    this.title = event;
+
+    switch (event) {
+      case 'Inicio':
+        goAdminHome(this.router);
+        break;
+
+      case '':
+        break;
+    }
+  }
+
+  onClickSetSubMenuSelected(sm: string, m: string) {
+    this.subMenuSelected = sm;
+    this.menuSelected = m;
+
+    this.title = sm;
+
+    switch (sm) {
+      // Inicio
+      case 'Cotización': goAdminCotizacionLaboratorio(this.router); break;
+
+      case 'Recepción': break;
+
+      case 'Pruebas': break;
+
+      case 'Gráficos': goAdminGraficosGeneral(this.router); break;
+
+      // Mantenimiento
+      case 'Parámetro': break;
+
+      case 'Clientes': break;
+
+      case 'Usuarios': goUsuarios(this.router); break;
+    }
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/

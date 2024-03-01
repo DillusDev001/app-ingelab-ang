@@ -9,20 +9,68 @@
 
         <nav class="p-4 z-20 top:0 fixed top-0 bottom-0 duration-300 w-max h-full bg-white shadow-2xl
         lg:left-0 lg:my-0 lg:w-80 lg:relative border-r border-gray-200"
-            [ngClass]="{ 'left-0'  : open == true, 'left-[-300px]' : open == false }">
+            [ngClass]="{ 'left-0'  : open == true, 'left-[-330px]' : open == false }">
 
-            <div class="flex flex-col h-full divide-y">
-                
+            <div class="flex flex-col h-full divide-y divide-color-divide">
+
                 <!-- Marca -->
-                <div>
-                    <img src="./../../../../../assets/logo.svg" alt="">
+                <div class="flex justify-center">
+                    <img class="h-32 w-32" src="./../../../../../assets/logo.svg" alt="">
                 </div>
 
-                <!--  -->
-                <div class="flex">
-                    <span class="p-1 text-color_focus">
-                        <i class="fa-solid fa-house fa-lg"></i>
-                    </span>
+                <!-- Menu -->
+                <div class="flex flex-col divide-y divide-color-divide grow">
+                    <!-- Menu 1 -->
+                    <div class="py-4">
+                        <app-custom-menu-button (click)="onClickSetMenuSelected('Inicio')" [label]="'Inicio'"
+                            [icon]="'fa-solid fa-shapes fa-lg'" [selected]="menuSelected" [submenu]="true">
+                        </app-custom-menu-button>
+                        <!-- SubMenu -->
+                        <div class="flex flex-col ml-12">
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Cotización', 'Inicio')"
+                                [label]="'Cotización'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Recepción', 'Inicio')"
+                                [label]="'Recepción'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Pruebas', 'Inicio')"
+                                [label]="'Pruebas'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Gráficos', 'Inicio')"
+                                [label]="'Gráficos'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+                        </div>
+                    </div>
+
+                    <!-- Menu 2 -->
+                    <div class="py-4">
+                        <app-custom-menu-button (click)="onClickSetMenuSelected('Mantenimiento')"
+                            [label]="'Mantenimiento'" [icon]="'fa-solid fa-toolbox fa-lg'" [selected]="menuSelected"
+                            [submenu]="true">
+                        </app-custom-menu-button>
+                        <!-- SubMenu -->
+                        <div class="flex flex-col ml-12">
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Parámetro', 'Mantenimiento')"
+                                [label]="'Parámetro'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Clientes', 'Mantenimiento')"
+                                [label]="'Clientes'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Usuarios', 'Mantenimiento')"
+                                [label]="'Usuarios'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="py-2 flex flex-col items-center">
+                    <img class="w-full h-12 rounded-full fill-color-icon-1" src="./../../../../../assets/logo-elohim.svg" alt="">
+                    <p class="text-xs text-color-text text-center font-medium">© 2020 Elohim. Todos los derechos
+                        reservados
+                    </p>
                 </div>
 
             </div>
@@ -34,62 +82,82 @@
 
             <header class="flex items-center p-5 shadow-lg bg-white w-full h-max border-b border-gray-200">
 
-                <span class="lg:hidden p-2 text-color_text cursor-pointer" (click)="onClickSideBar(true)">
+                <!-- menu burguer -->
+                <span class="lg:hidden p-2 text-color-text cursor-pointer mr-2" (click)="onClickSideBar(true)">
                     <i class="fa-solid fa-bars fa-lg"></i>
                 </span>
 
-                <p class="font-semibold text-xl text-color_text w-full">Hola mundo</p>
+                <!-- Title -->
+                <p class="font-semibold text-xl text-color-text w-max flex-grow">{{ title }}</p>
 
-                
-
+                <!-- Profile -->
                 <div class="flex items-center ms-3">
-                    <app-custom-button [label]="'Perfil'" [type]="'accept'" [valid]="true"
-                        data-popover-target="popover-animation"></app-custom-button>
+                    <button type="button" class="text-sm rounded-full mx-4" data-popover-target="popover-animation">
+                        <img *ngIf="userLogeado.img == ''" 
+                            class="w-8 h-8 rounded-full"
+                            src="./../../../../../assets/blank-profile.webp" 
+                            alt="user img">
+
+                        <img
+                            *ngIf="userLogeado.img != ''" 
+                            class="w-8 h-8 rounded-full" 
+                            [src]="userLogeado.img" 
+                            alt="user photo">
+                      </button>
 
                     <div data-popover id="popover-animation" role="tooltip"
-                        class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
-                        <div class="p-3">
-                            <div class="flex items-center justify-between mb-2">
-                                <a href="#">
-                                    <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-1.jpg"
-                                        alt="Jese Leos">
-                                </a>
-                                <div>
-                                    <button type="button"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Follow</button>
+                        class="absolute z-20 invisible inline-block w-max text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0">
+
+                        <div class="flex flex-col">
+                            <div class="flex gap-3 bg-color-text w-full h-max px-8 py-4 rounded-t-lg">
+                                <button type="button" class="rounded-full">
+                                    <img *ngIf="userLogeado.img == ''" 
+                                        class="w-8 h-8 rounded-full"
+                                        src="./../../../../../assets/blank-profile.webp" 
+                                        alt="user img">
+            
+                                    <img
+                                        *ngIf="userLogeado.img != ''" 
+                                        class="w-8 h-8 rounded-full" 
+                                        [src]="userLogeado.img" 
+                                        alt="user photo">
+                                </button>
+                                <div class="flex flex-col flex-grow">
+                                    <p class="text-color-white text-base font-medium">
+                                        {{ userLogeado.nombres }} {{ userLogeado.apellidos }}
+                                    </p>
+                                    <p class="text-color-white text-sm font-light">
+                                        {{ userLogeado.user }}
+                                    </p>
+                                    <p class="text-color-white text-xs font-thin">
+                                        {{ userLogeado.rol }}
+                                    </p>
                                 </div>
                             </div>
-                            <p class="text-base font-semibold leading-none text-gray-900 dark:text-white">
-                                <a href="#">Jese Leos</a>
-                            </p>
-                            <p class="mb-3 text-sm font-normal">
-                                <a href="#" class="hover:underline">@jeseleos</a>
-                            </p>
-                            <p class="mb-4 text-sm">Open-source contributor. Building <a href="#"
-                                    class="text-blue-600 dark:text-blue-500 hover:underline">flowbite.com</a>.</p>
-                            <ul class="flex text-sm">
-                                <li class="me-2">
-                                    <a href="#" class="hover:underline">
-                                        <span class="font-semibold text-gray-900 dark:text-white">799</span>
-                                        <span>Following</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="hover:underline">
-                                        <span class="font-semibold text-gray-900 dark:text-white">3,758</span>
-                                        <span>Followers</span>
-                                    </a>
-                                </li>
-                            </ul>
+                            
+                            <div class="flex flex-col gap-3 w-full p-4">
+                                <p>CI: {{ userLogeado.ci }} {{ userLogeado.exp }}</p>
+                                <p>Celular:{{ userLogeado.code }} {{ userLogeado.celular }}</p>
+                                <p>Estado: {{ userLogeado.estado }}</p>
+                                <app-custom-button 
+                                    [id]="'id_profile'"
+                                    [label]="'Perfil'"
+                                    [type]="'cancel'"
+                                    [icon]="''" 
+                                    [class]="''"
+                                    [valid]="true" >
+                                </app-custom-button>
+                            </div>                            
                         </div>
-                        <div data-popper-arrow></div>
+
+                        <div class="bg-color-text" data-popper-arrow></div>
                     </div>
                 </div>
 
             </header>
 
             <!-- holder -->
-            <div class="p-4 w-full h-full bg-color_bg">
+            <div class="p-4 w-full h-full overflow-auto">
                 <router-outlet></router-outlet>
             </div>
 

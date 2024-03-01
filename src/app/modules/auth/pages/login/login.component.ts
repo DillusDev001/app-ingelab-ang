@@ -39,6 +39,8 @@ export class LoginComponent implements OnInit {
   // Mensaje Alert
   msgAlert: string = '';
 
+  result!: ApiResult;  
+
   // ================  ================ //
 
 
@@ -46,8 +48,6 @@ export class LoginComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required])
   })
-
-  result!: ApiResult;
 
 
   /** -------------------------------------- Constructor -------------------------------------- **/
@@ -105,7 +105,6 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
 
         this.msgAlert = this.result.message;
-        this.onShowInfo();
         if (this.result.boolean) {
           this.saveLoggedData();
         } else {

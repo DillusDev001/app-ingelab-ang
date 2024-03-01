@@ -1,19 +1,10 @@
-<div>
-    <select id="exp" [formControl]="control" (blur)="onBlur()" (focus)="onFocus()"
-            [ngClass]=" { 
-                    'border-color-border-unfocus text-color-text-unfocus' : !inputFocus, 
-                    'focus:border-color-border text-color-text' : inputFocus , 
-                    'border-color-border-red text-color-error' : control.invalid && control.touched,
-                    'text-color-error' : control.invalid && control.touched,
-                }"
-            class="py-3 px-3 text-base w-full rounded-lg border-2  focus:ring-0" >
+<div [class]="class">
+    <select [id]="id" [formControl]="control" (blur)="onBlur()" (focus)="onFocus()"
+            class="py-3 px-3 text-base w-full rounded-lg border-2 focus:ring-0"
+            [class]="classSet" >
+
         <option value="" selected>{{ label }}</option>
-        <option *ngFor="let item of data" value="{{ item.data }}">{{ item.data }}</option>
+        <option *ngFor="let item of data" value="{{ item.value }}">{{ item.data }}</option>
+
     </select>
 </div>
-
-
-input: {{ inputFocus }}<br>
-control:{{ control.invalid }}<br>
-touched:{{ control.touched }} <br>
-controlvaue: {{ control.value }}

@@ -7,6 +7,8 @@ import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@ang
 
 import { HttpClientModule } from '@angular/common/http';
 
+import { HotToastModule } from '@ngneat/hot-toast';
+
 import localeES from "@angular/common/locales/es";
 registerLocaleData(localeES, "es");
 
@@ -17,7 +19,8 @@ registerLocaleData(localeES, "es");
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    HotToastModule.forRoot()
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy }

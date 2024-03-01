@@ -1,1 +1,57 @@
-<p>home works!</p>
+<div class="relative p-4 w-full h-full border shadow-lg overflow-auto">
+    <div class="flex flex-col md:grid lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full h-max">
+
+        <app-card
+            (click)="onClickCard('Cotización')"
+            [id] = "'id_card_cotizacion'"
+            [label] = "'Cotización Laboratorio'"
+            [description] = "'Hola diego junior'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-file-lines fa-3x'">
+        </app-card>
+
+        <app-card
+            (click)="onClickCard('Servicios')"
+            [id] = "'id_card_cotizacion'"
+            [label] = "'Cotización Servicios'"
+            [description] = "'Hola diego junior'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-file-lines fa-3x'">
+        </app-card>
+
+        <app-card
+            (click)="onClickCard('Recepción')"
+            [id] = "'id_card_recepcion'"
+            [label] = "'Recepción'"
+            [description] = "'Hola diego junior'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-hand-holding fa-3x'">
+        </app-card>
+
+        <app-card
+            (click)="onClickCard('Pruebas')"
+            [id] = "'id_card_pruebas'"
+            [label] = "'Pruebas'"
+            [description] = "'Hola diego junior'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-file-lines fa-3x'">
+        </app-card>
+
+        <app-card
+            [id] = "'id_card_pruebasterminadas'"
+            [label] = "'P. Terminadas'"
+            [description] = "'Hola diego junior'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-file-lines fa-3x'">
+        </app-card>
+
+        <app-card
+            [id] = "'id_card_pruebasaprobadas'"
+            [label] = "'P. Aprobadas'"
+            [description] = "'Hola diego junior'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-file-lines fa-3x'">
+        </app-card>
+
+    </div>
+</div>

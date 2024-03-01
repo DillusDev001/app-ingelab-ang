@@ -1,19 +1,35 @@
 <div class="relative flex w-screen h-screen">
 
-    <div class="grid grid-cols-3 items-center w-2/5 h-max m-auto gap-5 rounded-lg border border-gray-200 shadow-lg p-5">
+    <div class="grid grid-cols-3 items-center w-2/5 h-max m-auto gap-5 rounded-lg border border-gray-200 shadow-lg p-5 bg-white">
         <img class="h-full" src="./../../../../../assets/draw_login.svg" alt="">
         <form [formGroup]="formLogin" class="w-full my-auto h-max flex flex-col gap-5 p-5 col-span-2">
             <p class="text-2xl text-color-text font-bold">Bienvenido</p>
 
-            <app-custom-input [id]="'id_user'" [label]="'Usuario'" [type]="'email'" autocomplete="'email'"
-                [control]="formLogin.controls.email" [icon]="'fa-solid fa-circle-user fa-lg'">
+            <app-custom-input 
+                [id]="'id_user'" 
+                [label]="'Usuario'" 
+                [type]="'email'" 
+                [autocomplete]="'email'"
+                [class]="''"
+                [control]="formLogin.controls.email" 
+                [icon]="'fa-solid fa-circle-user fa-lg'">
             </app-custom-input>
 
-            <app-custom-input [id]="'id_password'" [label]="'Contraseña'" [type]="'password'"
-                [control]="formLogin.controls.password" [icon]="'fa-solid fa-lock fa-lg'">
+            <app-custom-input 
+                [id]="'id_password'"
+                [label]="'Contraseña'" 
+                [type]="'password'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formLogin.controls.password" 
+                [icon]="'fa-solid fa-lock fa-lg'">
             </app-custom-input>
 
-            <app-custom-button [valid]="formLogin.valid" (click)="onClickLogin()" [label]="'Ingresar'" [type]="'accept'">
+            <app-custom-button 
+                [label]="'Ingresar'"
+                [type]="'accept'"
+                [valid]="formLogin.valid" 
+                (click)="onClickLogin()">
             </app-custom-button>
 
             <a (click)="onClickGoForGotPasswrd()" class="w-max text-sm text-color-text underline cursor-pointer">

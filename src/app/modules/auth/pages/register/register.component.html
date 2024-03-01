@@ -1,1 +1,154 @@
-<p>register works!</p>
+<form class="flex flex-col items-center gap-4 w-full md:w-max h-full md:h-max m-auto border border-color-text rounded-lg p-6 overflow-auto">
+    <app-custom-title
+        [id]="'id_code'" 
+        [label]="'Agregar Usuario'" 
+        [class]="'uppercase'">
+    </app-custom-title>
+    
+    <!-- User/Correo -->
+    <div class="flex gap-1 w-full">
+        <app-custom-input
+            class="w-full"
+            [id]="'id_user'" 
+            [label]="'Correo'" 
+            [type]="'email'" 
+            [autocomplete]="'email'"
+            [class]="'w-full'"
+            [control]="formRegister.controls.user" 
+            [icon]="'fa-solid fa-envelope fa-lg'">
+        </app-custom-input>
+    </div>
+
+    <!-- Nombres -->
+    <div class="flex gap-1 w-full">
+        <app-custom-input
+            class="w-full"
+            [id]="'id_nombres'" 
+            [label]="'Nombres'" 
+            [type]="'text'" 
+            [autocomplete]="''"
+            [class]="'w-full'"
+            [control]="formRegister.controls.nombres" 
+            [icon]="'fa-solid fa-circle-user fa-lg'">
+        </app-custom-input>
+    </div>
+
+    <!-- Apellidos -->
+    <div class="flex gap-1 w-full">
+        <app-custom-input
+            class="w-full"
+            [id]="'id_apellidos'" 
+            [label]="'Apellidos'" 
+            [type]="'text'" 
+            [autocomplete]="''"
+            [class]="'w-full'"
+            [control]="formRegister.controls.apellidos" 
+            [icon]="'fa-solid fa-circle-user fa-lg'">
+        </app-custom-input>
+    </div>
+
+    <!-- Code - Numero -->
+    <div class="flex gap-1">
+        <app-custom-drop-box 
+            [id]="'id_code'" 
+            [label]="'Código país...'" 
+            [control]="formRegister.controls.code"
+            [class]="'w-32'" 
+            [data]="dataCode">
+        </app-custom-drop-box>
+
+        <app-custom-input class="col-span-2" 
+            [id]="'id_number'" 
+            [label]="'Número Celular'" 
+            [type]="'number'" 
+            [autocomplete]="''"
+            [class]="'w-full'" 
+            [control]="formRegister.controls.celular" 
+            [icon]="'fa-solid fa-mobile-screen-button fa-lg'">
+        </app-custom-input>
+    </div>
+
+    <!-- CI - Numero -->
+    <div class="flex gap-1">
+        <app-custom-drop-box 
+            [id]="'id_ci'" 
+            [label]="'Expedido...'" 
+            [control]="formRegister.controls.exp"
+            [class]="'w-32'" 
+            [data]="dataExp">
+        </app-custom-drop-box>
+
+        <app-custom-input class="col-span-2" 
+            [id]="'id_code'" 
+            [label]="'Cédula de Identidad'" 
+            [type]="'number'" 
+            [autocomplete]="''"
+            [class]="'w-full'" 
+            [control]="formRegister.controls.ci" 
+            [icon]="'fa-regular fa-address-card fa-lg'">
+        </app-custom-input>
+    </div>
+
+    <!-- Rol -->
+    <div class="flex gap-1 w-full">
+        <app-custom-drop-box 
+            class="w-full"
+            [id]="'id_rol'"
+            [label]="'Rol...'"
+            [control]="formRegister.controls.rol"
+            [class]="'w-full'" 
+            [data]="dataRol">
+        </app-custom-drop-box>
+    </div>
+
+    <!-- Pregunta -->
+    <div class="flex gap-1 w-full">
+        <app-custom-drop-box 
+            class="w-full"
+            [id]="'id_pregunta'"
+            [label]="'Pregunta de verificación...'"
+            [control]="formRegister.controls.pregunta"
+            [class]="'w-full'" 
+            [data]="dataPregunta">
+        </app-custom-drop-box>
+    </div>
+
+    <!-- Respuesta -->
+    <div class="flex gap-1 w-full">
+        <app-custom-input
+            class="w-full"
+            [id]="'id_respuesta'" 
+            [label]="'Respuesta'" 
+            [type]="'text'" 
+            [autocomplete]="''"
+            [class]="'w-full'"
+            [control]="formRegister.controls.respuesta" 
+            [icon]="'fa-solid fa-comment fa-lg'">
+        </app-custom-input>
+    </div>
+
+    <div class="flex gap-1 w-full">
+        <app-custom-button 
+            class="w-full"
+            [id]="'id_btnAgregar'"
+            [label]="'Agregar'"
+            [type]="'accept'"
+            [icon]="''" 
+            [class]="'w-full h-12'"
+            [valid]="formRegister.valid" 
+            (click)="onClickAgregarUsuario()">
+        </app-custom-button>
+
+        <app-custom-button 
+            class="w-full"
+            [id]="'id_btnAgregar'"
+            [label]="'Cancelar'"
+            [type]="'cancel'"
+            [icon]="''" 
+            [class]="'w-full h-12'"
+            [valid]="true" 
+            (click)="onClickCancelarAgregar()">
+        </app-custom-button>
+    </div>
+
+</form>
