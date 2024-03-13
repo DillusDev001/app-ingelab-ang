@@ -101,7 +101,7 @@ export class AgregarCotizacionComponent implements OnInit {
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
   generarCodCotizacion(){
-    return 'COD-LAB-'+ formatDate(new Date(), 'ddMMYY', 'es') + '-001-INGLAB';
+    return 'INGLAB-CTZ-LAB-'+ formatDate(new Date(), 'ddMMYY', 'es') + '-001';
   }
 
   /** ------------------------------------ Methods onClick ------------------------------------ **/

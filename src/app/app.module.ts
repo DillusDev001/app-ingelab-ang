@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HotToastModule } from '@ngneat/hot-toast';
 
 import localeES from "@angular/common/locales/es";
+import { NgApexchartsModule } from 'ng-apexcharts';
 registerLocaleData(localeES, "es");
 
 @NgModule({
@@ -20,7 +21,9 @@ registerLocaleData(localeES, "es");
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HotToastModule.forRoot()
+    HotToastModule.forRoot(),
+    NgApexchartsModule,
+    
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy }

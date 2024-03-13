@@ -1,1 +1,41 @@
-<p>general works!</p>
+<div class="relative p-4 w-full h-full border shadow-lg overflow-auto">
+    <div class="grid grid-cols-2 gap-4 w-full h-full">
+        <div class="flex flex-col items-center justify-center h-auto rounded shadow-lg">
+            <apx-chart 
+                [series]="chartExampleIngresos.charSeries"
+                [chart]="chartExampleIngresos.chartDetails!"
+                [labels]="chartExampleIngresos.chartLabels"
+                [title]="chartExampleIngresos.chartTitle">
+            </apx-chart>
+        </div>
+
+        <div class="flex flex-col items-center justify-center h-auto rounded shadow-lg">
+            <apx-chart 
+                [series]="chartExampleMuestras.charSeries"
+                [chart]="chartExampleMuestras.chartDetails!"
+                [labels]="chartExampleMuestras.chartLabels"
+                [title]="chartExampleMuestras.chartTitle">
+            </apx-chart>
+        </div>
+
+        <div class="flex flex-col items-center justify-center h-auto rounded shadow-lg">
+            <apx-chart 
+                [series]="chartExampleGastos.charSeries"
+                [chart]="chartExampleGastos.chartDetails!"
+                [labels]="chartExampleGastos.chartLabels"
+                [title]="chartExampleGastos.chartTitle">
+            </apx-chart>
+        </div>
+
+        <div class="flex flex-col items-center justify-center h-auto rounded shadow-lg">
+            <apx-chart 
+                [series]="chartExampleOtros.charSeries"
+                [chart]="chartExampleOtros.chartDetails!"
+                [labels]="chartExampleOtros.chartLabels"
+                [title]="chartExampleOtros.chartTitle">
+            </apx-chart>
+        </div>
+
+        
+    </div>
+</div>
