@@ -1,7 +1,7 @@
 <div [class]="class">
     <div class="flex items-center gap-2 py-2 px-3 w-full rounded-lg border-2" [class]="classDiv">
 
-        <span class="p-1" [class]="classIcon" >
+        <span *ngIf="icon != ''" class="p-1" [class]="classIcon" >
             <i [class]="icon"></i>
         </span>
 

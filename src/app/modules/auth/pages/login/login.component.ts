@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
@@ -7,7 +7,7 @@ import { Usuario } from 'src/app/shared/interfaces/app/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { msgErrorConexion } from 'src/app/shared/utils/local.msg';
-import { goAdminDashBoard, goForGotPassword, goLogin } from 'src/app/shared/utils/local.router';
+import { goAdminDashBoard, goForGotPassword, goLogin, goRegister } from 'src/app/shared/utils/local.router';
 import { setLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
 @Component({
@@ -18,6 +18,7 @@ import { setLocalDataLogged } from 'src/app/shared/utils/local.storage';
 export class LoginComponent implements OnInit {
 
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
+  @Output() registerEvent = new EventEmitter<string>();
   // ================ INICIO ================ //
   dataLocalStorage: DataLocalStorage = {
     usuario: null,
@@ -39,14 +40,14 @@ export class LoginComponent implements OnInit {
   // Mensaje Alert
   msgAlert: string = '';
 
-  result!: ApiResult;  
+  result!: ApiResult;
 
   // ================  ================ //
 
 
   formLogin = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required])
+    email: new FormControl('admin-dillus@ingenialab.com', [Validators.required, Validators.email]),
+    password: new FormControl('Mudanzas*123', [Validators.required])
   })
 
 
@@ -64,7 +65,6 @@ export class LoginComponent implements OnInit {
     const user = this.result.data[0] as Usuario;
 
     if (user != null) {
-      user.password = '';
       this.dataLocalStorage.usuario = user;
       this.dataLocalStorage.loggedDate = formatDate(Date.now(), 'dd/MM/y, h:mm a', 'es');
       setLocalDataLogged(this.dataLocalStorage);
@@ -82,6 +82,7 @@ export class LoginComponent implements OnInit {
           break;
 
         case 'Administrador':
+          goAdminDashBoard(this.router);
           break;
 
         case 'Asistente':
@@ -100,6 +101,7 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       const user = String(this.formLogin.controls.email.value);
       const pass = String(this.formLogin.controls.password.value);
+
       this.authService.authLogin(user, pass).subscribe(data => {
         this.result = data;
         this.isLoading = false;
@@ -111,7 +113,12 @@ export class LoginComponent implements OnInit {
           this.onShowError(true);
         }
       });
+
     }
+  }
+
+  onClickRegister() {
+    this.registerEvent.emit('register');
   }
 
   onClickGoForGotPasswrd() {

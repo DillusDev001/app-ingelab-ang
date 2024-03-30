@@ -10,20 +10,22 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  urlBase: string = 'http://localhost:3000/';
+  urlBase: string = 'http://localhost:3000';
+  urlVersion: string = '/v1';
+  urlModule: string = '/auth';
 
   public authLogin(user: string, pass: string): Observable<ApiResult> {
-    const url = this.urlBase + 'api/auth/' + user + '/' + pass;
+    const url = this.urlBase + this.urlVersion + this.urlModule + '/login/' + user + '/' + pass;
     return this.http.get<ApiResult>(url);
   }
 
-  public authGotPassword(data: any): Observable<ApiResult> {
-    const url = this.urlBase + 'api/auth/forgot';
-    return this.http.post<ApiResult>(url, data);
+  public authForGotPassword(user: string, data: any): Observable<ApiResult> {
+    const url = this.urlBase + this.urlVersion + this.urlModule + '/' + user;
+    return this.http.patch<ApiResult>(url, data);
   }
 
-  public authRegister(data:any): Observable<ApiResult> {
-    const url = this.urlBase + 'api/auth/register';
+  public authRegistro(data:any): Observable<ApiResult> {
+    const url = this.urlBase + this.urlVersion + this.urlModule + '';
     return this.http.post<ApiResult>(url, data);
   }
 

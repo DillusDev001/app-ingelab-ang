@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { Usuario } from 'src/app/shared/interfaces/app/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { goAdminCotizacionLaboratorio, goAdminGraficosGeneral, goAdminHome, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
-import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
+import { goAdminCotizacionLaboratorio, goAdminGraficosGeneral, goAdminHome, goIndex, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
+import { deleteLocalStorageData, getLocalDataLogged, localStorageLogOut } from 'src/app/shared/utils/local.storage';
 
 @Component({
   selector: 'app-dashboard',
@@ -91,9 +91,11 @@ export class DashboardComponent implements OnInit {
       case '':
         break;
     }
+
+    this.open = false;
   }
 
-  onClickSetSubMenuSelected(sm: string, m: string) {
+  onClickSetSubMenuSelected(m: string, sm: string) {
     this.subMenuSelected = sm;
     this.menuSelected = m;
 
@@ -115,6 +117,14 @@ export class DashboardComponent implements OnInit {
       case 'Clientes': break;
 
       case 'Usuarios': goUsuarios(this.router); break;
+    }
+
+    this.open = false;
+  }
+
+  onClickLogOut() {
+    if (localStorageLogOut()) {
+      goIndex(this.router);
     }
   }
 

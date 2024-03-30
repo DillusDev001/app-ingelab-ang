@@ -1,9 +1,17 @@
 import { Router } from "@angular/router";
 
+// ================ INDeX ================ //
+export function goIndex(router: Router) {
+    router.navigate(['auth/']);
+}
 
 // ================ AUTH ================ //
 export function goLogin(router: Router) {
     router.navigate(['auth/login']);
+}
+
+export function goRegister(router: Router) {
+    router.navigate(['auth/register']);
 }
 
 export function goForGotPassword(router: Router) {

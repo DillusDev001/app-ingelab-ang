@@ -7,13 +7,15 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ForgotComponent } from './pages/forgot/forgot.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IndexComponent } from './index.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
-    ForgotComponent
+    ForgotComponent,
+    IndexComponent
   ],
   imports: [
     CommonModule,

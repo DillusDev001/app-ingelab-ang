@@ -1,8 +1,8 @@
 export interface ApiResult {
+    title: string;
     route: string;
     status: string;
     code: number;
-    title: string;
     message: string;
     boolean: boolean;
     rows: number;

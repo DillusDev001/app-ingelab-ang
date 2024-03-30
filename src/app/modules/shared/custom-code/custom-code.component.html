@@ -1,0 +1,58 @@
+<!-- Confirmacion Alert -->
+<div class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 z-10">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="bg-white rounded-lg shadow">
+            <div class="relative flex flex-col gap-5 p-4 md:p-5 items-center">
+                <div class="w-max h-max">
+                    <img src="./../../../../assets/draw_security.svg" height="100" width="100" alt="">
+                </div>
+
+                <div class="absolute top-2 right-2">
+                    <app-custom-icon
+                        class="cursor-pointer hover:bg-gray-50"
+                        [icon]="'fa-solid fa-xmark fa-lg'"
+                        [class]="'text-color-icon-unfocus'"
+                        (click)="onClickClose()">
+                    </app-custom-icon>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-700">Ingrese el Código de Verificación</h3>
+                    <p class="w-full text-sm text-center text-gray-400 font-extralight">Ingrese el código proporcionado por el administrador.</p>
+                </div>
+
+                <div class="flex gap-3">
+                    <input [formControl]="formCode.controls.num1" class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 
+                    (keydown)="myKeyPress($event, inputText1, 1)" #inputText1 type="text" maxlength="1">
+
+                    <input [formControl]="formCode.controls.num2" class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 
+                    (keydown)="myKeyPress($event, inputText2, 2)" #inputText2 type="text" maxlength="1">
+
+                    <input [formControl]="formCode.controls.num3" class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 
+                    (keydown)="myKeyPress($event, inputText3, 3)" #inputText3 type="text" maxlength="1">
+
+                    <input [formControl]="formCode.controls.num4" class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 
+                    (keydown)="myKeyPress($event, inputText4, 4)" #inputText4 type="text" maxlength="1">
+                </div>
+
+                <app-custom-label3
+                    *ngIf="msgBoolean"
+                    [id]="'id_label_msg'"
+                    [label]="'Error verificación'"
+                    [text]="msgString"
+                    [class]="'text-color-error'">
+                </app-custom-label3>
+
+                <app-custom-button
+                    [id] ="'id_btn_verificar'"
+                    [label] ="'Verificar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="''"
+                    [valid] ="formCode.valid"
+                    (click)="onClickFindCode()" >
+                </app-custom-button>
+            </div>
+        </div>
+    </div>
+</div>

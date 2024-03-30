@@ -1,154 +1,426 @@
-<form class="flex flex-col items-center gap-4 w-full md:w-max h-full md:h-max m-auto border border-color-text rounded-lg p-6 overflow-auto">
-    <app-custom-title
-        [id]="'id_code'" 
-        [label]="'Agregar Usuario'" 
-        [class]="'uppercase'">
-    </app-custom-title>
+<div class="relative w-full h-full bg-white p-4">
+
+    <form class="flex flex-col gap-4 w-full h-full border border-color-text rounded-lg p-6 overflow-y-auto">
+
+        <div class="flex w-full">
+            <app-custom-title class="w-full"
+                [id]="'id_title'" 
+                [label]="title" 
+                [class]="'uppercase'">
+            </app-custom-title>
+            
+            <app-custom-input
+                [id]="'id_codigo'"
+                [label]="'Código'"
+                [type]="'text'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formRegisterUsuario.controls.codigo"
+                [icon]="''">
+            </app-custom-input>
+        </div>
+
+        <!-- Datos Personales -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera - Datos Personales -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="'id_subtitle_datos_personales'"
+                    [label]="'Datos Personales'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex flex-col md:grid 2xl:grid-cols-5  xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4 flex-wrap">
+                 <!-- Nombres -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_nombres'" 
+                        [label]="'Nombres'" 
+                        [type]="'text'" 
+                        [autocomplete]="''"
+                        [class]="''"
+                        [control]="formRegisterUsuario.controls.nombres" 
+                        [icon]="'fa-solid fa-circle-user fa-lg'">
+                    </app-custom-input>
+                </div>
+
+                <!-- Apellidos -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_apellidos'" 
+                        [label]="'Apellidos'" 
+                        [type]="'text'" 
+                        [autocomplete]="''"
+                        [class]="''"
+                        [control]="formRegisterUsuario.controls.apellidos" 
+                        [icon]="'fa-solid fa-circle-user fa-lg'">
+                    </app-custom-input>
+                </div>
+
+                <!-- Code - Celular-->
+                <div class="flex flex-col md:flex-row gap-1">
+                    <app-custom-drop-box 
+                        [id]="'id_code_cel'" 
+                        [label]="'Código país...'" 
+                        [control]="formRegisterUsuario.controls.code"
+                        [class]="'w-full md:w-32'" 
+                        [data]="dataCode">
+                    </app-custom-drop-box>
+
+                    <app-custom-input class="w-full"
+                        [id]="'id_number'" 
+                        [label]="'Número Celular'" 
+                        [type]="'number'" 
+                        [autocomplete]="''"
+                        [class]="''" 
+                        [control]="formRegisterUsuario.controls.celular" 
+                        [icon]="'fa-solid fa-mobile-screen-button fa-lg'">
+                    </app-custom-input>
+                </div>
+                
+                <!-- Telefono -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_telefono'" 
+                        [label]="'Teléfono'" 
+                        [type]="'text'" 
+                        [autocomplete]="''"
+                        [class]="''"
+                        [control]="formRegisterUsuario.controls.telefono" 
+                        [icon]="'fa-solid fa-phone fa-lg'">
+                    </app-custom-input>
+                </div>
+
+                <!-- Exp - CI -->
+                <div class="flex flex-col md:flex-row gap-1">
+                    <app-custom-drop-box 
+                        [id]="'id_ci_exp'" 
+                        [label]="'Expedido...'" 
+                        [control]="formRegisterUsuario.controls.exp"
+                        [class]="'w-full md:w-32'" 
+                        [data]="dataExp">
+                    </app-custom-drop-box>
+
+                    <app-custom-input  class="w-full"
+                        [id]="'id_ci_number'" 
+                        [label]="'C.I.'" 
+                        [type]="'number'" 
+                        [autocomplete]="''"
+                        [class]="''" 
+                        [control]="formRegisterUsuario.controls.ci" 
+                        [icon]="'fa-regular fa-address-card fa-lg'">
+                    </app-custom-input>
+                </div>
+
+                <!-- Sexo -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-drop-box class="w-full"
+                        [id]="'id_sexo'"
+                        [label]="'Sexo...'"
+                        [control]="formRegisterUsuario.controls.sexo"
+                        [class]="''"
+                        [data]="dataSexo">
+                    </app-custom-drop-box>
+                </div>
+
+                <!-- Estado Civil -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-drop-box class="w-full"
+                        [id]="'id_estado_civil'" 
+                        [label]="'Estado Civíl...'" 
+                        [control]="formRegisterUsuario.controls.est_civil"
+                        [class]="''" 
+                        [data]="dataCivil">
+                    </app-custom-drop-box>
+                </div>
+
+                <!-- Fec Nacimiento -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_fec_nac'" 
+                        [label]="'Fecha de Nacimiento'" 
+                        [type]="'date'" 
+                        [autocomplete]="''"
+                        [class]="''"
+                        [control]="formRegisterUsuario.controls.fec_nac" 
+                        [icon]="''">
+                    </app-custom-input>
+                </div>
+
+
+            </div>
+        </div>
+        
+        <!-- Datos Financieros -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera - Datos Financieros -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="'id_subtitle_datos_financieros'"
+                    [label]="'Datos Financiero'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex flex-col md:grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4 flex-wrap">
+                <!-- Banco -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-drop-box class="w-full"
+                        [id]="'id_banco'"
+                        [label]="'Banco'"
+                        [control]="formRegisterUsuario.controls.banco"
+                        [class]="''"
+                        [data]="dataBanco">
+                    </app-custom-drop-box>
+                </div>
+
+                <!-- Nro Cuenta -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_nro_cuenta'" 
+                        [label]="'Nro. de Cuenta'" 
+                        [type]="'text'" 
+                        [autocomplete]="''"
+                        [class]="'w-full'"
+                        [control]="formRegisterUsuario.controls.nro_cuenta" 
+                        [icon]="''">
+                    </app-custom-input>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera - Datos -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="'id_subtitle_datos'"
+                    [label]="'Datos'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex flex-col md:grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4 flex-wrap">
+                <!-- Fecha de ingreso -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input class="w-full"
+                        [id]="'id_fec_ingreso'"
+                        [label]="'Fecha de Ingreso'"
+                        [type]="'Date'"
+                        [autocomplete]="''"
+                        [class]="''"
+                        [control]="formRegisterUsuario.controls.fec_ingreso"
+                        [icon]="''">
+                    </app-custom-input>
+                </div>
+
+                <!-- Rol -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-drop-box 
+                        class="w-full"
+                        [id]="'id_rol'"
+                        [label]="'Rol...'"
+                        [control]="formRegisterUsuario.controls.rol"
+                        [class]="'w-full'" 
+                        [data]="dataRol">
+                    </app-custom-drop-box>
+                </div>
+
+                <!-- Imagen -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-button class="w-full h-12 lg:h-full"
+                        [id]="'id_btnImagen'"
+                        [label]="'Seleccionar Imagen de Perfil'"
+                        [type]="'accept'"
+                        [icon]="'fa-solid fa-image fa-lg'" 
+                        [class]="''"
+                        [valid]="true" >
+                    </app-custom-button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inicio de Sesion -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera - Inicio de Sesion -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="'id_subtitle_datos_sesion'"
+                    [label]="'Inicio de Sesión'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex flex-col md:grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4 flex-wrap">
+                <!-- User/Correo -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_user'" 
+                        [label]="'Correo'" 
+                        [type]="'email'" 
+                        [autocomplete]="'email'"
+                        [class]="'w-full'"
+                        [control]="formRegisterAuth.controls.user" 
+                        [icon]="'fa-solid fa-envelope fa-lg'">
+                    </app-custom-input>
+                </div>
+
+                <!-- User/Contraseña -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_password'" 
+                        [label]="'Contraseña'" 
+                        [type]="'password'" 
+                        [autocomplete]="'email'"
+                        [class]="'w-full'"
+                        [control]="formRegisterAuth.controls.password" 
+                        [icon]="'fa-solid fa-lock fa-lg'">
+                    </app-custom-input>
+                </div>
+
+                <!-- Pregunta -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-drop-box 
+                        class="w-full"
+                        [id]="'id_pregunta'"
+                        [label]="'Pregunta de verificación...'"
+                        [control]="formRegisterAuth.controls.pregunta"
+                        [class]="'w-full'" 
+                        [data]="dataPregunta">
+                    </app-custom-drop-box>
+                </div>
+
+                <!-- Respuesta -->
+                <div class="flex gap-1 w-full">
+                    <app-custom-input
+                        class="w-full"
+                        [id]="'id_respuesta'" 
+                        [label]="'Respuesta'" 
+                        [type]="'text'" 
+                        [autocomplete]="''"
+                        [class]="'w-full'"
+                        [control]="formRegisterAuth.controls.respuesta" 
+                        [icon]="'fa-solid fa-comment fa-lg'">
+                    </app-custom-input>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos de Contacto -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera - Inicio de Sesion -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Datos de Contacto'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex flex-col md:grid xl:grid-cols-5 lg:grid-cols-3 md:grid-cols-2 gap-4 flex-wrap">
+                <app-custom-input
+                    [id]="'id_input_contacto_nombre'"
+                    [label]="'Nombre de contacto'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formAddContacto.controls.nombre_contacto"
+                    [icon]="'fa-solid fa-person fa-lg'" >
+                </app-custom-input>
+
+                <app-custom-input
+                    [id]="'id_input_contacto_numero'"
+                    [label]="'Número de contacto'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formAddContacto.controls.nro_contacto"
+                    [icon]="'fa-solid fa-phone fa-lg'" >
+                </app-custom-input>
+
+                <app-custom-button
+                    [id] ="'id_btn_add_contacto'"
+                    [label] ="'Agregar Contacto'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="''"
+                    [valid] ="formAddContacto.valid"
+                    (click)="onClickAddContacto()" >
+                </app-custom-button>
+
+                <div class="w-full h-max xl:col-span-2 lg:col-span-3 md:col-span-2">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 border shadow-lg">
+                        <!-- Header -->
+                        <thead class="text-xs text-color-text uppercase bg-primary-100">
+                            <tr>
+                                <th scope="col" class="px-2 py-2 w-max" style="width: 10%;">#</th>
+                                <th scope="col" class="px-2 py-2" style="width: fit-content;">Nombre</th>
+                                <th scope="col" class="px-2 py-2" style="width: fit-content;">Número</th>
+                                <th scope="col" class="px-2 py-2" style="width: 20%;">Eliminar</th>
+                            </tr>
+                        </thead>
+        
+                        <!-- Body -->
+                        <tbody class="">
+                            <tr class="bg-white border-y" *ngFor="let item of arrayContactos; index as i">
+                                <th class="px-2 py-2 font-medium text-gray-900">{{item.cont}}</th>
+                                <th class="px-2 py-2 font-medium text-gray-900">{{item.nombre_contacto}}</th>
+                                <td class="px-2 py-2">{{item.nro_contacto}}</td>
+                                <td class="px-2 py-2">
+                                    <app-custom-icon
+                                        [icon]="'fa-solid fa-trash fa-xl cursor-pointer'" 
+                                        [class]="'text-color-error'"
+                                        (click)="onClickRemoveContact(i)" >
+                                    </app-custom-icon>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>        
+
+        <div class="flex flex-col md:flex-row gap-4 w-full">
+            <app-custom-button
+                [id]="'id_btnAgregar'"
+                [label]="'Agregar'"
+                [type]="'accept'"
+                [icon]="''" 
+                [valid]="formRegisterUsuario.valid && formRegisterAuth.valid" 
+                [class]="'w-full md:w-32'"
+                (click)="onClickAgregarUsuario()">
+            </app-custom-button>
+
+            <app-custom-button
+                [id]="'id_btnCancelar'"
+                [label]="'Cancelar'"
+                [type]="'cancel'"
+                [icon]="''" 
+                [valid]="true" 
+                [class]="'w-full md:w-32'"
+                (click)="onClickCancelarAgregar()">
+            </app-custom-button>
+        </div>
+
+    </form>
+
+    <app-custom-code *ngIf="!hasCode" (alerConfirmationEven)="codeReceiver($event)"></app-custom-code>
     
-    <!-- User/Correo -->
-    <div class="flex gap-1 w-full">
-        <app-custom-input
-            class="w-full"
-            [id]="'id_user'" 
-            [label]="'Correo'" 
-            [type]="'email'" 
-            [autocomplete]="'email'"
-            [class]="'w-full'"
-            [control]="formRegister.controls.user" 
-            [icon]="'fa-solid fa-envelope fa-lg'">
-        </app-custom-input>
-    </div>
+    <app-custom-alert-confirmation *ngIf="alertConfirmacion" [msgAlert]="'Desea eliminar?'"
+        [strBtn1]="'Si, estoy seguro'" [strBtn2]="'Jamás'" (alerConfirmationEven)="listenAlertConfirmation($event)">
+    </app-custom-alert-confirmation>
 
-    <!-- Nombres -->
-    <div class="flex gap-1 w-full">
-        <app-custom-input
-            class="w-full"
-            [id]="'id_nombres'" 
-            [label]="'Nombres'" 
-            [type]="'text'" 
-            [autocomplete]="''"
-            [class]="'w-full'"
-            [control]="formRegister.controls.nombres" 
-            [icon]="'fa-solid fa-circle-user fa-lg'">
-        </app-custom-input>
-    </div>
+    <app-custom-alert-info *ngIf="alertInfo" [msgAlert]="msgAlert">
+    </app-custom-alert-info>
 
-    <!-- Apellidos -->
-    <div class="flex gap-1 w-full">
-        <app-custom-input
-            class="w-full"
-            [id]="'id_apellidos'" 
-            [label]="'Apellidos'" 
-            [type]="'text'" 
-            [autocomplete]="''"
-            [class]="'w-full'"
-            [control]="formRegister.controls.apellidos" 
-            [icon]="'fa-solid fa-circle-user fa-lg'">
-        </app-custom-input>
-    </div>
-
-    <!-- Code - Numero -->
-    <div class="flex gap-1">
-        <app-custom-drop-box 
-            [id]="'id_code'" 
-            [label]="'Código país...'" 
-            [control]="formRegister.controls.code"
-            [class]="'w-32'" 
-            [data]="dataCode">
-        </app-custom-drop-box>
-
-        <app-custom-input class="col-span-2" 
-            [id]="'id_number'" 
-            [label]="'Número Celular'" 
-            [type]="'number'" 
-            [autocomplete]="''"
-            [class]="'w-full'" 
-            [control]="formRegister.controls.celular" 
-            [icon]="'fa-solid fa-mobile-screen-button fa-lg'">
-        </app-custom-input>
-    </div>
-
-    <!-- CI - Numero -->
-    <div class="flex gap-1">
-        <app-custom-drop-box 
-            [id]="'id_ci'" 
-            [label]="'Expedido...'" 
-            [control]="formRegister.controls.exp"
-            [class]="'w-32'" 
-            [data]="dataExp">
-        </app-custom-drop-box>
-
-        <app-custom-input class="col-span-2" 
-            [id]="'id_code'" 
-            [label]="'Cédula de Identidad'" 
-            [type]="'number'" 
-            [autocomplete]="''"
-            [class]="'w-full'" 
-            [control]="formRegister.controls.ci" 
-            [icon]="'fa-regular fa-address-card fa-lg'">
-        </app-custom-input>
-    </div>
-
-    <!-- Rol -->
-    <div class="flex gap-1 w-full">
-        <app-custom-drop-box 
-            class="w-full"
-            [id]="'id_rol'"
-            [label]="'Rol...'"
-            [control]="formRegister.controls.rol"
-            [class]="'w-full'" 
-            [data]="dataRol">
-        </app-custom-drop-box>
-    </div>
-
-    <!-- Pregunta -->
-    <div class="flex gap-1 w-full">
-        <app-custom-drop-box 
-            class="w-full"
-            [id]="'id_pregunta'"
-            [label]="'Pregunta de verificación...'"
-            [control]="formRegister.controls.pregunta"
-            [class]="'w-full'" 
-            [data]="dataPregunta">
-        </app-custom-drop-box>
-    </div>
-
-    <!-- Respuesta -->
-    <div class="flex gap-1 w-full">
-        <app-custom-input
-            class="w-full"
-            [id]="'id_respuesta'" 
-            [label]="'Respuesta'" 
-            [type]="'text'" 
-            [autocomplete]="''"
-            [class]="'w-full'"
-            [control]="formRegister.controls.respuesta" 
-            [icon]="'fa-solid fa-comment fa-lg'">
-        </app-custom-input>
-    </div>
-
-    <div class="flex gap-1 w-full">
-        <app-custom-button 
-            class="w-full"
-            [id]="'id_btnAgregar'"
-            [label]="'Agregar'"
-            [type]="'accept'"
-            [icon]="''" 
-            [class]="'w-full h-12'"
-            [valid]="formRegister.valid" 
-            (click)="onClickAgregarUsuario()">
-        </app-custom-button>
-
-        <app-custom-button 
-            class="w-full"
-            [id]="'id_btnAgregar'"
-            [label]="'Cancelar'"
-            [type]="'cancel'"
-            [icon]="''" 
-            [class]="'w-full h-12'"
-            [valid]="true" 
-            (click)="onClickCancelarAgregar()">
-        </app-custom-button>
-    </div>
-
-</form>
+    <app-custom-alert-error *ngIf="alertError" [msgAlert]="msgAlert" (alertInfoEvent)="listenAlertError($event)">
+    </app-custom-alert-error>
+</div>

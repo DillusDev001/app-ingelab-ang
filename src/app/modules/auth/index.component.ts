@@ -1,19 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { arrayPreguntas } from 'src/app/shared/utils/local.array';
-import { goLogin } from 'src/app/shared/utils/local.router';
+import { Usuario } from 'src/app/shared/interfaces/app/usuario';
+import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 
 @Component({
-  selector: 'app-forgot',
-  templateUrl: './forgot.component.html',
-  styleUrls: ['./forgot.component.css']
+  selector: 'app-index',
+  templateUrl: './index.component.html',
+  styleUrls: ['./index.component.css']
 })
-export class ForgotComponent implements OnInit {
+export class IndexComponent {
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   // ================ INICIO ================ //
+  // Data Local Storeage - Variable
+  dataLocalStorage: DataLocalStorage = {
+    usuario: null,
+    loggedDate: ''
+  }
+
+  // Usuario logeado
+  userLogeado!: Usuario;
+
   // loading spinner
   isLoading: boolean = true;
 
@@ -29,77 +38,37 @@ export class ForgotComponent implements OnInit {
   // Mensaje Alert
   msgAlert: string = '';
 
-  // ================  ================ //
-  formForgot = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    pregunta: new FormControl('', [Validators.required]),
-    respuesta: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required])
-  })
-
-  // Array de preguntas de seguridad
-  dataPregunta = arrayPreguntas;
-
-  // Api Result - respuesta de Servidor
   result!: ApiResult;
 
+  // ================  ================ //
+  mostrar: string = 'register';
+
   /** -------------------------------------- Constructor -------------------------------------- **/
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) { }
+  constructor(private router: Router) { }
 
   /** ---------------------------------------- OnInit ----------------------------------------- **/
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    initFlowbite();
+  }
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
-  limpiarFormForgot(){
-    this.formForgot.controls.email.setValue('');
-    this.formForgot.controls.pregunta.setValue('');
-    this.formForgot.controls.respuesta.setValue('');
-    this.formForgot.controls.password.setValue('');
-    this.formForgot.markAsUntouched();
-  }
 
   /** ------------------------------------ Methods onClick ------------------------------------ **/
-  onClickValidar() {
-    if (this.formForgot.valid) {
-      this.isLoading = true;
-      const user = String(this.formForgot.controls.email.value);
-      const pregunta = String(this.formForgot.controls.pregunta.value);
-      const respuesta = String(this.formForgot.controls.respuesta.value);
-      const password = String(this.formForgot.controls.password.value);
-
-      let data = { 
-        pregunta, 
-        respuesta, 
-        password 
-      }
-
-      this.authService.authForGotPassword(user, data).subscribe(data => {
-        console.log(data);
-        this.result = data
-        this.msgAlert = this.result.message;
-
-        if(this.result.boolean){
-          this.onShowInfo();
-          this.limpiarFormForgot();
-        } else {
-          this.onShowError(true);
-        }
-      })
-    }
-  }
-
-  onClickLogin(){
-    goLogin(this.router);
-  }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
 
   /** ---------------------------------- Onclick file import ---------------------------------- **/
 
   /** ---------------------------------------- Receiver --------------------------------------- **/
+  loginGoRegisterRegisterReceiver(event:string){
+    this.mostrar = event;
+  }
+
+  registerCancelRegisterReceiver(event:boolean){
+    if(event){
+      this.mostrar = 'login';
+    }
+  }
 
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
   onShowConfirmacion(sw: boolean) {
@@ -112,7 +81,6 @@ export class ForgotComponent implements OnInit {
     //this.open = false; // Close Menú Lateral
     setTimeout(() => {
       this.alertInfo = false;
-      goLogin(this.router);
     }, 1000);
   }
 
@@ -120,7 +88,6 @@ export class ForgotComponent implements OnInit {
     this.alertError = sw;
     //this.open = false; // Close Menú Lateral
   }
-
 
   listenAlertConfirmation(event: boolean) {
     this.alertConfirmacion = false;
@@ -136,5 +103,4 @@ export class ForgotComponent implements OnInit {
   listenAlertError(event: boolean) {
     if (event) this.alertError = false;
   }
-
 }

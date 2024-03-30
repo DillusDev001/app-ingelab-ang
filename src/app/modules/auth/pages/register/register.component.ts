@@ -1,15 +1,20 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
+import { Code } from 'src/app/shared/interfaces/app/code';
+import { Contacto } from 'src/app/shared/interfaces/app/contacto';
 import { Usuario } from 'src/app/shared/interfaces/app/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { arrayCodeCountries, arrayExp, arrayPreguntas, arrayRol } from 'src/app/shared/utils/local.array';
+import { ContactoService } from 'src/app/shared/services/contacto/contacto.service';
+import { UsuarioService } from 'src/app/shared/services/usuario/usuario.service';
+import { arrayBanco, arrayCivil, arrayCodeCountries, arrayExp, arrayPreguntas, arrayRol, arraySexo } from 'src/app/shared/utils/local.array';
 import { goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
+import { inicialesCapital, letraCapital, returnPrimerSubString } from 'src/app/shared/utils/utils.utils';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +25,8 @@ export class RegisterComponent implements OnInit {
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   @Output() cancelEvent = new EventEmitter<boolean>();
   @Output() resultRegister = new EventEmitter<boolean>();
+
+  @Input() title: string = '';
 
   // ================ INICIO ================ //
   // Data Local Storeage - Variable
@@ -46,38 +53,73 @@ export class RegisterComponent implements OnInit {
   // Mensaje Alert
   msgAlert: string = '';
 
-  result!: ApiResult;
-
   // ================  ================ //
   dataCode = arrayCodeCountries;
   dataExp = arrayExp;
   dataRol = arrayRol;
+  dataCivil = arrayCivil;
   dataPregunta = arrayPreguntas;
+  dataBanco = arrayBanco;
+  dataSexo = arraySexo;
 
-  formRegister = new FormGroup({
-    user: new FormControl('', [Validators.required, Validators.email]),
-    nombres: new FormControl('', [Validators.required]),
-    apellidos: new FormControl('', [Validators.required]),
+  formRegisterUsuario = new FormGroup({
+    user: new FormControl('', []),
+
+    codigo: new FormControl('', [Validators.required]),
+
+    nombres: new FormControl('Diego Junior', [Validators.required]),
+    apellidos: new FormControl('Llusco Chui', [Validators.required]),
     code: new FormControl('+591', [Validators.required]),
-    celular: new FormControl('', [Validators.required]),
-    ci: new FormControl('', [Validators.required]),
-    exp: new FormControl('', [Validators.required]),
-    rol: new FormControl('', [Validators.required]),
-    autorizacion: new FormControl(-1, []),
+    celular: new FormControl('77255776', [Validators.required]),
+    telefono: new FormControl('', []),
+    ci: new FormControl('4741134', [Validators.required]),
+    exp: new FormControl('LP', [Validators.required]),
+    sexo: new FormControl('M', [Validators.required]),
+    est_civil: new FormControl('Soltero(a)', [Validators.required]),
+    fec_nac: new FormControl('1987-09-30', [Validators.required]),
+
+    banco: new FormControl('Banco Central de Bolivia', [Validators.required]),
+    nro_cuenta: new FormControl('123', [Validators.required]),
+
+    fec_ingreso: new FormControl('2024-01-01', [Validators.required]),
+    fec_baja: new FormControl('', []),
+    rol: new FormControl('Administrador', [Validators.required]),
     img: new FormControl('', []),
+
     user_mod: new FormControl('', []),
-    password: new FormControl('', []),
-    pregunta: new FormControl('', [Validators.required]),
-    respuesta: new FormControl('', [Validators.required]),
   });
+
+  formRegisterAuth = new FormGroup({
+    user: new FormControl('admin-dillus@ingenialab.com', [Validators.required, Validators.email]),
+    password: new FormControl('Mudanzas*123', [Validators.required]),
+    pregunta: new FormControl('¿Cómo se llama tu mamá?', [Validators.required]),
+    respuesta: new FormControl('Juanita', [Validators.required]),
+  });
+
+  formAddContacto = new FormGroup({
+    nro_contacto: new FormControl('', [Validators.required]),
+    nombre_contacto: new FormControl('', [Validators.required]),
+  });
+
+  arrayContactos: Contacto[] = [];
+
+  hasCode: boolean = false;
+
+  objCode!: Code;
+
+  _CodeTypeRequired: string = 'Registro de Usuario';
 
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
     private router: Router,
+    private usuarioService: UsuarioService,
     private authService: AuthService,
+    private contactoService: ContactoService,
     private toast: HotToastService
   ) {
-    if (getLocalDataLogged() != null) {
+    this.formRegisterUsuario.controls.codigo.disable();
+    this.formRegisterUsuario.controls.rol.disable();
+    /*if (getLocalDataLogged() != null) {
       this.dataLocalStorage = getLocalDataLogged();
       if (this.dataLocalStorage.usuario != null) {
         this.userLogeado = this.dataLocalStorage.usuario;
@@ -88,7 +130,7 @@ export class RegisterComponent implements OnInit {
     } else {
       deleteLocalStorageData();
       goLogin(this.router);
-    }
+    }*/
   }
 
   /** ---------------------------------------- OnInit ----------------------------------------- **/
@@ -98,8 +140,14 @@ export class RegisterComponent implements OnInit {
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
   limpiarFormRegister() {
-    this.formRegister.reset();
+    this.formRegisterUsuario.reset();
+    this.formRegisterAuth.reset();
   }
+
+  limpiarFormAddContacto() {
+    this.formAddContacto.reset();
+  }
+
   getAutorizacion(rol: string) {
     let autorizacion = 0;
 
@@ -160,15 +208,128 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  generateCodigoEmpleado(): String {
+    const nombre = returnPrimerSubString(String(this.formRegisterUsuario.controls.nombres.value));
+    const iniNombre = inicialesCapital(nombre);
+
+    const iniApellidos = inicialesCapital(String(this.formRegisterUsuario.controls.nombres.value));
+
+    return iniApellidos + iniNombre + '-' + this.objCode.var_number;
+  }
+
+  getNextNumAddContact(): number {
+
+    if (this.arrayContactos.length === 0) { return 1; }
+
+    const x = this.arrayContactos[this.arrayContactos.length - 1];
+
+    return x.cont + 1;
+  }
+
+  reordenarNroContacto() {
+    let aux: Contacto[] = [];
+
+    for (let i = 0; i < this.arrayContactos.length; i++) {
+      let obj = this.arrayContactos[i];
+      obj.cont = i + 1;
+      aux.push(obj);
+    }
+
+    this.arrayContactos = aux;
+  }
+
+  setUserArrayContacts(user: string) {
+    for (let i = 0; i < this.arrayContactos.length; i++) {
+      let obj = this.arrayContactos[i];
+      obj.user = user;
+    }
+  }
+
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   onClickAgregarUsuario() {
-    if (this.formRegister.valid) {
-      this.customLoadingToast('Agregando');
-      this.formRegister.controls.user_mod.setValue(String(this.userLogeado.user));
-      this.formRegister.controls.password.setValue(String(this.formRegister.controls.ci.value));
-      this.formRegister.controls.autorizacion.setValue(Number(this.getAutorizacion(String(this.formRegister.controls.rol.value))));
+    if (this.formRegisterAuth.valid) {
+      if (this.formRegisterUsuario.valid) {
+        this.formRegisterUsuario.controls.user.setValue(String(this.formRegisterAuth.controls.user.value));
+        this.formRegisterUsuario.controls.user_mod.setValue(String(this.formRegisterAuth.controls.user.value));
 
-      this.authService.authRegister(this.formRegister.value).subscribe(data => {
+        const dataUsuario = {
+          user: String(this.formRegisterUsuario.controls.user.value),
+          codigo: this.generateCodigoEmpleado(),
+          nombres: letraCapital(String(this.formRegisterUsuario.controls.nombres.value).trim()),
+          apellidos: letraCapital(String(this.formRegisterUsuario.controls.apellidos.value).trim()),
+          code: String(this.formRegisterUsuario.controls.code.value),
+          celular: String(this.formRegisterUsuario.controls.celular.value),
+          telefono: String(this.formRegisterUsuario.controls.telefono.value),
+          ci: String(this.formRegisterUsuario.controls.ci.value).trim(),
+          exp: String(this.formRegisterUsuario.controls.exp.value),
+          fec_ingreso: String(this.formRegisterUsuario.controls.fec_ingreso.value),
+          fec_baja: String(this.formRegisterUsuario.controls.fec_baja.value),
+          banco: String(this.formRegisterUsuario.controls.banco.value),
+          nro_cuenta: String(this.formRegisterUsuario.controls.nro_cuenta.value).trim(),
+          sexo: String(this.formRegisterUsuario.controls.sexo.value),
+          est_civil: String(this.formRegisterUsuario.controls.est_civil.value),
+          fec_nac: String(this.formRegisterUsuario.controls.fec_nac.value),
+          rol: String(this.formRegisterUsuario.controls.rol.value),
+          img: String(this.formRegisterUsuario.controls.img.value),
+          user_mod: String(this.formRegisterUsuario.controls.user_mod.value),
+        }
+
+        // ========= Registrar el Usuario en tabla Usuario ========= \\
+        this.usuarioService.usuarioRegistro(dataUsuario).subscribe(resultUsuario => {
+          resultUsuario as ApiResult;
+
+          if (resultUsuario.boolean) {
+            const dataAuth = {
+              user: String(this.formRegisterAuth.controls.user.value).trim(),
+              password: String(this.formRegisterAuth.controls.password.value),
+              pregunta: String(this.formRegisterAuth.controls.pregunta.value),
+              respuesta: String(this.formRegisterAuth.controls.respuesta.value).trim(),
+            }
+
+            // ========= Registrar el Usuario en la tabla Auth ========= \\
+            this.authService.authRegistro(dataAuth).subscribe(resultAuth => {
+              resultAuth as ApiResult;
+
+              if (resultAuth.boolean) {
+                this.setUserArrayContacts(dataUsuario.user);
+                
+                // ========= Registrar contactos de Usuario en la tabla Contacto ========= \\
+                this.contactoService.contactoRegistro(dataUsuario.user, this.arrayContactos).subscribe(resultContacto => {
+                  resultContacto as ApiResult;
+
+                  if (resultContacto.boolean) {
+                    this.limpiarFormRegister();
+                    
+                    // Editar Code recibido
+                    
+                    this.customSuccessToast(resultAuth.message);
+
+                  } else {
+                    this.customErrorToast(resultUsuario.message);
+                  }
+                });
+
+              } else {
+                this.customErrorToast(resultAuth.message);
+              }
+            });
+
+          } else {
+            this.customErrorToast(resultUsuario.message);
+          }
+        });
+
+      } else {
+        this.customErrorToast('Datos personales son requeridos.');
+      }
+    } else {
+      this.customErrorToast('Datos de inicio de sesión son requeridos.');
+    }
+    /*if (this.formRegisterUsuario.valid) {
+      this.customLoadingToast('Agregando');
+      this.formRegisterUsuario.controls.user_mod.setValue(String(this.formRegisterAuth.controls.user.value));
+
+      this.authService.authRegister(this.formRegisterUsuario.value).subscribe(data => {
         this.toast.close();
         this.result = data;
         if (this.result.boolean) {
@@ -180,12 +341,33 @@ export class RegisterComponent implements OnInit {
           this.customErrorToast(this.result.message);
         }
       })
-      console.log(this.formRegister.value);
-    }
+      console.log(this.formRegisterUsuario.value);
+    }*/
   }
 
   onClickCancelarAgregar() {
     this.cancelEvent.emit(true);
+  }
+
+  onClickAddContacto() {
+    if (this.formAddContacto.valid) {
+
+      const obj = {
+        user: String(this.formRegisterAuth.controls.user.value).trim(),
+        cont: this.getNextNumAddContact(),
+        nro_contacto: String(this.formAddContacto.controls.nro_contacto.value),
+        nombre_contacto: letraCapital(String(this.formAddContacto.controls.nombre_contacto.value).trim())
+      }
+
+      this.arrayContactos.push(obj);
+
+      this.limpiarFormAddContacto();
+    }
+  }
+
+  onClickRemoveContact(index: number) {
+    this.arrayContactos.splice(index, 1);
+    this.reordenarNroContacto();
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
@@ -193,6 +375,21 @@ export class RegisterComponent implements OnInit {
   /** ---------------------------------- Onclick file import ---------------------------------- **/
 
   /** ---------------------------------------- Receiver --------------------------------------- **/
+  codeReceiver(data: ApiResult | null) {
+    if (data !== null) {
+      this.objCode = data.data[0] as Code
+
+      if (this.objCode.type === this._CodeTypeRequired) {
+        this.hasCode = true;
+        this.customSuccessToast('Código de verificación correcto.')
+        this.formRegisterUsuario.controls.codigo.setValue(String(this.objCode.var_number))
+      } else {
+        this.customErrorToast('El código no es para este uso.')
+      }
+    } else {
+      this.cancelEvent.emit(true);
+    }
+  }
 
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
   onShowConfirmacion(sw: boolean) {
@@ -212,7 +409,6 @@ export class RegisterComponent implements OnInit {
     this.alertError = sw;
     //this.open = false; // Close Menú Lateral
   }
-
 
   listenAlertConfirmation(event: boolean) {
     this.alertConfirmacion = false;

@@ -1,42 +1,63 @@
-<div class="relative flex w-screen h-screen">
+<div class="relative w-full h-full overflow-auto bg-white">
 
-    <div class="grid grid-cols-3 items-center w-2/5 h-max m-auto gap-5 rounded-lg border border-gray-200 shadow-lg p-5 bg-white">
-        <img class="h-full" src="./../../../../../assets/draw_login.svg" alt="">
-        <form [formGroup]="formLogin" class="w-full my-auto h-max flex flex-col gap-5 p-5 col-span-2">
-            <p class="text-2xl text-color-text font-bold">Bienvenido</p>
-
-            <app-custom-input 
-                [id]="'id_user'" 
-                [label]="'Usuario'" 
-                [type]="'email'" 
-                [autocomplete]="'email'"
-                [class]="''"
-                [control]="formLogin.controls.email" 
-                [icon]="'fa-solid fa-circle-user fa-lg'">
-            </app-custom-input>
-
-            <app-custom-input 
-                [id]="'id_password'"
-                [label]="'Contraseña'" 
-                [type]="'password'"
-                [autocomplete]="''"
-                [class]="''"
-                [control]="formLogin.controls.password" 
-                [icon]="'fa-solid fa-lock fa-lg'">
-            </app-custom-input>
-
-            <app-custom-button 
-                [label]="'Ingresar'"
-                [type]="'accept'"
-                [valid]="formLogin.valid" 
-                (click)="onClickLogin()">
-            </app-custom-button>
-
-            <a (click)="onClickGoForGotPasswrd()" class="w-max text-sm text-color-text underline cursor-pointer">
-                ¿Has olvidado tu contraseña?
-            </a>
-
-        </form>
+    <div class="w-full h-full flex items-center">
+        <div class="grid grid-cols-3 items-center w-2/5 h-max m-auto gap-5 rounded-lg border border-gray-200 shadow-lg bg-white">
+            <div class="flex flex-col">
+                <img class="h-full" src="./../../../../../assets/draw_login.svg" alt="">
+                
+            </div>
+            
+            <form [formGroup]="formLogin" class="w-full my-auto h-max flex flex-col gap-5 p-5 col-span-2 bg-primary-50">
+                <p class="text-2xl text-color-text font-bold">Bienvenido</p>
+    
+                <app-custom-input 
+                    [id]="'id_user'" 
+                    [label]="'Usuario'" 
+                    [type]="'email'" 
+                    [autocomplete]="'email'"
+                    [class]="''"
+                    [control]="formLogin.controls.email" 
+                    [icon]="'fa-solid fa-circle-user fa-lg'">
+                </app-custom-input>
+    
+                <app-custom-input 
+                    [id]="'id_password'"
+                    [label]="'Contraseña'" 
+                    [type]="'password'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formLogin.controls.password" 
+                    [icon]="'fa-solid fa-lock fa-lg'">
+                </app-custom-input>
+    
+                <div class="flex gap-4 w-full">
+                    <app-custom-button class="w-full"
+                        [id]="'id_ingresar'"
+                        [label]="'Ingresar'"
+                        [type]="'accept'"
+                        [icon]="''" 
+                        [valid]="formLogin.valid" 
+                        [class]="''"
+                        (click)="onClickLogin()">
+                    </app-custom-button>
+    
+                    <app-custom-button class="w-full"
+                        [id]="'id_register'"
+                        [label]="'Registrarse'"
+                        [type]="'cancel'"
+                        [icon]="''" 
+                        [valid]="true"
+                        [class]="''"
+                        (click)="onClickRegister()">
+                    </app-custom-button>
+                </div>
+    
+                <a (click)="onClickGoForGotPasswrd()" class="w-max text-sm text-color-text underline cursor-pointer">
+                    ¿Has olvidado tu contraseña?
+                </a>
+    
+            </form>
+        </div>
     </div>
 
     <app-custom-alert-confirmation *ngIf="alertConfirmacion" [msgAlert]="'Desea eliminar?'"

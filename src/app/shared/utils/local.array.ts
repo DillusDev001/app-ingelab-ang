@@ -1125,6 +1125,99 @@ export const arrayExp = [
     },
 ]
 
+export const arrayCivil = [
+    {
+        value: 'Soltero(a)',
+        data: 'Soltero(a)'
+    },
+    {
+        value: 'Casado(a)',
+        data: 'Casado(a)'
+    },
+    {
+        value: 'Viudo(a)',
+        data: 'Viudo(a)'
+    },
+    {
+        value: 'Separado(a)',
+        data: 'Separado(a)'
+    },
+    {
+        value: 'Divorciado(a)',
+        data: 'Divorciado(a)'
+    },
+]
+
+export const arrayBanco = [
+    {
+        value: 'Banco Bisa',
+        data: 'Banco Bisa'
+    },
+    {
+        value: 'Banco Central de Bolivia',
+        data: 'Banco Central de Bolivia'
+    },
+    {
+        value: 'Banco de Crédito (BCP)',
+        data: 'Banco de Crédito (BCP)'
+    },
+    {
+        value: 'Banco Económico',
+        data: 'Banco Económico'
+    },
+    {
+        value: 'Banco FIE',
+        data: 'Banco FIE'
+    },
+    {
+        value: 'Banco Fortaleza',
+        data: 'Banco Fortaleza'
+    },
+    {
+        value: 'Banco Ganadero',
+        data: 'Banco Ganadero'
+    },
+    {
+        value: 'Banco Mercantil Santa Cruz',
+        data: 'Banco Mercantil Santa Cruz'
+    },
+    {
+        value: 'Banco Nacional de Bolivia',
+        data: 'Banco Nacional de Bolivia'
+    },
+    {
+        value: 'Banco Prodem',
+        data: 'Banco Prodem'
+    },
+    {
+        value: 'Banco PYME de la Comunidad',
+        data: 'Banco PYME de la Comunidad'
+    },
+    {
+        value: 'Banco PYME Ecofuturo',
+        data: 'Banco PYME Ecofuturo'
+    },
+    {
+        value: 'Banco Solidario',
+        data: 'Banco Solidario'
+    },
+    {
+        value: 'Banco Unión',
+        data: 'Banco Unión'
+    },
+]
+
+export const arraySexo = [
+    {
+        value: 'F',
+        data: 'Femenino'
+    },
+    {
+        value: 'M',
+        data: 'Masculino'
+    },
+]
+
 export const arrayIcon = [
     { name: '', value: '' },
     { name: '', value: '' },

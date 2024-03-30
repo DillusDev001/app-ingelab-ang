@@ -30,3 +30,9 @@ export function existUserLogged(): boolean {
     }
 }
 
+export function localStorageLogOut(): boolean{
+    deleteLocalStorageData();
+
+    return !existUserLogged();
+}
+

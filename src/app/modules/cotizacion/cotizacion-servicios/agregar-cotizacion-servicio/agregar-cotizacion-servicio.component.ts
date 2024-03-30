@@ -56,24 +56,34 @@ export class AgregarCotizacionServicioComponent implements OnInit {
   fechaNow: string = formatDate(new Date(), 'dd/MM/yyyy', 'es');
 
   personaC: Persona = {
-    id: null,
-    nombre_completo: 'Jhamir Jimenez',
+    id_persona: 0,
+    nombre_persona: 'Jhamir Jimenez',
     celular: '+591 XXX XXXXX',
     email: 'example@email.com',
     razon: 'Empresa',
     nit: '123123123',
-    id_empresa: 0
+    id_empresa: 0,
+    
+    fec_crea: '',
+    user_crea: '',
+    fec_mod: '',
+    user_mod: ''
   }
 
   empresaC: Empresa = {
     id_empresa: 0,
-    razon: 'Empresa',
+    razon_social: 'Empresa',
     nit: '123123123',
     direccion: 'Av. Principal',
     telefono: '+591 2 XXXXXXX',
     web: 'www.empresa.com',
     ciudad: 'La Paz',
-    pais: 'Bolivia'
+    pais: 'Bolivia',
+
+    fec_crea: '',
+    user_crea: '',
+    fec_mod: '',
+    user_mod: ''
   }
 
   /** -------------------------------------- Constructor -------------------------------------- **/

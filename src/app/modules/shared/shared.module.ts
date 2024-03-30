@@ -21,6 +21,8 @@ import { CustomLabel1Component } from './custom-label1/custom-label1.component';
 import { CustomLabel0Component } from './custom-label0/custom-label0.component';
 import { CustomSubTitleComponent } from './custom-sub-title/custom-sub-title.component';
 import { CustomLabel2Component } from './custom-label2/custom-label2.component';
+import { CustomCodeComponent } from './custom-code/custom-code.component';
+import { CustomLabel3Component } from './custom-label3/custom-label3.component';
 
 
 
@@ -43,7 +45,10 @@ import { CustomLabel2Component } from './custom-label2/custom-label2.component';
     CustomLabel0Component,
     CustomLabel1Component,
     CustomLabel2Component,
+    CustomLabel3Component,
     CustomSubTitleComponent,
+    CustomCodeComponent,
+    
   ],
   exports: [
     CustomInputComponent,
@@ -63,7 +68,9 @@ import { CustomLabel2Component } from './custom-label2/custom-label2.component';
     CustomLabel0Component,
     CustomLabel1Component,
     CustomLabel2Component,
+    CustomLabel3Component,
     CustomSubTitleComponent,
+    CustomCodeComponent,
 
     ReactiveFormsModule
   ],

@@ -133,7 +133,7 @@ export class UsuarioComponent implements OnInit {
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
   getUsuarios() {
     this.dataUsuarios = [];
-    this.usuarioService.getUsuarios().subscribe(data => {
+    this.usuarioService.usuarioGetLista().subscribe(data => {
       this.result = data;
       this.dataUsuarios = this.result.data;
 

@@ -1,0 +1,5 @@
+<div class="flex w-screen h-screen bg-red-100">
+    <app-login class="w-full" (registerEvent)="loginGoRegisterRegisterReceiver($event)" *ngIf="mostrar == 'login'"></app-login>
+
+    <app-register (cancelEvent)="registerCancelRegisterReceiver($event)" class="w-full" [title]="'Registro'" *ngIf="mostrar == 'register'"></app-register>
+</div>
