@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResult } from '../../interfaces/api/api.result';
+import { urlBaseApi } from '../../utils/local.string';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  urlBase: string = 'http://localhost:3000';
+  urlBase: string = urlBaseApi;
   urlVersion: string = '/v1';
   urlModule: string = '/auth';
 

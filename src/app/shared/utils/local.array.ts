@@ -1230,3 +1230,15 @@ export const arrayIcon = [
     { name: '', value: '' },
 
 ]
+
+export const arrayBusquedaPersona=[
+    { value: 'nombre_persona', data: 'Nombre Persona' },
+    { value: 'razon', data: 'Razón' },
+    { value: 'nit', data: 'NIT' },
+    { value: 'email', data: 'Email' },
+    { value: 'celular', data: 'Celular' },
+]
+
+export const arrayBusquedaParametro=[
+    { value: 'nombre', data: 'Parámetro' }
+]

@@ -12,8 +12,11 @@
     <i class="fa-regular fa-address-card fa-lg"></i>
     <i class="fa-solid fa-comment fa-lg"></i>
     <i class="fa-solid fa-file-lines fa-lg"></i>
+
     <i class="fa-solid fa-trash fa-lg"></i>
     <i class="fa-solid fa-circle-plus fa-lg"></i>
+    <i class="fa-solid fa-pen-to-square fa-lg"></i>
+
     <i class="fa-solid fa-hand-holding fa-lg"></i>
     <i class="fa-solid fa-phone fa-lg"></i>
     <i class="fa-regular fa-calendar fa-lg"></i>
@@ -21,6 +24,7 @@
     <i class="fa-solid fa-image fa-lg"></i>
     <i class="fa-solid fa-xmark fa-lg"></i>
     <i class="fa-solid fa-person fa-lg"></i>
+    <i class="fa-solid fa-dollar-sign fa-lg"></i>
 
     <i class="fa-solid fa-comment-dots fa-lg"></i>
     <i class="fa-solid fa-comment-dots fa-lg"></i>
@@ -88,6 +92,30 @@
       [text]="''"
       [class]="''">
     </app-custom-label1>
+
+    <app-custom-tab-button
+      [id]="''"
+      [label]="''"
+      [icon]="''"
+      [class]="''"
+      [spanClass]="''"
+      [selected]="''" >
+    </app-custom-tab-button>
+
+    <app-custom-alert-input
+        *ngIf="showAlertCustomInput"
+        [id]="'id_input_alert'"
+        [title]="'Agregar Parámetro'"
+        [label]="'Nombre Parámetro'"
+        [class]="''"
+        [icon]="''"
+        (onResponse)="reciveCustomInput($event)" >
+    </app-custom-alert-input>
+
+    <app-custom-icon
+      [icon]="''"
+      [class]="''" >
+    </app-custom-icon>
 
     -->
     

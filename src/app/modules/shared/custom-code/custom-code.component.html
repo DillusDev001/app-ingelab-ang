@@ -22,7 +22,9 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <input [formControl]="formCode.controls.num1" class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 
+                    <input 
+                    [formControl]="formCode.controls.num1" 
+                    class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 
                     (keydown)="myKeyPress($event, inputText1, 1)" #inputText1 type="text" maxlength="1">
 
                     <input [formControl]="formCode.controls.num2" class="w-12 h-12 border-0 rounded-md bg-primary-400 focus:bg-primary-500 text-2xl text-white text-center" 

@@ -3,11 +3,10 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
-import { Usuario } from 'src/app/shared/interfaces/app/usuario';
+import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { msgErrorConexion } from 'src/app/shared/utils/local.msg';
-import { goAdminDashBoard, goForGotPassword, goLogin, goRegister } from 'src/app/shared/utils/local.router';
+import { goAdminHome, goForGotPassword } from 'src/app/shared/utils/local.router';
 import { setLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
 @Component({
@@ -78,11 +77,11 @@ export class LoginComponent implements OnInit {
       const user = this.result.data[0] as Usuario;
       switch (user.rol) {
         case 'Developer':
-          goAdminDashBoard(this.router);
+          goAdminHome(this.router);
           break;
 
         case 'Administrador':
-          goAdminDashBoard(this.router);
+          goAdminHome(this.router);
           break;
 
         case 'Asistente':

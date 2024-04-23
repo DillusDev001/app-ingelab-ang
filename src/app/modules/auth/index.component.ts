@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
-import { Usuario } from 'src/app/shared/interfaces/app/usuario';
+import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 
 @Component({
@@ -41,7 +41,7 @@ export class IndexComponent {
   result!: ApiResult;
 
   // ================  ================ //
-  mostrar: string = 'register';
+  mostrar: string = 'login';
 
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(private router: Router) { }

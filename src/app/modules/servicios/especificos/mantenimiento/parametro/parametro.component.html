@@ -1,0 +1,161 @@
+<div class="flex flex-col gap-4 w-full  h-full overflow-auto">
+    <!-- Parametro -->
+    <div class="flex flex-col border border-dashed border-color-text rounded-lg w-max h-max p-2">
+        <!-- Subtitle / Cabecera -->
+        <div class="flex w-full mb-2">
+            <app-custom-sub-title
+                [id]="''"
+                [label]="titleLabel"
+                [class]="''">
+            </app-custom-sub-title>
+        </div>
+
+        <div class="flex gap-4 flex-wrap ">
+            <!-- Parámetro -->
+            <app-custom-input
+                [id]="'id_input_parametro'"
+                [label]="'Parámetro'"
+                [type]="'text'"
+                [autocomplete]="'text'"
+                [class]="''"
+                [control]="formParametro.controls.nombre"
+                [icon]="''" >
+            </app-custom-input>
+
+            <!-- Costo Directo -->
+            <app-custom-input
+                [id]="'id_input_costo_directo'"
+                [label]="'Costo Directo'"
+                [type]="'number'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formParametro.controls.costo_directo"
+                [icon]="'fa-solid fa-dollar-sign fa-lg'" >
+            </app-custom-input>
+
+            <!-- Costo Variable -->
+            <app-custom-input
+                [id]="'id_input_costo_variable'"
+                [label]="'Costo Variable'"
+                [type]="'number'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formParametro.controls.costo_variable"
+                [icon]="'fa-solid fa-dollar-sign fa-lg'" >
+            </app-custom-input>
+            
+            <div class="grow"></div>
+
+            <app-custom-button
+                class="h-full w-40"
+                [id] ="'id_btn_agregar'"
+                [label] ="btnLabel"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="formParametro.valid"
+                (click)="onClickGuardar()" >
+            </app-custom-button>
+
+            <app-custom-button
+                *ngIf="isEditing"
+                class="h-full w-40"
+                [id] ="'id_btn_cancelar'"
+                [label] ="'Cancelar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="'bg-color-error hover:bg-color-error-hover'"
+                [valid] ="formParametro.valid"
+                (click)="onClickCancelar()" >
+            </app-custom-button>
+        </div>
+    </div>
+
+    <div *ngIf="!isEditing" class="flex flex-col gap-4 w-full h-full">
+        <!-- Table y Nav -->
+        <div class="overflow-auto shadow-md border rounded-lg grow ">
+            <table class="w-full text-sm text-center rtl:text-right text-primary-500">
+                <thead class="text-sm text-primary-800 uppercase bg-primary-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            #
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            Parámetro
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            Costo Directo
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            Costo Variable
+                        </th>
+
+                        <th scope="col" class="px-6 py-3">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="text-primary-800 bg-white border-b hover:bg-primary-50"
+                        *ngFor="let item of dataParametros; index as i">
+                        <td class="p-2">
+                            {{ i + 1 }}
+                        </td>
+
+                        <td class="px-2 py-2">
+                            {{ item.nombre }}
+                        </td>
+
+                        <td class="px-2 py-2">
+                            {{ item.costo_directo | currency:'BOB':'Bs. ' }}
+                        </td>
+
+                        <td class="px-2 py-2">
+                            {{ item.costo_variable | currency:'BOB':'Bs. ' }}
+                        </td>
+
+                        <td class="px-2 py-2">
+                            <div class="flex justify-around gap-4">
+                                <app-custom-icon
+                                    [icon]="'fa-solid fa-pen-to-square fa-lg'"
+                                    [class]="'text-color-info cursor-pointer hover:text-color-info-hover'"
+                                    (click)="onClickEditar(i)" >
+                                </app-custom-icon>
+
+                                <app-custom-icon
+                                    [icon]="'fa-solid fa-trash fa-lg'"
+                                    [class]="'text-color-error cursor-pointer hover:text-color-error-hover'"
+                                    (click)="onClickRemove(i)" >
+                                </app-custom-icon>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <nav class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
+            aria-label="Table navigation">
+            <div class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                <a [ngClass]="{ 'cursor-pointer' : posPaginacion > 1 }" (click)="anteriorLista()"
+                    class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-primary-500 bg-white border border-primary-300 rounded-s-lg hover:bg-primary-100 hover:text-primary-700">Anterior</a>
+
+                <ul class="inline-flex" *ngFor="let n of paginationArray">
+                    <li>
+                        <a [ngClass]="{ 'text-primary-600 bg-primary-50'  : n == posPaginacion, 'text-primary-500 bg-white cursor-pointer' : n != posPaginacion }"
+                            class="flex items-center justify-center px-3 h-8 border border-primary-300 hover:bg-primary-100 hover:text-primary-700">{{
+                            n }}</a>
+                    </li>
+                </ul>
+
+                <a [ngClass]="{ 'cursor-pointer' : posPaginacion < paginationArray.length }" (click)="siguienteLista()"
+                    class="flex items-center justify-center px-3 h-8 leading-tight text-primary-500 bg-white border border-primary-300 rounded-e-lg hover:bg-primary-100 hover:text-primary-700">Siguiente</a>
+            </div>
+        </nav>
+    </div>
+</div>

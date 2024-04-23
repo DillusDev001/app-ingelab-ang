@@ -1,31 +1,64 @@
 import { Router } from "@angular/router";
 
-// ================ INDeX ================ //
+// ================ INDEX ================ //
 export function goIndex(router: Router) {
     router.navigate(['auth/']);
 }
 
 // ================ AUTH ================ //
 export function goLogin(router: Router) {
-    router.navigate(['auth/login']);
-}
-
-export function goRegister(router: Router) {
-    router.navigate(['auth/register']);
+    router.navigate(['auth']);
 }
 
 export function goForGotPassword(router: Router) {
     router.navigate(['auth/forgot']);
 }
 
-export function goAdminDashBoard(router: Router) {
-    router.navigate(['admin/home']);
-}
-
-// ================= HOME ================== //
+// ================ ADMIN ================ //
 export function goAdminHome(router: Router) {
     router.navigate(['admin/home']);
 }
+
+export function goAdminServiciosEspecificos(router: Router) {
+    router.navigate(['admin/servicios/especificos/mantenimiento']);
+}
+
+export function goAdminServiciosGenerales(router: Router) {
+    router.navigate(['admin/servicios/generales/mantenimiento']);
+}
+
+// ================= SERVICIOS ESPECIFICOS ================== //
+export function goAdminServiciosEspecificosListaFRX(router: Router) {
+    router.navigate(['admin/servicios/especificos/lista-frx']);
+}
+
+export function goAdminServiciosEspecificosAgregar(router: Router) {
+    router.navigate(['admin/servicios/especificos/agregar']);
+}
+
+// ================= SERVICIOS ESPECIFICOS - MANTENIMIENTO ================== //
+export function goAdminServiciosEspecificosMantenimientoParametro(router: Router) {
+    router.navigate(['admin/servicios/especificos/mantenimiento/parametro']);
+}
+
+// ================= SERVICIOS GENERALES ================== //
+export function goAdminServiciosGeneralesMantenimiento(router: Router) {
+    router.navigate(['admin/servicios/generales/mantenimiento']);
+}
+
+export function goAdminServiciosGeneralesLista(router: Router) {
+    router.navigate(['admin/servicios/generales/lista']);
+}
+
+export function goAdminServiciosGeneralesAgregar(router: Router) {
+    router.navigate(['admin/servicios/generales/agregar']);
+}
+
+
+
+
+
+
 
 // ============== COTIZACION =============== //
 export function goAdminCotizacionLaboratorio(router: Router) {

@@ -8,7 +8,8 @@ const routes: Routes = [
 
   { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },
 
-  { path: 'cotizacion', loadChildren: () => import('./modules/cotizacion/cotizacion.module').then(m => m.CotizacionModule) },
+  // { path: 'servicios/especificos', loadChildren: () => import('./modules/servicios/especificos/especificos.module').then(m => m.EspecificosModule) },
+  // { path: 'servicios/generales', loadChildren: () => import('./modules/servicios/generales/generales.module').then(m => m.GeneralesModule) },
 
   { path: 'icons', loadChildren: () => import('./modules/icons/icons.module').then(m => m.IconsModule) }
 ];

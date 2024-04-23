@@ -40,7 +40,7 @@ export class CustomCodeComponent {
         String(this.formCode.controls.num3.value) +
         String(this.formCode.controls.num4.value);
 
-      this.codeService.authLogin(code).subscribe(data => {
+      this.codeService.getCode(code).subscribe(data => {
         data as ApiResult;
 
         if (data.boolean) {

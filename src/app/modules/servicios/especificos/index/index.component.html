@@ -1,0 +1,29 @@
+<div class="relative flex flex-col gap-4 p-4 w-full h-full border shadow-lg overflow-auto">
+    <div class="flex gap-4 overflow-y-hidden overflow-x-auto h-max">
+        <app-custom-tab-button
+            class="w-max"
+            [id]="'id_servicios_especificos_frx'"
+            [label]="'Lista FRX'"
+            [icon]="''"
+            [class]="'cursor-pointer'"
+            [spanClass]="''"
+            [selected]="selectedTab"
+            (click)="onClickButton('Lista FRX')" >
+        </app-custom-tab-button>
+
+        <app-custom-tab-button
+            class="w-max"
+            [id]="'id_servicios_generales_mantenimiento'"
+            [label]="'Mantenimiento'"
+            [icon]="''"
+            [class]="'cursor-not-allowed'"
+            [spanClass]="''"
+            [selected]="selectedTab"
+            (click)="onClickButton('Mantenimiento')" >
+        </app-custom-tab-button>
+    </div>
+
+    <div class="relative w-full h-full overflow-auto">
+        <router-outlet></router-outlet>
+    </div>
+</div>

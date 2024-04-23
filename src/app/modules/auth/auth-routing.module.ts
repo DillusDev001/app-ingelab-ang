@@ -7,8 +7,8 @@ import { IndexComponent } from './index.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  // { path: 'login', component: LoginComponent },
+  // { path: 'register', component: RegisterComponent },
   { path: 'forgot', component: ForgotComponent }
 ];
 

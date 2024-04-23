@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-custom-menu-button',
@@ -11,7 +11,10 @@ export class CustomMenuButtonComponent {
   @Input() label!: string;
   @Input() icon!: string;
   @Input() submenu!: boolean;
+  @Input() spanClass!: string;
   @Input() selected!: string;
+
+  @Output() onSpanClick: EventEmitter<boolean> = new EventEmitter();
 
   openMenu: boolean = false;
   class: string = 'rotate-180';
@@ -21,8 +24,10 @@ export class CustomMenuButtonComponent {
       this.openMenu = !this.openMenu;
       if (this.openMenu) {
         this.class = ''; // open Menu
+        this.onSpanClick.emit(true);
       } else {
         this.class = 'rotate-180'; // close Menu
+        this.onSpanClick.emit(false);
       }
     }
   }

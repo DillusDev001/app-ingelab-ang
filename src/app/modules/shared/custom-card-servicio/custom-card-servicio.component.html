@@ -1,0 +1,23 @@
+<div class="flex flex-col items-center h-full w-full rounded-lg border-2 border-color-button-1 py-2 px-4 gap-1"
+    [ngClass]="{'bg-color-button-1 ':servicio.nombre == selected, 'hover:bg-primary-50':servicio.nombre != selected}"
+    [class]="class">
+    <p class="w-full text-center font-bold text-lg text-color-text tracking-wider"
+        [ngClass]="{'text-color-white': servicio.nombre == selected, 'text-color-button-1':servicio.nombre != selected}" >
+        {{ servicio.nombre }}
+    </p>
+    <p class="text-xs w-full text-center"
+        [ngClass]="{'text-color-white': servicio.nombre == selected, 'text-color-button-1':servicio.nombre != selected}" >
+        {{ servicio.descripcion }}
+    </p>
+
+    <app-custom-button
+        *ngIf="servicio.nombre == selected"
+        [id] ="'id_btn_editar_servicio'"
+        [label] ="'Editar'"
+        [type] ="'cancel'"
+        [icon] ="'fa-solid fa-pen-to-square fa-lg'"
+        [class] ="''"
+        [valid] ="true"
+        (click)="onClickEdit()" >
+    </app-custom-button>
+</div>

@@ -7,6 +7,7 @@
     <!-- Dashboard -->
     <div class="flex w-full h-full">
 
+        <!-- Menu -->
         <nav class="p-4 z-20 top:0 fixed top-0 bottom-0 duration-300 w-max h-full bg-white shadow-2xl
         lg:left-0 lg:my-0 lg:w-80 lg:relative border-r border-gray-200"
             [ngClass]="{ 'left-0'  : open == true, 'left-[-330px]' : open == false }">
@@ -21,15 +22,16 @@
                 <!-- Menu -->
                 <div class="flex flex-col divide-y divide-color-divide grow">
 
-                    <!-- Menu 1  INICIO-->
+                    <!-- Menu INICIO-->
                     <div class="py-4">
                         <app-custom-menu-button
                             [id]="'id_menu_inicio'"
                             [label]="'Inicio'"
                             [icon]="'fa-solid fa-shapes fa-lg'"
                             [submenu]="true"
+                            [spanClass]="' hidden'"
                             [selected]="menuSelected" 
-                            (click)="onClickSetMenuSelected('Inicio')">
+                            (click)="onClickSetMenuSelected('Inicio', null)">
                         </app-custom-menu-button>
 
                         <!-- SubMenu -->
@@ -37,27 +39,38 @@
                         </div>
                     </div>
 
-                    <!-- Menu 2 SERVICIOS -->
+                    <!-- Menu GRAFICOS-->
+                    <div class="py-4">
+                        <app-custom-menu-button
+                            [id]="'id_menu_inicio'"
+                            [label]="'Gráficos'"
+                            [icon]="'fa-solid fa-chart-pie fa-lg'"
+                            [submenu]="true"
+                            [spanClass]="' hidden'"
+                            [selected]="menuSelected" 
+                            (click)="onClickSetMenuSelected('Gráficos', null)">
+                        </app-custom-menu-button>
+
+                        <!-- SubMenu -->
+                        <div class="flex flex-col ml-12">
+                        </div>
+                    </div>
+
+                    <!-- Menu SERVICIOS -->
                     <div class="py-4">
                         <app-custom-menu-button
                             [id]="'id_menu_servicios'"
                             [label]="'Servicios'"
                             [icon]="'fa-solid fa-shapes fa-lg'"
                             [submenu]="true"
+                            [spanClass]="''"
                             [selected]="menuSelected" 
-                            (click)="onClickSetMenuSelected('Servicios')">
+                            (click)="onClickSetMenuSelected('Servicios', Servicios)">
                         </app-custom-menu-button>
+                        
                         <!-- SubMenu -->
-                        <div class="flex flex-col ml-12">
-                            <app-custom-sub-menu-button
-                                [id]="'id_submenu_servicios_generales'"
-                                [label]="'Generales'"
-                                [icon]="''"
-                                [submenu]="true"
-                                [selected]="subMenuSelected"
-                                (click)="onClickSetSubMenuSelected('Servicios', 'Generales')" >
-                            </app-custom-sub-menu-button>
-
+                        <div class="flex flex-col ml-12 overflow-hidden h-0" #Servicios>
+                            <!-- Especificos -->
                             <app-custom-sub-menu-button
                                 [id]="'id_submenu_servicios_especificos'"
                                 [label]="'Específicos'"
@@ -66,25 +79,59 @@
                                 [selected]="subMenuSelected"
                                 (click)="onClickSetSubMenuSelected('Servicios', 'Específicos')" >
                             </app-custom-sub-menu-button>
+
+                            <!-- Generales -->
+                            <app-custom-sub-menu-button
+                                [id]="'id_submenu_servicios_generales'"
+                                [label]="'Generales'"
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Servicios', 'Generales')" >
+                            </app-custom-sub-menu-button>
                         </div>
                     </div>
 
-                    <!-- Menu 3 MATENIMIENTO -->
+                    <!-- Menu MATENIMIENTO -->
                     <div class="py-4">
-                        <app-custom-menu-button (click)="onClickSetMenuSelected('Mantenimiento')"
-                            [label]="'Mantenimiento'" [icon]="'fa-solid fa-toolbox fa-lg'" [selected]="menuSelected"
-                            [submenu]="true">
+                        <app-custom-menu-button
+                            [id]="'id_menu_mantenimiento'"
+                            [label]="'Mantenimiento'" 
+                            [icon]="'fa-solid fa-toolbox fa-lg'" 
+                            [submenu]="true"
+                            [spanClass]="''"
+                            [selected]="menuSelected"
+                            (click)="onClickSetMenuSelected('Mantenimiento', Mantenimiento)" >
                         </app-custom-menu-button>
+
                         <!-- SubMenu -->
-                        <div class="flex flex-col ml-12">
-                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Mantenimiento', 'Parámetro')"
-                                [label]="'Parámetro'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+                        <div class="flex flex-col ml-12 h-0 overflow-hidden" #Mantenimiento>
+                            <app-custom-sub-menu-button 
+                                [id]="'id_submenu_mantenimiento_parametro'"
+                                [label]="'Parámetro'" 
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Mantenimiento', 'Parámetro')" >
+                            </app-custom-sub-menu-button>
 
-                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Mantenimiento', 'Clientes')"
-                                [label]="'Clientes'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+                            <app-custom-sub-menu-button 
+                                [id]="'id_submenu_mantenimiento_Clientes'"
+                                [label]="'Clientes'"
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Mantenimiento', 'Clientes')" >
+                            </app-custom-sub-menu-button>
 
-                            <app-custom-sub-menu-button (click)="onClickSetSubMenuSelected('Mantenimiento', 'Usuarios')"
-                                [label]="'Usuarios'" [selected]="subMenuSelected"></app-custom-sub-menu-button>
+                            <app-custom-sub-menu-button 
+                                [id]="'id_submenu_mantenimiento_usuarios'"
+                                [label]="'Usuarios'"  
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Mantenimiento', 'Usuarios')" >
+                            </app-custom-sub-menu-button>
                         </div>
                     </div>
 
@@ -197,7 +244,7 @@
             </header>
 
             <!-- holder -->
-            <div class="p-4 w-full h-full overflow-auto">
+            <div class="relative p-4 w-full h-full overflow-auto">
                 <router-outlet></router-outlet>
             </div>
 

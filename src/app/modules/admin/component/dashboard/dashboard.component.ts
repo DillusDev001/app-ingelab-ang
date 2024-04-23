@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
-import { Usuario } from 'src/app/shared/interfaces/app/usuario';
+import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { goAdminCotizacionLaboratorio, goAdminGraficosGeneral, goAdminHome, goIndex, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
+import { goAdminCotizacionLaboratorio, goAdminGraficosGeneral, goAdminHome, goAdminServiciosEspecificosListaFRX, goAdminServiciosEspecificosMantenimientoParametro, goAdminServiciosGeneralesLista, goIndex, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged, localStorageLogOut } from 'src/app/shared/utils/local.storage';
 
 @Component({
@@ -47,10 +47,14 @@ export class DashboardComponent implements OnInit {
 
   title: string = this.menuSelected;
 
+  booleanServicios: boolean = false;
+  booleanMantenimieto: boolean = false;
+
 
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ) {
     if (getLocalDataLogged() != null) {
       this.dataLocalStorage = getLocalDataLogged();
@@ -78,45 +82,80 @@ export class DashboardComponent implements OnInit {
     this.open = sw;
   }
 
-  onClickSetMenuSelected(event: string) {
-    this.menuSelected = event;
-    this.subMenuSelected = '';
-    this.title = event;
-
-    switch (event) {
+  onClickSetMenuSelected(eventTitle: string, div: any) {
+    switch (eventTitle) {
       case 'Inicio':
+        this.title = eventTitle;
+        
+        this.menuSelected = eventTitle;
+        this.subMenuSelected = '';
+
         goAdminHome(this.router);
+        this.open = false;
         break;
 
-      case '':
+      case 'Gráficos':
+        this.title = eventTitle;
+        
+        this.menuSelected = eventTitle;
+        this.subMenuSelected = '';
+
+        goAdminGraficosGeneral(this.router);
+        this.open = false;
+        break;
+
+      case 'Servicios':
+        // this.onClickSetSubMenuSelected(eventTitle, 'Específicos');
+        this.booleanServicios = !this.booleanServicios;
+
+        if (this.booleanServicios) {
+          this.renderer.setAttribute(div, 'class', 'flex flex-col ml-12 h-max');
+        } else {
+          this.renderer.setAttribute(div, 'class', 'flex flex-col ml-12 overflow-hidden h-0');
+        }
+        break;
+
+      case 'Mantenimiento':
+        // this.onClickSetSubMenuSelected(eventTitle, 'Parámetro');
+        this.booleanMantenimieto = !this.booleanMantenimieto;
+
+        if (this.booleanMantenimieto) {
+          this.renderer.setAttribute(div, 'class', 'flex flex-col ml-12 h-max');
+        } else {
+          this.renderer.setAttribute(div, 'class', 'flex flex-col ml-12 overflow-hidden h-0');
+        }
         break;
     }
-
-    this.open = false;
   }
 
   onClickSetSubMenuSelected(m: string, sm: string) {
-    this.subMenuSelected = sm;
     this.menuSelected = m;
+    this.subMenuSelected = sm;
 
-    this.title = sm;
+    this.title = m + ' ' + sm;
 
     switch (sm) {
-      // Inicio
+      // Servicios
+      case 'Generales': goAdminServiciosGeneralesLista(this.router); break;
+      case 'Específicos': goAdminServiciosEspecificosListaFRX(this.router); break;
+
+      // 
       case 'Cotización': goAdminCotizacionLaboratorio(this.router); break;
 
       case 'Recepción': break;
 
       case 'Pruebas': break;
 
-      case 'Gráficos': goAdminGraficosGeneral(this.router); break;
-
       // Mantenimiento
-      case 'Parámetro': break;
+      case 'Parámetro': goAdminServiciosEspecificosMantenimientoParametro(this.router); break;
 
       case 'Clientes': break;
 
       case 'Usuarios': goUsuarios(this.router); break;
+
+      case 'Servicios Específicos': goUsuarios(this.router); break;
+
+      case 'Servicios Generales': goUsuarios(this.router); break;
     }
 
     this.open = false;

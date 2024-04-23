@@ -1,0 +1,38 @@
+<!-- Confirmacion Alert -->
+<div class="flex justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 p-4">
+    <div class="bg-white rounded-lg w-full md:w-max h-full md:h-max">
+        <div class="h-full flex flex-col gap-4 p-4 text-center">
+            <!-- Content -->
+            <div class="flex flex-col w-full gap-4 items-center">
+
+                <app-custom-sub-title
+                    [id]="'id_label_title_fecha'"
+                    [label]="label"
+                    [class]="''" >
+                </app-custom-sub-title>
+
+                <app-custom-input
+                    [id]="'id_input_fecha'"
+                    [label]="'Fecha'"
+                    [type]="'date'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formFecha.controls.fecha"
+                    [icon]="''" >
+                </app-custom-input>
+
+                <app-custom-button
+                    class="w-full"
+                    [id] ="'id_btn_busqueda'"
+                    [label] ="'Aceptar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="'w-32'"
+                    [valid] ="true"
+                    (click)="onClickAceptar()" >
+                </app-custom-button>
+
+            </div>
+        </div>
+    </div>
+</div>

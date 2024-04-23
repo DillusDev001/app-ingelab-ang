@@ -33,6 +33,7 @@ module.exports = {
 
       // <<<<<< Icon >>>>>> //
       'color-icon-1': '#3494a6', // primary-500
+      'color-icon-2': '#2b6273', // primary-700
       'color-icon-unfocus': '#e5e7eb', // gray-200
       'color-icon-red': '#d62246', // red-600
 
@@ -110,7 +111,11 @@ module.exports = {
         '950': '#1c2a4f',
       },
     },
-    extend: {},
+    extend: {
+      transitionProperty: {
+        height: 'height'
+    }
+    },
   },
   plugins: [
     require('flowbite/plugin')({

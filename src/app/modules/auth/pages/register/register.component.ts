@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -5,10 +6,11 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Code } from 'src/app/shared/interfaces/app/code';
-import { Contacto } from 'src/app/shared/interfaces/app/contacto';
-import { Usuario } from 'src/app/shared/interfaces/app/usuario';
+import { Contacto } from 'src/app/shared/interfaces/app/sesion-module/contacto';
+import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { CodeService } from 'src/app/shared/services/code/code.service';
 import { ContactoService } from 'src/app/shared/services/contacto/contacto.service';
 import { UsuarioService } from 'src/app/shared/services/usuario/usuario.service';
 import { arrayBanco, arrayCivil, arrayCodeCountries, arrayExp, arrayPreguntas, arrayRol, arraySexo } from 'src/app/shared/utils/local.array';
@@ -83,7 +85,7 @@ export class RegisterComponent implements OnInit {
 
     fec_ingreso: new FormControl('2024-01-01', [Validators.required]),
     fec_baja: new FormControl('', []),
-    rol: new FormControl('Administrador', [Validators.required]),
+    rol: new FormControl('', [Validators.required]),
     img: new FormControl('', []),
 
     user_mod: new FormControl('', []),
@@ -115,6 +117,7 @@ export class RegisterComponent implements OnInit {
     private usuarioService: UsuarioService,
     private authService: AuthService,
     private contactoService: ContactoService,
+    private codeService: CodeService,
     private toast: HotToastService
   ) {
     this.formRegisterUsuario.controls.codigo.disable();
@@ -212,9 +215,11 @@ export class RegisterComponent implements OnInit {
     const nombre = returnPrimerSubString(String(this.formRegisterUsuario.controls.nombres.value));
     const iniNombre = inicialesCapital(nombre);
 
-    const iniApellidos = inicialesCapital(String(this.formRegisterUsuario.controls.nombres.value));
+    const iniApellidos = inicialesCapital(String(this.formRegisterUsuario.controls.apellidos.value));
 
-    return iniApellidos + iniNombre + '-' + this.objCode.var_number;
+    const fecString = formatDate(String(this.formRegisterUsuario.controls.fec_nac.value), 'ddMMyy', 'es');
+
+    return iniApellidos + iniNombre + fecString + '-' + this.objCode.var_number;
   }
 
   getNextNumAddContact(): number {
@@ -292,18 +297,41 @@ export class RegisterComponent implements OnInit {
 
               if (resultAuth.boolean) {
                 this.setUserArrayContacts(dataUsuario.user);
-                
+
                 // ========= Registrar contactos de Usuario en la tabla Contacto ========= \\
                 this.contactoService.contactoRegistro(dataUsuario.user, this.arrayContactos).subscribe(resultContacto => {
                   resultContacto as ApiResult;
 
                   if (resultContacto.boolean) {
                     this.limpiarFormRegister();
-                    
-                    // Editar Code recibido
-                    
-                    this.customSuccessToast(resultAuth.message);
 
+                    // Editar Code recibido
+                    if (this.objCode.count - 1 === 0) {
+                      // Delete Code
+                      this.codeService.deleteCode(this.objCode.id).subscribe(resultCode => {
+                        resultCode as ApiResult;
+
+                        if (resultCode.boolean) {
+                          this.customSuccessToast('Se ha registrado correctamente.');
+                          this.cancelEvent.emit(true);
+                        } else {
+                          this.customErrorToast(resultCode.message);
+                        }
+                      });
+                    } else {
+                      // Editar Code
+                      this.objCode.count = this.objCode.count - 1;
+                      this.codeService.updateCode(this.objCode.id, this.objCode).subscribe(resultCode =>{
+                        resultCode as ApiResult;
+
+                        if (resultCode.boolean) {
+                          this.customSuccessToast('Se ha registrado correctamente.');
+                          this.cancelEvent.emit(true);
+                        } else {
+                          this.customErrorToast(resultCode.message);
+                        }
+                      });
+                    }
                   } else {
                     this.customErrorToast(resultUsuario.message);
                   }
@@ -325,24 +353,6 @@ export class RegisterComponent implements OnInit {
     } else {
       this.customErrorToast('Datos de inicio de sesión son requeridos.');
     }
-    /*if (this.formRegisterUsuario.valid) {
-      this.customLoadingToast('Agregando');
-      this.formRegisterUsuario.controls.user_mod.setValue(String(this.formRegisterAuth.controls.user.value));
-
-      this.authService.authRegister(this.formRegisterUsuario.value).subscribe(data => {
-        this.toast.close();
-        this.result = data;
-        if (this.result.boolean) {
-          this.limpiarFormRegister();
-          this.resultRegister.emit(true);
-          this.customSuccessToast(this.result.message);
-        } else {
-          //this.resultRegister.emit(false);
-          this.customErrorToast(this.result.message);
-        }
-      })
-      console.log(this.formRegisterUsuario.value);
-    }*/
   }
 
   onClickCancelarAgregar() {
@@ -381,8 +391,12 @@ export class RegisterComponent implements OnInit {
 
       if (this.objCode.type === this._CodeTypeRequired) {
         this.hasCode = true;
-        this.customSuccessToast('Código de verificación correcto.')
-        this.formRegisterUsuario.controls.codigo.setValue(String(this.objCode.var_number))
+        this.customSuccessToast('Código de verificación correcto.');
+        this.formRegisterUsuario.controls.codigo.setValue(String(this.objCode.var_number));
+        this.formRegisterUsuario.controls.rol.setValue(this.objCode.var_string);
+
+        const x = String(this.generateCodigoEmpleado());
+        this.customSuccessToast(x);
       } else {
         this.customErrorToast('El código no es para este uso.')
       }

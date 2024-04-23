@@ -1,0 +1,486 @@
+<div class="w-full h-full">
+    <app-custom-add-muestra *ngIf="showAddMuestra"
+        [title]="'Muestra'"
+        (response)="addMuestraResponse($event)">
+    </app-custom-add-muestra>
+
+    <app-custom-alert-search *ngIf="showBusqueda" 
+    [type]="'cliente'"
+    (response)="busquedaClienteResponse($event)">
+    </app-custom-alert-search>
+
+    <app-custom-alert-search-parametro *ngIf="showBusquedaParametro"
+        (response)="busquedaParametroResponse($event)">
+    </app-custom-alert-search-parametro>
+
+    <app-custom-alert-date-picker *ngIf="showDatePicker"
+        [label]="labelDatePicker"
+        [fecha]="fechaSendDatePicker"
+        [type]="typeDatePicker"
+        (response)="fechaSelectResponse($event)">
+    </app-custom-alert-date-picker>
+
+    <form *ngIf="!showBusqueda && !showDatePicker && !showBusquedaParametro && !showAddMuestra" class="flex flex-col gap-4 w-full h-max overflow-auto">
+        
+        <!-- Title -->
+        <app-custom-title
+            class="w-full text-center"
+            [id]="'id_titlte'"
+            [label]="'FORMULARIO DE COTIZACIÓN DE LABORATORIO'"
+            [class]="'uppercase w-full h-full text-3xl'">
+        </app-custom-title>
+        <br>
+
+        <!-- Fecha/Codigo -->
+        <div class="flex gap-4">
+            <!-- Fecha Solicitud -->        
+            <app-custom-label1
+                class="cursor-pointer"
+                [id] = "'id_label_fecha_solicitud'"
+                [label] = "'Fecha Solicitud'"
+                [text] = "transformFecha('Solicitud')"
+                (click)="onClickShowFechaSelect('Solicitud', 'Fecha Solicitud')">
+            </app-custom-label1>
+
+            <!-- Fecha Emision -->
+            <app-custom-label1
+                class="cursor-pointer"
+                [id] = "'id_label_fecha_emision'"
+                [label] = "'Fecha Emisión'"
+                [text] = "transformFecha('Emision')"
+                (click)="onClickShowFechaSelect('Emision', 'Fecha Emisión')">
+            </app-custom-label1>
+
+            <div class="flex-grow"></div>
+
+            <!-- Codigo Cotizacion -->
+            <app-custom-label1
+                [id] = "''"
+                [label] = "'Código de cotización'"
+                [text] = "formCotizacion.controls.cod_cotizacion.value">
+            </app-custom-label1>
+        </div>
+
+        <!-- Técnico -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Datos del Técnico'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex gap-4 flex-wrap ">
+                <!-- Técnico / Nombre -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Técnico'"
+                    [text]="userLogeado.nombres + ' ' + userLogeado.apellidos"
+                    [class]="''" >
+                </app-custom-label1>
+
+                <!-- Técnico / Celular -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Celular'"
+                    [text]="userLogeado.code + ' ' + userLogeado.celular"
+                    [class]="''" >
+                </app-custom-label1>
+
+                <!-- Técnico / Rol -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Rol'"
+                    [text]="userLogeado.rol"
+                    [class]="''" >
+                </app-custom-label1>
+            </div>
+        </div>
+
+        <!-- Cliente -->
+        <div class="w-full grid grid-cols-2 gap-4">
+            
+            <!-- Persona -->
+            <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-full p-2">
+                <!-- Subtitle / Cabecera -->
+                <div class="flex gap-4 w-full mb-2">
+                    <app-custom-sub-title
+                        [id]="''"
+                        [label]="'Datos del Cliente'"
+                        [class]="''">
+                    </app-custom-sub-title>
+
+                    <app-custom-icon
+                        [icon]="'fa-solid fa-magnifying-glass fa-lg cursor-pointer'" 
+                        [class]="'h-full text-color-icon-2 hover:bg-primary-100 rounded'"
+                        (click)="onClickBusquedaCliente()">
+                    </app-custom-icon>
+                </div>
+                
+                <div class="flex gap-4 flex-wrap ">
+                    <!-- Persona / Nombre -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Nombre'"
+                        [text]="personaC.nombre_persona"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Persona / Email -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Email'"
+                        [text]="personaC.email"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Persona / Celular -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Celular'"
+                        [text]="personaC.celular"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Persona / Razon -->
+                    <app-custom-label1
+                        *ngIf="personaC.id_empresa  ==  0"
+                        [id]="''"
+                        [label]="'Razón'"
+                        [text]="personaC.razon"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Persona / Nit -->
+                    <app-custom-label1
+                        *ngIf="personaC.id_empresa  ==  0"
+                        [id]="''"
+                        [label]="'NIT'"
+                        [text]="personaC.nit"
+                        [class]="''" >
+                    </app-custom-label1>
+                </div>
+                
+            </div>
+
+            <!-- Empresa -->
+            <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-full p-2">
+                <!-- Subtitle / Cabecera -->
+                <div class="flex gap-4 w-full mb-2">
+                    <app-custom-sub-title
+                        [id]="''"
+                        [label]="'Datos de la Empresa'"
+                        [class]="''">
+                    </app-custom-sub-title>
+
+                    <app-custom-icon
+                        [icon]="''" 
+                        [class]="'h-full text-color-icon-2'">
+                    </app-custom-icon>
+                </div>
+
+                <div class="flex gap-4 flex-wrap ">
+                    <!-- Empresa / Razon -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Empresa'"
+                        [text]="empresaC.razon_social"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Empresa / Nit -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'NIT'"
+                        [text]="empresaC.nit"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Empresa / Direccion -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Dirección'"
+                        [text]="empresaC.direccion"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Empresa / Telefono -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Teléfono'"
+                        [text]="empresaC.telefono"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Empresa / Web -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Web'"
+                        [text]="empresaC.web"
+                        [class]="''" >
+                    </app-custom-label1>
+
+                    <!-- Empresa / Lugar -->
+                    <app-custom-label1
+                        [id]="''"
+                        [label]="'Lugar'"
+                        [text]="empresaC.pais + ' - '+ empresaC.ciudad"
+                        [class]="''" >
+                    </app-custom-label1>
+                </div>
+                
+            </div>
+
+        </div>
+
+        <!-- Observacion -->
+        <app-custom-input 
+            [id]="'id_user'" 
+            [label]="'Observaciones'" 
+            [type]="'text'" 
+            [autocomplete]="''"
+            [class]="''"
+            [control]="formCotizacion.controls.observacion" 
+            [icon]="''">
+        </app-custom-input>
+
+        <!-- Muestras -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max px-2 pt-2 pb-8">
+            <!-- Subtitle / Cabecera -->
+            <div class="flex gap-4 w-full mb-2">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Muestras'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <!-- Btn Agregar -->
+            <div class="flex flex-row-reverse w-full mb-2">
+                <app-custom-button 
+                    [id]="''"
+                    [label]="'Agregar'"
+                    [type]="'cancel'"
+                    [icon]="'fa-solid fa-circle-plus fa-lg'" 
+                    [class]="'w-max h-10'"
+                    [valid]="true"
+                    (click)="onClickAgregarMuestra()" >
+                </app-custom-button>
+            </div>
+
+            <!-- Table -->
+            <div class="w-full h-max">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 border shadow-lg">
+                    <!-- Header -->
+                    <thead class="text-xs text-color-text uppercase bg-primary-100">
+                        <tr>
+                            <th scope="col" class="px-2 py-2 text-center" style="width: 2%;">
+                                Item
+                            </th>
+
+                            <th scope="col" class="px-2 py-2" style="width: fit-content;">
+                                Descripción
+                            </th>
+
+                            <th scope="col" class="px-2 py-2" style="width: fit-content;">
+                                Observación
+                            </th>
+
+                            <th scope="col" class="px-2 py-2 w-max text-center" style="width: 15%;">
+                                Código Interno
+                            </th>
+
+                            <th scope="col" class="px-2 py-2 w-max text-center" style="width: 15%;">
+                                Costo Muestra
+                            </th>
+
+                            <th scope="col" class="" style="width: 1%;">
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody>
+                        <ng-container *ngFor="let item of dataMuestras, index as i">
+                            <tr class="bg-white border-y" fragment="">
+                                <th class="px-2 py-2 font-medium text-gray-900 text-center">
+                                    {{ item.muestra_sec }}
+                                </th>
+    
+                                <th class="px-2 py-2 font-medium text-gray-900">
+                                    {{ item.descripcion }}
+                                </th>
+    
+                                <td class="px-2 py-2">
+                                    {{ item.observacion }}
+                                </td>
+    
+                                <td class="px-2 py-2 text-center">
+                                    {{ item.cod_interno }}
+                                </td>
+    
+                                <td class="px-2 py-2 text-center">
+                                    {{ item.costo_muestra | currency:'BOB':'Bs. ' }}
+                                </td>
+    
+                                <td class="px-2 py-2">
+                                    <div class="flex gap-4">
+                                        <app-custom-icon
+                                            [icon]="'fa-solid fa-circle-plus fa-xl cursor-pointer'" 
+                                            [class]="'text-color-info'"
+                                            (click)="onClickAgregarParametroMuestra(i)" >
+                                        </app-custom-icon>
+    
+                                        <app-custom-icon
+                                            [icon]="'fa-solid fa-trash fa-xl cursor-pointer'" 
+                                            [class]="'text-color-error'"
+                                            (click)="onClickEliminarParametroMuestra(i)" >
+                                        </app-custom-icon>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+    
+                                <td colspan="4">
+                                    <table class="w-full text-sm text-center rtl:text-right text-gray-500 border shadow-lg" 
+                                        *ngIf="item.muestra_parametros.length">
+                                        <!-- Header -->
+                                        <thead class="text-xs text-color-text uppercase bg-primary-100">
+                                            <tr>
+                                                <th scope="col" class="px-2 py-2 w-max text-center" style="width: 1%;">
+                                                    #
+                                                </th>
+    
+                                                <th scope="col" class="px-2 py-2" style="width: max-content;">
+                                                    Muestra
+                                                </th>
+    
+                                                <th scope="col" class="px-2 py-2 w-max" style="width: 20%;">
+                                                    Costo Unitario
+                                                </th>
+    
+                                                <th scope="col" class="px-2 py-2 w-max" style="width: 20%;">
+                                                    Cantidad
+                                                </th>
+    
+                                                <th scope="col" class="px-2 py-2 w-max" style="width: 20%;">
+                                                    Costo Parámetro
+                                                </th>
+    
+                                                <th scope="col" class="" style="width: 8%;">
+                                                </th>
+                                            </tr>
+                                        </thead>
+    
+                                        <!-- Body -->
+                                        <tbody>
+                                            <ng-container *ngFor="let itemM_P of item.muestra_parametros, index as j" >
+                                                <tr class="bg-primary-50 border-b">
+                                                    <th class="px-2 py-2 font-medium text-gray-900" >
+                                                        {{ j + 1 }}
+                                                    </th>
+        
+                                                    <td class="px-2 py-2 font-medium text-gray-900 whitespace-nowrap">
+                                                        {{ itemM_P.parametro.nombre }}
+                                                    </td>
+        
+                                                    <th class="px-2 py-2 w-max">
+                                                        {{ itemM_P.costo_parametro_unitario | currency:'BOB':'Bs. ' }}
+                                                    </th>
+        
+                                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap" >
+                                                        <div class="flex gap-2">
+                                                            <app-custom-icon
+                                                                [icon]="'fa-solid fa-circle-plus fa-lg'"
+                                                                [class]="'text-color-info cursor-pointer'"
+                                                                (click)="onClickPlusCantidad(i, j)" >
+                                                            </app-custom-icon>
+                                                            
+                                                            <p class="grow">{{ itemM_P.cantidad }}</p>
+        
+                                                            <app-custom-icon
+                                                                [icon]="'fa-solid fa-circle-minus fa-lg'"
+                                                                [class]="'text-color-info cursor-pointer'"
+                                                                (click)="onClickLessCantidad(i, j)" >
+                                                            </app-custom-icon>
+                                                        </div>
+                                                    </td>
+        
+                                                    <th class="px-2 py-2 w-max">
+                                                        {{ itemM_P.costo_parametro_total | currency:'BOB':'Bs. ' }}
+                                                    </th>
+        
+                                                    <td class="px-2 py-2">
+                                                        <app-custom-icon
+                                                            [icon]="'fa-solid fa-trash fa-xl cursor-pointer'" 
+                                                            [class]="'text-color-error'">
+                                                        </app-custom-icon>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Costos -->
+        <div class="flex gap-4 flex-row-reverse">
+            <div class="flex flex-col gap-2 w-max">
+                <app-custom-label0
+                    [id] = "'id_label_total_pagar'"
+                    [label] = "'Total Pagar'"
+                    [text] = "transformCostos('Total Pagar') | currency:'BOB':'Bs. '"
+                    [class]="'w-full'" >
+                </app-custom-label0>
+
+                <app-custom-label0
+                    [id] = "'id_label_descuento'"
+                    [label] = "'Descuento'"
+                    [text] = "transformCostos('Descuento') + '%'"
+                    [class]="'w-full'" >
+                </app-custom-label0>
+
+                <app-custom-label0
+                    [id] = "'id_label_costo_total'"
+                    [label] = "'Costo Total'"
+                    [text] = "transformCostos('Costo Total') | currency:'BOB':'Bs. '"
+                    [class]="'w-full'" >
+                </app-custom-label0>
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex gap-4 w-full">
+            <app-custom-button
+                [id] ="'id_btn_guardar'"
+                [label] ="'Guardar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="formCotizacion.valid"
+                (click)="onClickAgregarCotizacion()" >
+            </app-custom-button>
+
+            <app-custom-button
+                [id] ="'id_btn_cancelar'"
+                [label] ="'Cancelar'"
+                [type] ="'cancel'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickCancel()" >
+            </app-custom-button>
+        </div>
+
+    </form>
+</div>

@@ -9,7 +9,7 @@ export class CustomLabel1Component {
 
   @Input() id!: string;
   @Input() label!: string;
-  @Input() text!: string;
+  @Input() text!: string | null;
   @Input() class!: string;
-  
+
 }

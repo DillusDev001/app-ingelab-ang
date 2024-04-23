@@ -6,8 +6,8 @@
 
     <p class="font-medium text-lg grow" [ngClass]="{'text-color-icon-1': selected == label, 'text-color-text-gray': selected != label}">{{ label }}</p>
 
-    <span *ngIf="submenu" class="hidden p-1 transition-all transform duration-500"
-        [class]="class"
+    <span *ngIf="submenu" class="p-1 transition-all transform duration-500"
+        [class]="class + spanClass"
         [ngClass]="{'text-color-icon-1': selected == label, 'text-color-text-gray': selected != label}" >
         <i class="fa-solid fa-caret-up fa-lg"></i>
     </span>

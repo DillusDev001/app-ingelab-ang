@@ -1,0 +1,66 @@
+<div class="flex justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 p-4">
+    <div class="bg-white rounded-lg w-full md:w-max h-full md:h-max">
+        <div class="h-full flex flex-col gap-4 p-4 text-center">
+            <!-- Content -->
+            <app-custom-sub-title
+                [id]="'id_title_alert'"
+                [label]="title"
+                [class]="''" >
+            </app-custom-sub-title>
+
+            <div class="flex flex-col md:flex-row gap-4">
+                <app-custom-input
+                    [id]="'id_input_muestra_descripcion'"
+                    [label]="'Descripción'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formMuestra.controls.descripcion"
+                    [icon]="''" >
+                </app-custom-input>
+
+                <app-custom-input
+                    [id]="'id_input_muestra_observacion'"
+                    [label]="'Observación'"
+                    [type]="'tex'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formMuestra.controls.observacion"
+                    [icon]="''" >
+                </app-custom-input>
+
+                <app-custom-input
+                    [id]="'id_input_muestra_cod_interno'"
+                    [label]="'Código Interno'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formMuestra.controls.cod_interno"
+                    [icon]="''" >
+                </app-custom-input>
+            </div>
+
+            <div class="flex justify-around gap-4">
+                <app-custom-button
+                    [id] ="'id_btn_busqueda'"
+                    [label] ="'Aceptar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="'w-32'"
+                    [valid] ="formMuestra.valid"
+                    (click)="onClick(true)" >
+                </app-custom-button>
+
+                <app-custom-button
+                    [id] ="'id_btn_busqueda'"
+                    [label] ="'Cancelar'"
+                    [type] ="'cancel'"
+                    [icon] ="''"
+                    [class] ="'w-32'"
+                    [valid] ="true"
+                    (click)="onClick(false)" >
+                </app-custom-button>
+            </div>
+        </div>
+    </div>
+</div>

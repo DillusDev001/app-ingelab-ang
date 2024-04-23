@@ -1,0 +1,60 @@
+<!-- Confirmacion Alert -->
+<div class="flex justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 p-4">
+    <div class="bg-white rounded-lg w-full md:w-max h-max md:h-max">
+        <div class="h-full flex flex-col gap-4 p-4 text-center">
+            <!-- Content -->
+            <app-custom-sub-title
+                [id]="'id_title_alert'"
+                [label]="title"
+                [class]="''" >
+            </app-custom-sub-title>
+
+            <div class="flex flex-col md:flex-row w-full gap-4 items-center">
+                <app-custom-input
+                    class="w-full"
+                    [id]="'id_input_value'"
+                    [label]="label1"
+                    [type]="'text'"
+                    [autocomplete]="'text'"
+                    [class]="''"
+                    [control]="formCustom.controls.value1"
+                    [icon]="icon" >
+                </app-custom-input>
+
+                <app-custom-input
+                    class="w-full"
+                    [id]="'id_input_descripcion'"
+                    [label]="label2"
+                    [type]="'text'"
+                    [autocomplete]="'text'"
+                    [class]="''"
+                    [control]="formCustom.controls.value2"
+                    [icon]="icon" >
+                </app-custom-input>
+            </div>
+
+            <div class="flex justify-around gap-4">
+                <app-custom-button
+                    [id] ="'id_btn_busqueda'"
+                    [label] ="'Aceptar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="'w-32'"
+                    [valid] ="formCustom.valid"
+                    (click)="onClick(true)" >
+                </app-custom-button>
+
+                <app-custom-button
+                    [id] ="'id_btn_busqueda'"
+                    [label] ="'Cancelar'"
+                    [type] ="'cancel'"
+                    [icon] ="''"
+                    [class] ="'w-32'"
+                    [valid] ="true"
+                    (click)="onClick(false)" >
+                </app-custom-button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -10,7 +10,8 @@ const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent, },
       { path: 'usuarios', component: UsuarioComponent },
-      { path: 'cotizacion', loadChildren: () => import('./../cotizacion/cotizacion.module').then(m => m.CotizacionModule) },
+      { path: 'servicios/especificos', loadChildren: () => import('./../../modules/servicios/especificos/especificos.module').then(m => m.EspecificosModule) },
+      { path: 'servicios/generales', loadChildren: () => import('./../../modules/servicios/generales/generales.module').then(m => m.GeneralesModule) },
       { path: 'graficos', loadChildren: () => import('./../graficos/graficos.module').then(m => m.GraficosModule) },
     ]
   },

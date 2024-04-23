@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Contacto } from '../../interfaces/app/contacto';
+import { Contacto } from '../../interfaces/app/sesion-module/contacto';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ApiResult } from '../../interfaces/api/api.result';
+import { urlBaseApi } from '../../utils/local.string';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ContactoService {
 
   constructor(private http: HttpClient) { }
 
-  urlBase: string = 'http://localhost:3000';
+  urlBase: string = urlBaseApi;
   urlVersion: string = '/v1';
   urlModule: string = '/contacto';
 
