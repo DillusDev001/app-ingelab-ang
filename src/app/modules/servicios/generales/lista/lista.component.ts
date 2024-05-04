@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { CotizacionGeneral } from 'src/app/shared/interfaces/app/servicio-module/cotizacion-general';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
+import { CotizacionGeneralService } from 'src/app/shared/services/servicio-generale-module/cotizacion-general/cotizacion-general.service';
 import { arrayBusquedaCotizacion } from 'src/app/shared/utils/local.array';
 import { goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
@@ -15,7 +17,34 @@ import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.css']
 })
-export class ListaComponent {
+export class ListaComponent implements OnInit {
+  /** -------------------------------------- Constructor -------------------------------------- **/
+  constructor(
+    private router: Router,
+    private cotizacionGeneralService: CotizacionGeneralService,
+    private toast: HotToastService
+  ) {
+    if (getLocalDataLogged() != null) {
+      this.dataLocalStorage = getLocalDataLogged();
+      if (this.dataLocalStorage.usuario != null) {
+        this.userLogeado = this.dataLocalStorage.usuario;
+      } else {
+        deleteLocalStorageData();
+        goLogin(this.router);
+      }
+    } else {
+      deleteLocalStorageData();
+      goLogin(this.router);
+    }
+  }
+
+  /** ---------------------------------------- OnInit ----------------------------------------- **/
+  ngOnInit(): void {
+    initFlowbite();
+
+    this.getListaCotizacionGeneral();
+  }
+
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   // ================ INICIO ================ //
   // Data Local Storeage - Variable
@@ -61,29 +90,12 @@ export class ListaComponent {
   // Agregar Usuario
   showAgregar: boolean = false;
 
+    // Como mostrar FRX FORMULARIO
+    showFormularioFRX: string = '';
 
-  /** -------------------------------------- Constructor -------------------------------------- **/
-  constructor(
-    private router: Router
-  ) {
-    if (getLocalDataLogged() != null) {
-      this.dataLocalStorage = getLocalDataLogged();
-      if (this.dataLocalStorage.usuario != null) {
-        this.userLogeado = this.dataLocalStorage.usuario;
-      } else {
-        deleteLocalStorageData();
-        goLogin(this.router);
-      }
-    } else {
-      deleteLocalStorageData();
-      goLogin(this.router);
-    }
-  }
+    // CodeFormulario Send
+    codeFormularioFRX: string = '';
 
-  /** ---------------------------------------- OnInit ----------------------------------------- **/
-  ngOnInit(): void {
-    initFlowbite();
-  }
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
   showListaNext(n: number) {
@@ -122,59 +134,97 @@ export class ListaComponent {
   onClickBusqueda() { }
 
   onClickAgregar() {
+    this.showFormularioFRX = 'agregar';
+    this.showAgregar = true;
+  }
+
+  onClickListaElement(index: number){
+    this.showFormularioFRX = 'ver';
+    this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
+    this.showAgregar = true;
+  }
+
+  onClickActulizar(index: number){
+    this.showFormularioFRX = 'editar';
+    this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
     this.showAgregar = true;
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
+  getListaCotizacionGeneral(){
+    this.dataCotizacion = []
+    this.cotizacionGeneralService.cotizacionGetLista().subscribe(result => {
+      result as ApiResult;
+
+      if (result.rows > 0) {
+        for(let i = result.data.length - 1; i >= 0; i--){
+          this.dataCotizacion.push(result.data[i] as CotizacionGeneral);
+        }
+
+        // Paginación
+        let nPaginacion = Math.trunc(this.dataCotizacion.length / 10) + 1;
+        this.paginationArray = Array.from({ length: nPaginacion }, (_, i) => i + 1);
+      } else {
+        this.customErrorToast(result.message);
+      }
+    });
+  }
 
   /** ---------------------------------- Onclick file import ---------------------------------- **/
 
   /** ---------------------------------------- Receiver --------------------------------------- **/
-  agregarCancelReceiver(event: boolean) {
-    this.showAgregar = false;
-  }
-
-  agregarResultRegisterReceiver(event: boolean) {
+  cotizacionGeneralResponse(event: boolean) {
     if (event) {
-      this.showAgregar = false;
-      this.isLoading = true;
-      //this.getUsuarios();
+      //this.isLoading = true;
+      this.getListaCotizacionGeneral();
     }
-  }
-  
+
+    this.showAgregar = false;
+  }  
 
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
-  onShowConfirmacion(sw: boolean) {
-    this.alertConfirmacion = sw;
-    //this.open = false; // Close Menú Lateral
+  customSuccessToast(msg: string) {
+    this.toast.success(msg, {
+      duration: 2000,
+      style: {
+        border: '1px solid #2e798c',
+        padding: '16px',
+        color: '#2b6273',
+      },
+      iconTheme: {
+        primary: '#3494a6',
+        secondary: '#FFFAEE',
+      },
+    });
   }
 
-  onShowInfo() {
-    this.alertInfo = true;
-    //this.open = false; // Close Menú Lateral
-    setTimeout(() => {
-      this.alertInfo = false;
-    }, 1000);
+  customErrorToast(msg: string) {
+    this.toast.error(msg, {
+      duration: 2000,
+      style: {
+        border: '1px solid #ef445f',
+        padding: '16px',
+        color: '#ef445f',
+      },
+      iconTheme: {
+        primary: '#ef445f',
+        secondary: '#FFFAEE',
+      },
+    });
   }
 
-  onShowError(sw: boolean) {
-    this.alertError = sw;
-    //this.open = false; // Close Menú Lateral
-  }
-
-
-  listenAlertConfirmation(event: boolean) {
-    this.alertConfirmacion = false;
-    if (event) {
-      this.msgAlert = 'Se ha eliminado correctamente!!!';
-      this.onShowInfo();
-    } else {
-      this.msgAlert = 'Acción cancelada';
-      this.alertError = true;
-    }
-  }
-
-  listenAlertError(event: boolean) {
-    if (event) this.alertError = false;
+  customLoadingToast(msg: string) {
+    this.toast.loading(msg, {
+      duration: 10000,
+      style: {
+        border: '1px solid #2b59c3',
+        padding: '16px',
+        color: '#2b59c3',
+      },
+      iconTheme: {
+        primary: '#2b59c3',
+        secondary: '#FFFAEE',
+      },
+    });
   }
 }

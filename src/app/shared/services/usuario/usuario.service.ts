@@ -25,4 +25,11 @@ export class UsuarioService {
     const url = this.urlBase + this.urlVersion + this.urlModule;
     return this.http.get<ApiResult>(url);
   }
+
+  public usuarioGetUser(user: string): Observable<ApiResult> {
+    const url = this.urlBase + this.urlVersion + this.urlModule + '/' + user;
+    return this.http.get<ApiResult>(url);
+  }
+
+
 }

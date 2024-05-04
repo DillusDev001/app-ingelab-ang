@@ -8,6 +8,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListaFrxComponent } from './lista/lista-frx/lista-frx.component';
 import { ParametroComponent } from './mantenimiento/parametro/parametro.component';
+import { ParametroNombrePipe } from './pipes/parametroNombre/parametro-nombre.pipe';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ParametroComponent } from './mantenimiento/parametro/parametro.componen
     FrxComponent,
     ListaFrxComponent,
     ParametroComponent,
+    ParametroNombrePipe
   ],
   imports: [
     CommonModule,
@@ -24,5 +26,6 @@ import { ParametroComponent } from './mantenimiento/parametro/parametro.componen
     FormsModule,
     ReactiveFormsModule,
   ],
+  // providers: [Para]
 })
 export class EspecificosModule { }

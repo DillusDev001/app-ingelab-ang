@@ -1,5 +1,9 @@
 <div class="relative w-full h-full shadow-lg overflow-auto">
-    <app-cotizacion (response)="agregarCancelReceiver($event)" *ngIf="showAgregar"></app-cotizacion>
+    <app-cotizacion *ngIf="showAgregar"
+        [typeRecive]="showFormularioFRX" 
+        [codeRecive]="codeFormularioFRX"
+        (response)="cotizacionGeneralResponse($event)" >
+    </app-cotizacion>
 
     <app-custom-loading *ngIf="isLoading"></app-custom-loading>
 
@@ -46,75 +50,83 @@
             </app-custom-button>
         </div>
 
-        <!-- Table y Nav -->
-        <div class="overflow-auto shadow-md border rounded-lg h-full">
-            <table class="w-full text-sm text-left rtl:text-right text-dark-500">
-                <thead class="text-sm text-dark-800 uppercase bg-dark-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Usuario
-                        </th>
+        <div class="flex flex-col gap-4 w-full h-full">
+            <!-- Table y Nav -->
+            <div class="overflow-auto shadow-md border rounded-lg grow">
+                <table class="w-max md:w-full text-sm text-center rtl:text-right text-primary-500 table-fixed md:table-auto">
+                    <thead class="text-sm text-primary-800 uppercase bg-primary-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Código Cotización
+                            </th>
 
-                        <th scope="col" class="px-6 py-3">
-                            Rol
-                        </th>
+                            <th scope="col" class="px-6 py-3">
+                                Fecha Solicitud
+                            </th>
 
-                        <th scope="col" class="px-6 py-3">
-                            Celular
-                        </th>
+                            <th scope="col" class="px-6 py-3">
+                                Fecha Emisión
+                            </th>
 
-                        <th scope="col" class="px-6 py-3">
-                            Estado
-                        </th>
+                            <th scope="col" class="px-6 py-3">
+                                Costo Total
+                            </th>
 
-                        <th scope="col" class="px-6 py-3">
-                        </th>
+                            <th scope="col" class="px-6 py-3">
+                                Descuento
+                            </th>
 
-                        <th scope="col" class="px-6 py-3">
-                        </th>
-                    </tr>
-                </thead>
+                            <th scope="col" class="px-6 py-3">
+                                Total
+                            </th>
 
-                <tbody>
-                    <tr class="text-dark-800 bg-white border-b hover:bg-dark-50"
-                        *ngFor="let item of dataCotizacion; index as i">
-                        <td scope="row"></td>
+                            <th scope="col" class="px-6 py-3">
+                                
+                            </th>
+                        </tr>
+                    </thead>
 
-                        <td class="px-2 py-2"></td>
+                    <tbody>
+                        <tr class="text-primary-800 bg-white border-b hover:bg-primary-50 cursor-pointer"
+                            *ngFor="let item of dataCotizacion; index as i" (click)="onClickListaElement(i)">
+                            <td class="px-2 py-2">{{ item.cod_cotizacion }}</td>
 
-                        <td class="px-2 py-2"></td>
+                            <td class="px-2 py-2">{{ item.fec_solicitud }}</td>
 
-                        <td class="px-2 py-2"></td>
+                            <td class="px-2 py-2">{{ item.fec_emision }}</td>
 
-                        <td class="px-2 py-2"></td>
+                            <td class="px-2 py-2">{{ item.costo_total }}</td>
 
-                        <td class="px-2 py-2">
+                            <td class="px-2 py-2">{{ item.descuento }} %</td>
 
-                        </td>
-                    </tr>
-                </tbody>
+                            <td class="px-2 py-2">{{ item.total_pagar }}</td>
 
-            </table>
-        </div>
+                            <td class="px-2 py-2"><p class="underline underline-offset-1" (click)="onClickActulizar(i)">Actualizar</p></td>
+                        </tr>
+                    </tbody>
 
-        <nav class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
-            aria-label="Table navigation">
-            <div class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-                <a [ngClass]="{ 'cursor-pointer' : posPaginacion > 1 }" (click)="anteriorLista()"
-                    class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-dark-500 bg-white border border-dark-300 rounded-s-lg hover:bg-dark-100 hover:text-dark-700">Anterior</a>
-
-                <ul class="inline-flex" *ngFor="let n of paginationArray">
-                    <li>
-                        <a [ngClass]="{ 'text-dark-600 bg-dark-50'  : n == posPaginacion, 'text-dark-500 bg-white cursor-pointer' : n != posPaginacion }"
-                            class="flex items-center justify-center px-3 h-8 border border-dark-300 hover:bg-dark-100 hover:text-dark-700">{{
-                            n }}</a>
-                    </li>
-                </ul>
-
-                <a [ngClass]="{ 'cursor-pointer' : posPaginacion < paginationArray.length }" (click)="siguienteLista()"
-                    class="flex items-center justify-center px-3 h-8 leading-tight text-dark-500 bg-white border border-dark-300 rounded-e-lg hover:bg-dark-100 hover:text-dark-700">Siguiente</a>
+                </table>
             </div>
-        </nav>
+
+            <nav class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
+                aria-label="Table navigation">
+                <div class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                    <a [ngClass]="{ 'cursor-pointer' : posPaginacion > 1 }" (click)="anteriorLista()"
+                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-dark-500 bg-white border border-dark-300 rounded-s-lg hover:bg-dark-100 hover:text-dark-700">Anterior</a>
+
+                    <ul class="inline-flex" *ngFor="let n of paginationArray">
+                        <li>
+                            <a [ngClass]="{ 'text-dark-600 bg-dark-50'  : n == posPaginacion, 'text-dark-500 bg-white cursor-pointer' : n != posPaginacion }"
+                                class="flex items-center justify-center px-3 h-8 border border-dark-300 hover:bg-dark-100 hover:text-dark-700">{{
+                                n }}</a>
+                        </li>
+                    </ul>
+
+                    <a [ngClass]="{ 'cursor-pointer' : posPaginacion < paginationArray.length }" (click)="siguienteLista()"
+                        class="flex items-center justify-center px-3 h-8 leading-tight text-dark-500 bg-white border border-dark-300 rounded-e-lg hover:bg-dark-100 hover:text-dark-700">Siguiente</a>
+                </div>
+            </nav>
+        </div>
     </div>
 
 </div>

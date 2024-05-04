@@ -1,0 +1,39 @@
+<div class="relative flex flex-col gap-4 w-full h-full shadow-lg overflow-auto p-4">
+    <div class="flex flex-col gap-4 w-full h-full">
+        <!-- Table y Nav -->
+        <div class="overflow-auto shadow-md border rounded-lg grow">
+            <table class="w-max md:w-full text-sm text-center rtl:text-right text-primary-500 table-fixed md:table-auto">
+                <thead class="text-sm text-primary-800 uppercase bg-primary-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Nombre/Apellidos</th>
+
+                        <th scope="col" class="px-6 py-3">Celular</th>
+
+                        <th scope="col" class="px-6 py-3">email</th>
+
+                        <th scope="col" class="px-6 py-3">razon</th>
+
+                        <th scope="col" class="px-6 py-3">nit</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="text-primary-800 bg-white border-b hover:bg-primary-50 cursor-pointer"
+                        *ngFor="let item of dataPersona" >
+                        <td class="px-2 py-2">{{ item.nombre_persona }}</td>
+
+                        <td class="px-2 py-2">{{ item.celular }}</td>
+
+                        <td class="px-2 py-2">{{ item.email }}</td>
+
+                        <td class="px-2 py-2">{{ item.razon }} %</td>
+
+                        <td class="px-2 py-2">{{ item.nit }}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

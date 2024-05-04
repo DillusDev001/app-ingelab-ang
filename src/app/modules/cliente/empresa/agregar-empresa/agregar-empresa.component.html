@@ -1,0 +1,171 @@
+<div class="relative w-full h-full overflow-auto p-4">
+    <app-custom-alert-search-empresa *ngIf="showBusquedaEmpresa"
+        (response)="empresaSearchResponse($event)">
+    </app-custom-alert-search-empresa>
+
+    <form class="flex flex-col gap-4 w-full h-full overflow-auto" *ngIf="!showBusquedaEmpresa">    
+        <app-custom-button
+          [id] ="'id_btn_agregar'"
+          [label] ="'Agregar'"
+          [type] ="'accept'"
+          [icon] ="''"
+          [class] ="''"
+          [valid] ="formEmpresa.valid"
+          (click)="onClickGuardar()" >
+        </app-custom-button>
+    
+        <div class="flex gap-4">
+            <div class="flex flex-col gap-4 w-full h-full">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Persona'"
+                    [class]="''" >
+                </app-custom-sub-title> 
+    
+                <app-custom-input
+                    [id]="'id_input_nombre'"
+                    [label]="'Nombre Completo'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formPersona.controls.nombre_persona"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <app-custom-input
+                    [id]="'id_input_celular'"
+                    [label]="'Celular'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formPersona.controls.celular"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <app-custom-input
+                    [id]="'id_input_email'"
+                    [label]="'Email'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formPersona.controls.email"
+                    [icon]="''" >
+                </app-custom-input>
+                
+                <app-custom-input
+                    [id]="'id_input_razon'"
+                    [label]="'Razón'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formPersona.controls.razon"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <app-custom-input
+                    [id]="'id_input_nit'"
+                    [label]="'NIT'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formPersona.controls.nit"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <div class="flex gap-4 w-full items-center">
+                    <app-custom-input 
+                        class="w-full"
+                        [id]="'id_input_empresa'"
+                        [label]="''"
+                        [type]="'text'"
+                        [autocomplete]="''"
+                        [class]="''"
+                        [control]="formPersona.controls.id_empresa"
+                        [icon]="''" >
+                    </app-custom-input>
+        
+                    <app-custom-icon
+                        [icon]="'fa-solid fa-magnifying-glass fa-lg'"
+                        [class]="'text-color-button-1 cursor-pointer '"
+                        (click)="onClickFindEmpresa()" >
+                    </app-custom-icon>
+        
+                </div>
+            </div>
+        
+            <div class="flex flex-col gap-4 w-full h-full">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Empresa'"
+                    [class]="''" >
+                </app-custom-sub-title> 
+    
+                <app-custom-input
+                    [id]="'id_input_razon_social'"
+                    [label]="'Razón Social'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formEmpresa.controls.razon_social"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <app-custom-input
+                    [id]="'id_input_direccion'"
+                    [label]="'Dirección'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formEmpresa.controls.direccion"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <app-custom-input
+                    [id]="'id_input_telefono'"
+                    [label]="'Teléfono'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formEmpresa.controls.telefono"
+                    [icon]="''" >
+                </app-custom-input>
+                
+                <app-custom-input
+                    [id]="'id_input_web'"
+                    [label]="'Web'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formEmpresa.controls.web"
+                    [icon]="''" >
+                </app-custom-input>
+        
+                <app-custom-drop-box
+                    [id]="'id_input_ciudad'"
+                    [label]="'Ciudad'"
+                    [control]="formEmpresa.controls.ciudad"
+                    [class]="''"
+                    [data]="dataCiudad" >
+                </app-custom-drop-box>
+        
+                <app-custom-drop-box
+                    [id]="'id_input_pais'"
+                    [label]="'País'"
+                    [control]="formEmpresa.controls.pais"
+                    [class]="''"
+                    [data]="dataPais" >
+                </app-custom-drop-box>
+        
+                <app-custom-input
+                    [id]="'id_input_empresa'"
+                    [label]="'NIT'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formEmpresa.controls.nit"
+                    [icon]="''" >
+                </app-custom-input>
+            </div>
+        </div>
+    </form>
+</div>

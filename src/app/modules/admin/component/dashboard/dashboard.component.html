@@ -116,12 +116,30 @@
                             </app-custom-sub-menu-button>
 
                             <app-custom-sub-menu-button 
+                                [id]="'id_submenu_mantenimiento_agregar'"
+                                [label]="'Agregar Cliente'"
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Mantenimiento', 'Agregar Cliente')" >
+                            </app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button 
                                 [id]="'id_submenu_mantenimiento_Clientes'"
                                 [label]="'Clientes'"
                                 [icon]="''"
                                 [submenu]="true"
                                 [selected]="subMenuSelected"
                                 (click)="onClickSetSubMenuSelected('Mantenimiento', 'Clientes')" >
+                            </app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button 
+                                [id]="'id_submenu_mantenimiento_Empresas'"
+                                [label]="'Empresas'"
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Mantenimiento', 'Empresas')" >
                             </app-custom-sub-menu-button>
 
                             <app-custom-sub-menu-button 

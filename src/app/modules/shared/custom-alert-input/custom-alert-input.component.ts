@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
+import { ResponseEvent } from 'src/app/shared/interfaces/event/response.event';
 import { letraCapital, letraCapitalInicial } from 'src/app/shared/utils/utils.utils';
 
 @Component({
@@ -16,17 +17,15 @@ export class CustomAlertInputComponent {
 
   @Input() id!: string;
   @Input() title!: string;
-  @Input() label1!: string;
-  @Input() label2!: string;
-  @Input() class!: string;
+  @Input() label!: string;
+  @Input() type!: string;
   @Input() icon!: string;
 
-  @Output() onResponse = new EventEmitter<any>();
+  @Output() onResponse = new EventEmitter<ResponseEvent>();
 
   // ================  ================ //
   formCustom = new FormGroup({
-    value1: new FormControl('', [Validators.required]),
-    value2: new FormControl('', [Validators.required])
+    value: new FormControl('', [Validators.required])
   });
 
 
@@ -42,10 +41,14 @@ export class CustomAlertInputComponent {
   onClick(bool: boolean) {
     if (bool) {
       if (this.formCustom.valid) {
-        const value1 = letraCapital(String(this.formCustom.controls.value1.value));
-        const value2 = letraCapitalInicial(String(this.formCustom.controls.value2.value));
+        let value;
+        if (this.type === 'number') {
+          value = Number(this.formCustom.controls.value.value);
+        } else {
+          value = String(this.formCustom.controls.value.value);
+        }
 
-        this.onResponse.emit({ bool, data: { value1: value1, value2: value2 } });
+        this.onResponse.emit({ bool, data: value });
       }
     } else {
       this.onResponse.emit({ bool, data: 0 });

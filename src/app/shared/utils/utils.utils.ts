@@ -53,3 +53,9 @@ export function addCerosIzquierda(num: number): string {
         return String(num)
     }
 }
+
+export function getCodigoServicioNum(str: string): string {
+    const arrayString = str.split("-");
+
+    return addCerosIzquierda(Number(arrayString[arrayString.length - 1]) + 1);
+}

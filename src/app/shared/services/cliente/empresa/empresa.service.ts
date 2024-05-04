@@ -1,43 +1,42 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiResult } from '../../interfaces/api/api.result';
 import { Observable } from 'rxjs';
-import { urlBaseApi } from '../../utils/local.string';
+import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
+import { urlBaseApi } from 'src/app/shared/utils/local.string';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PersonaService {
+export class EmpresaService {
 
   constructor(private http: HttpClient) { }
 
   urlBase: string = urlBaseApi;
   urlVersion: string = '/v1';
-  urlModule: string = '/persona';
+  urlModule: string = '/empresa';
 
-  public personaAdd(data: any): Observable<ApiResult> {
+  public empresaAdd(data: any): Observable<ApiResult> {
     const url = this.urlBase + this.urlVersion + this.urlModule;
     return this.http.post<ApiResult>(url, data);
   }
 
-  public personaBusqueda(attribute: string, value: string): Observable<ApiResult> {
-    const url = this.urlBase + this.urlVersion + this.urlModule + '/' + attribute + '/' + value;
-    return this.http.get<ApiResult>(url);
-  }
-
-  public personaGetAll(): Observable<ApiResult> {
+  public empresaGetAll(): Observable<ApiResult> {
     const url = this.urlBase + this.urlVersion + this.urlModule;
     return this.http.get<ApiResult>(url);
   }
 
-  public personaUpdate(id:number, data: any): Observable<ApiResult> {
+  public empresaBusqueda(attribute: string, value: string): Observable<ApiResult> {
+    const url = this.urlBase + this.urlVersion + this.urlModule + '/' + attribute + '/' + value;
+    return this.http.get<ApiResult>(url);
+  }
+
+  public empresaUpdate(id:number, data: any): Observable<ApiResult> {
     const url = this.urlBase + this.urlVersion + this.urlModule + '/' + id;
     return this.http.patch<ApiResult>(url, data);
   }
 
-  public personaRemove(id:number): Observable<ApiResult> {
+  public empresaRemove(id:number): Observable<ApiResult> {
     const url = this.urlBase + this.urlVersion + this.urlModule + '/' + id;
     return this.http.delete<ApiResult>(url);
   }
-
 }

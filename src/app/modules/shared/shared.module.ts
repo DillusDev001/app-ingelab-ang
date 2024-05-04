@@ -33,6 +33,7 @@ import { CustomTitleComponent } from './custom-title/custom-title.component';
 import { CustomAlertSearchParametroComponent } from './custom-alert-search-parametro/custom-alert-search-parametro.component';
 import { CustomAlertSearchServicioComponent } from './custom-alert-search-servicio/custom-alert-search-servicio.component';
 import { CustomAddMuestraComponent } from './custom-add-muestra/custom-add-muestra.component';
+import { CustomAlertSearchEmpresaComponent } from './custom-alert-search-empresa/custom-alert-search-empresa.component';
 
 
 
@@ -50,6 +51,7 @@ import { CustomAddMuestraComponent } from './custom-add-muestra/custom-add-muest
     CustomAlertInfoComponent,
     CustomAlertInputComponent,
     CustomAlertSearchComponent,
+    CustomAlertSearchEmpresaComponent,
     CustomAlertSearchParametroComponent,
     CustomAlertSearchServicioComponent,
     CustomButtonComponent,
@@ -84,6 +86,7 @@ import { CustomAddMuestraComponent } from './custom-add-muestra/custom-add-muest
     CustomAlertInfoComponent,
     CustomAlertInputComponent,
     CustomAlertSearchComponent,
+    CustomAlertSearchEmpresaComponent,
     CustomAlertSearchParametroComponent,
     CustomAlertSearchServicioComponent,
     CustomButtonComponent,

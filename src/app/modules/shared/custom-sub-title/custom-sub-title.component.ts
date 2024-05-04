@@ -8,7 +8,7 @@ import { Component, Input } from '@angular/core';
 export class CustomSubTitleComponent {
 
   @Input() id!: string;
-  @Input() label!: string;
+  @Input() label!: string | null | undefined;
   @Input() class!: string;
 
 }

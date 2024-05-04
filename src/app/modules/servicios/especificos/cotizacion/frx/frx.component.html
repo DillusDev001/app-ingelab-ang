@@ -1,4 +1,14 @@
 <div class="w-full h-full">
+    <app-custom-alert-input *ngIf="showAlertDescuento"
+        [id]="'id_input_number'"
+        [title]="'Descuento'"
+        [label]="'%'"
+        [type]="'number'"
+        [class]="''"
+        [icon]="''"
+        (onResponse)="inputDescuentoResponse($event)" >
+    </app-custom-alert-input>
+
     <app-custom-add-muestra *ngIf="showAddMuestra"
         [title]="'Muestra'"
         (response)="addMuestraResponse($event)">
@@ -20,7 +30,8 @@
         (response)="fechaSelectResponse($event)">
     </app-custom-alert-date-picker>
 
-    <form *ngIf="!showBusqueda && !showDatePicker && !showBusquedaParametro && !showAddMuestra" class="flex flex-col gap-4 w-full h-max overflow-auto">
+    <form *ngIf="!showBusqueda && !showDatePicker && !showBusquedaParametro && !showAddMuestra && !showAlertDescuento" 
+        class="flex flex-col gap-4 w-full h-max overflow-auto">
         
         <!-- Title -->
         <app-custom-title
@@ -35,7 +46,7 @@
         <div class="flex gap-4">
             <!-- Fecha Solicitud -->        
             <app-custom-label1
-                class="cursor-pointer"
+                [ngClass]="{'cursor-pointer': typeRecive != 'ver'}"
                 [id] = "'id_label_fecha_solicitud'"
                 [label] = "'Fecha Solicitud'"
                 [text] = "transformFecha('Solicitud')"
@@ -44,7 +55,7 @@
 
             <!-- Fecha Emision -->
             <app-custom-label1
-                class="cursor-pointer"
+                [ngClass]="{'cursor-pointer': typeRecive != 'ver'}"
                 [id] = "'id_label_fecha_emision'"
                 [label] = "'Fecha Emisión'"
                 [text] = "transformFecha('Emision')"
@@ -77,7 +88,7 @@
                 <app-custom-label1
                     [id]="''"
                     [label]="'Técnico'"
-                    [text]="userLogeado.nombres + ' ' + userLogeado.apellidos"
+                    [text]="tecnicoUser.nombres + ' ' + tecnicoUser.apellidos"
                     [class]="''" >
                 </app-custom-label1>
 
@@ -85,7 +96,7 @@
                 <app-custom-label1
                     [id]="''"
                     [label]="'Celular'"
-                    [text]="userLogeado.code + ' ' + userLogeado.celular"
+                    [text]="tecnicoUser.code + ' ' + tecnicoUser.celular"
                     [class]="''" >
                 </app-custom-label1>
 
@@ -93,7 +104,7 @@
                 <app-custom-label1
                     [id]="''"
                     [label]="'Rol'"
-                    [text]="userLogeado.rol"
+                    [text]="tecnicoUser.rol"
                     [class]="''" >
                 </app-custom-label1>
             </div>
@@ -112,7 +123,7 @@
                         [class]="''">
                     </app-custom-sub-title>
 
-                    <app-custom-icon
+                    <app-custom-icon *ngIf="typeRecive == 'agregar'"
                         [icon]="'fa-solid fa-magnifying-glass fa-lg cursor-pointer'" 
                         [class]="'h-full text-color-icon-2 hover:bg-primary-100 rounded'"
                         (click)="onClickBusquedaCliente()">
@@ -258,7 +269,7 @@
             </div>
 
             <!-- Btn Agregar -->
-            <div class="flex flex-row-reverse w-full mb-2">
+            <div class="flex flex-row-reverse w-full mb-2" *ngIf="typeRecive == 'agregar'">
                 <app-custom-button 
                     [id]="''"
                     [label]="'Agregar'"
@@ -304,7 +315,7 @@
                     <!-- Body -->
                     <tbody>
                         <ng-container *ngFor="let item of dataMuestras, index as i">
-                            <tr class="bg-white border-y" fragment="">
+                            <tr class="border-y" [ngClass]="{'bg-primary-50': i % 2 == 0}">
                                 <th class="px-2 py-2 font-medium text-gray-900 text-center">
                                     {{ item.muestra_sec }}
                                 </th>
@@ -321,12 +332,12 @@
                                     {{ item.cod_interno }}
                                 </td>
     
-                                <td class="px-2 py-2 text-center">
+                                <td class="px-2 py-2 text-center font-bold">
                                     {{ item.costo_muestra | currency:'BOB':'Bs. ' }}
                                 </td>
     
                                 <td class="px-2 py-2">
-                                    <div class="flex gap-4">
+                                    <div class="flex gap-4" *ngIf="typeRecive == 'agregar'">
                                         <app-custom-icon
                                             [icon]="'fa-solid fa-circle-plus fa-xl cursor-pointer'" 
                                             [class]="'text-color-info'"
@@ -342,7 +353,7 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr [ngClass]="{'bg-primary-50': i % 2 == 0, 'bg-white': i % 2 != 0}">
                                 <td></td>
                                 <td></td>
     
@@ -350,14 +361,14 @@
                                     <table class="w-full text-sm text-center rtl:text-right text-gray-500 border shadow-lg" 
                                         *ngIf="item.muestra_parametros.length">
                                         <!-- Header -->
-                                        <thead class="text-xs text-color-text uppercase bg-primary-100">
+                                        <thead class="text-xs text-color-text uppercase" [ngClass]="{'bg-primary-100': i % 2 == 0, 'bg-gray-50': i % 2 != 0}">
                                             <tr>
                                                 <th scope="col" class="px-2 py-2 w-max text-center" style="width: 1%;">
                                                     #
                                                 </th>
     
                                                 <th scope="col" class="px-2 py-2" style="width: max-content;">
-                                                    Muestra
+                                                    Parámetro
                                                 </th>
     
                                                 <th scope="col" class="px-2 py-2 w-max" style="width: 20%;">
@@ -380,7 +391,7 @@
                                         <!-- Body -->
                                         <tbody>
                                             <ng-container *ngFor="let itemM_P of item.muestra_parametros, index as j" >
-                                                <tr class="bg-primary-50 border-b">
+                                                <tr class="border-b" [ngClass]="{'bg-primary-50': i % 2 == 0}">
                                                     <th class="px-2 py-2 font-medium text-gray-900" >
                                                         {{ j + 1 }}
                                                     </th>
@@ -394,16 +405,16 @@
                                                     </th>
         
                                                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap" >
-                                                        <div class="flex gap-2">
-                                                            <app-custom-icon
+                                                        <div class="flex gap-2 items-center">
+                                                            <app-custom-icon *ngIf="typeRecive == 'agregar'"
                                                                 [icon]="'fa-solid fa-circle-plus fa-lg'"
                                                                 [class]="'text-color-info cursor-pointer'"
                                                                 (click)="onClickPlusCantidad(i, j)" >
                                                             </app-custom-icon>
                                                             
-                                                            <p class="grow">{{ itemM_P.cantidad }}</p>
+                                                            <p class="grow border bg-white py-1">{{ itemM_P.cantidad }}</p>
         
-                                                            <app-custom-icon
+                                                            <app-custom-icon *ngIf="typeRecive == 'agregar'"
                                                                 [icon]="'fa-solid fa-circle-minus fa-lg'"
                                                                 [class]="'text-color-info cursor-pointer'"
                                                                 (click)="onClickLessCantidad(i, j)" >
@@ -416,7 +427,7 @@
                                                     </th>
         
                                                     <td class="px-2 py-2">
-                                                        <app-custom-icon
+                                                        <app-custom-icon *ngIf="typeRecive == 'agregar'"
                                                             [icon]="'fa-solid fa-trash fa-xl cursor-pointer'" 
                                                             [class]="'text-color-error'">
                                                         </app-custom-icon>
@@ -444,10 +455,12 @@
                 </app-custom-label0>
 
                 <app-custom-label0
+                    [ngClass]="{'cursor-pointer': typeRecive == 'agregar'}"
                     [id] = "'id_label_descuento'"
                     [label] = "'Descuento'"
                     [text] = "transformCostos('Descuento') + '%'"
-                    [class]="'w-full'" >
+                    [class]="'w-full'"
+                    (click)="onClickDescuento()" >
                 </app-custom-label0>
 
                 <app-custom-label0
@@ -461,7 +474,7 @@
 
         <!-- Botones -->
         <div class="flex gap-4 w-full">
-            <app-custom-button
+            <app-custom-button *ngIf="typeRecive != 'ver'"
                 [id] ="'id_btn_guardar'"
                 [label] ="'Guardar'"
                 [type] ="'accept'"
@@ -479,6 +492,26 @@
                 [class] ="''"
                 [valid] ="true"
                 (click)="onClickCancel()" >
+            </app-custom-button>
+
+            <app-custom-button *ngIf="typeRecive == 'ver'"
+                [id] ="'id_btn_imprimir'"
+                [label] ="'Imprimir'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickPDF('imprimir')" >
+            </app-custom-button>
+
+            <app-custom-button *ngIf="typeRecive == 'ver'"
+                [id] ="'id_btn_imprimir'"
+                [label] ="'Descargar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickPDF('descargar')" >
             </app-custom-button>
         </div>
 

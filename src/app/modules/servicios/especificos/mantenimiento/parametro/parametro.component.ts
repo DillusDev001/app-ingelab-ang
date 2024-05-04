@@ -166,10 +166,12 @@ export class ParametroComponent implements OnInit {
   }
 
   onClickGuardar() {
-    if (this.btnLabel === 'Agregar') {
-      this.agregarParametro();
-    } else if (this.btnLabel === 'Guardar') {
-      this.editarParametro();
+    if(this.formParametro.valid){
+      if (this.btnLabel === 'Agregar') {
+        this.agregarParametro();
+      } else if (this.btnLabel === 'Guardar') {
+        this.editarParametro();
+      }
     }
   }
   onClickCancelar() {

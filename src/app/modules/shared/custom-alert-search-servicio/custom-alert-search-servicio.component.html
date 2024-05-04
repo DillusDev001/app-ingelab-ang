@@ -1,1 +1,77 @@
-<p>custom-alert-search-servicio works!</p>
+<!-- Confirmacion Alert -->
+<div class="flex justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 p-4">
+    <div class="bg-white rounded-lg w-full md:w-max h-full md:h-max">
+        <div class="h-full flex flex-col gap-4 p-4 text-center">
+            <!-- Content -->
+            <div class="flex flex-col md:flex-row w-full gap-4 items-center">
+                <app-custom-drop-box
+                    [id]="'id_drop_box_busqueda'"
+                    [label]="'Búsqueda...'"
+                    [control]="formBusqueda.controls.busqueda"
+                    [class]="'w-max'"
+                    [data]="dataBusqueda" >
+                </app-custom-drop-box>
+
+                <app-custom-input
+                    class="flex-grow"
+                    [id]="'id_input_value'"
+                    [label]="'Búsqueda'"
+                    [type]="'text'"
+                    [autocomplete]="''"
+                    [class]="''"
+                    [control]="formBusqueda.controls.value"
+                    [icon]="''" >
+                </app-custom-input>
+
+                <app-custom-button
+                    [id] ="'id_btn_busqueda'"
+                    [label] ="'Buscar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="'w-32'"
+                    [valid] ="formBusqueda.valid"
+                    (click)="onClickBuscar()" >
+                </app-custom-button>
+
+            </div>
+            
+            <div class="w-full h-full relative overflow-auto">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3" *ngFor="let item of tableHeadParametro, index as i">
+                                {{item}}
+                            </th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 cursor-pointer hover:bg-primary-100" *ngFor="let item of dataResult; index as i"
+                            (click)="onClickItem(i)">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {{ i + 1 }}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ item.nombre }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ item.descripcion }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <app-custom-button
+                [id] ="'id_btn_busqueda'"
+                [label] ="'Cancelar'"
+                [type] ="'cancel'"
+                [icon] ="''"
+                [class] ="'w-32'"
+                [valid] ="true"
+                (click)="onClickCancel()" >
+            </app-custom-button>
+
+        </div>
+    </div>
+</div>

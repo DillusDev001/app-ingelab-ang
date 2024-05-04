@@ -5,7 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Persona } from 'src/app/shared/interfaces/app/cliente-module/persona';
-import { PersonaService } from 'src/app/shared/services/persona/persona.service';
+import { PersonaService } from 'src/app/shared/services/cliente/persona/persona.service';
 import { arrayBusquedaPersona } from 'src/app/shared/utils/local.array';
 
 @Component({
@@ -17,6 +17,30 @@ export class CustomAlertSearchComponent {
 
   @Input() type!: string;
   @Output() response: EventEmitter<Persona | null> = new EventEmitter();
+
+  /** -------------------------------------- Constructor -------------------------------------- **/
+  constructor(
+    private router: Router,
+    private personaService: PersonaService,
+    private toast: HotToastService
+  ) { }
+
+  /** ---------------------------------------- OnInit ----------------------------------------- **/
+  ngOnInit(): void {
+    initFlowbite();
+
+    switch (this.type) {
+      case 'cliente':
+        this.tableShow = this.tableHeadCliente;
+        this.dataBusqueda = arrayBusquedaPersona;
+        break;
+
+      case 'parametro':
+        this.tableShow = this.tableHeadCliente;
+        this.dataBusqueda = arrayBusquedaPersona;
+        break;
+    }
+  }
 
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   result!: ApiResult;
@@ -36,33 +60,6 @@ export class CustomAlertSearchComponent {
   });
 
   tableShow: string[] = [];
-
-
-  /** -------------------------------------- Constructor -------------------------------------- **/
-  constructor(
-    private router: Router,
-    private personaService: PersonaService,
-    private toast: HotToastService
-  ) {
-
-  }
-
-  /** ---------------------------------------- OnInit ----------------------------------------- **/
-  ngOnInit(): void {
-    initFlowbite();
-
-    switch (this.type) {
-      case 'cliente':
-        this.tableShow = this.tableHeadCliente;
-        this.dataBusqueda = arrayBusquedaPersona;
-        break;
-
-      case 'parametro':
-        this.tableShow = this.tableHeadCliente;
-        this.dataBusqueda = arrayBusquedaPersona;
-        break;
-    }
-  }
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
 

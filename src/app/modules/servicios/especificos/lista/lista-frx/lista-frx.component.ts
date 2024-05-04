@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { CotizacionFrx } from 'src/app/shared/interfaces/app/frx-module/cotizacion-frx';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
+import { CotizacionFrxService } from 'src/app/shared/services/frx-module/cotizacion-frx/cotizacion-frx.service';
 import { arrayBusquedaCotizacion } from 'src/app/shared/utils/local.array';
 import { goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
@@ -15,7 +17,7 @@ import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils
   templateUrl: './lista-frx.component.html',
   styleUrls: ['./lista-frx.component.css']
 })
-export class ListaFrxComponent {
+export class ListaFrxComponent implements OnInit {
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   // ================ INICIO ================ //
   // Data Local Storeage - Variable
@@ -61,10 +63,19 @@ export class ListaFrxComponent {
   // Agregar Usuario
   showAgregar: boolean = false;
 
+  // Como mostrar FRX FORMULARIO
+  showFormularioFRX: string = '';
+
+  // CodeFormulario Send
+  codeFormularioFRX: string = '';
+
+
 
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
-    private router: Router
+    private router: Router,
+    private cotizacionFrxService: CotizacionFrxService,
+    private toast: HotToastService
   ) {
     if (getLocalDataLogged() != null) {
       this.dataLocalStorage = getLocalDataLogged();
@@ -83,6 +94,8 @@ export class ListaFrxComponent {
   /** ---------------------------------------- OnInit ----------------------------------------- **/
   ngOnInit(): void {
     initFlowbite();
+
+    this.getListaCotizacionFrx();
   }
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
@@ -122,15 +135,49 @@ export class ListaFrxComponent {
   onClickBusqueda() { }
 
   onClickAgregar() {
+    this.showFormularioFRX = 'agregar';
+    this.showAgregar = true;
+  }
+
+  onClickListaElement(index: number){
+    this.showFormularioFRX = 'ver';
+    this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
+    this.showAgregar = true;
+  }
+
+  onClickActulizar(index: number){
+    this.showFormularioFRX = 'editar';
+    this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
     this.showAgregar = true;
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
+  getListaCotizacionFrx() {
+    this.dataCotizacion = [];
+    this.cotizacionFrxService.cotizacionGetLista().subscribe(result => {
+      result as ApiResult;
+
+      if (result.rows > 0) {
+        for(let i = result.data.length - 1; i >= 0; i--){
+          this.dataCotizacion.push(result.data[i] as CotizacionFrx);
+        }
+
+        // Paginación
+        let nPaginacion = Math.trunc(this.dataCotizacion.length / 10) + 1;
+        this.paginationArray = Array.from({ length: nPaginacion }, (_, i) => i + 1);
+      } else {
+        this.customErrorToast(result.message);
+      }
+    });
+  }
 
   /** ---------------------------------- Onclick file import ---------------------------------- **/
 
   /** ---------------------------------------- Receiver --------------------------------------- **/
-  agregarCancelReceiver(event: boolean) {
+  cotizacionFrxResponse(event: boolean) {
+    if (event) {
+      this.getListaCotizacionFrx();
+    }
     this.showAgregar = false;
   }
 
@@ -138,43 +185,54 @@ export class ListaFrxComponent {
     if (event) {
       this.showAgregar = false;
       this.isLoading = true;
-      //this.getUsuarios();
+      this.getListaCotizacionFrx();
     }
   }
 
 
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
-  onShowConfirmacion(sw: boolean) {
-    this.alertConfirmacion = sw;
-    //this.open = false; // Close Menú Lateral
+  customSuccessToast(msg: string) {
+    this.toast.success(msg, {
+      duration: 2000,
+      style: {
+        border: '1px solid #2e798c',
+        padding: '16px',
+        color: '#2b6273',
+      },
+      iconTheme: {
+        primary: '#3494a6',
+        secondary: '#FFFAEE',
+      },
+    });
   }
 
-  onShowInfo() {
-    this.alertInfo = true;
-    //this.open = false; // Close Menú Lateral
-    setTimeout(() => {
-      this.alertInfo = false;
-    }, 1000);
+  customErrorToast(msg: string) {
+    this.toast.error(msg, {
+      duration: 2000,
+      style: {
+        border: '1px solid #ef445f',
+        padding: '16px',
+        color: '#ef445f',
+      },
+      iconTheme: {
+        primary: '#ef445f',
+        secondary: '#FFFAEE',
+      },
+    });
   }
 
-  onShowError(sw: boolean) {
-    this.alertError = sw;
-    //this.open = false; // Close Menú Lateral
-  }
-
-
-  listenAlertConfirmation(event: boolean) {
-    this.alertConfirmacion = false;
-    if (event) {
-      this.msgAlert = 'Se ha eliminado correctamente!!!';
-      this.onShowInfo();
-    } else {
-      this.msgAlert = 'Acción cancelada';
-      this.alertError = true;
-    }
-  }
-
-  listenAlertError(event: boolean) {
-    if (event) this.alertError = false;
+  customLoadingToast(msg: string) {
+    this.toast.loading(msg, {
+      duration: 10000,
+      style: {
+        border: '1px solid #2b59c3',
+        padding: '16px',
+        color: '#2b59c3',
+      },
+      iconTheme: {
+        primary: '#2b59c3',
+        secondary: '#FFFAEE',
+      },
+    });
   }
 }

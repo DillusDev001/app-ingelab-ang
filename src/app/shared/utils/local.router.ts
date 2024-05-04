@@ -41,6 +41,18 @@ export function goAdminServiciosEspecificosMantenimientoParametro(router: Router
     router.navigate(['admin/servicios/especificos/mantenimiento/parametro']);
 }
 
+export function goAdminMantenimientoCliente(router: Router) {
+    router.navigate(['admin/cliente/lista-persona']);
+}
+
+export function goAdminMantenimientoEmpresa(router: Router) {
+    router.navigate(['admin/cliente/lista-empresa']);
+}
+
+export function goAdminMantenimientoClienteAgregar(router: Router) {
+    router.navigate(['admin/cliente/agregar']);
+}
+
 // ================= SERVICIOS GENERALES ================== //
 export function goAdminServiciosGeneralesMantenimiento(router: Router) {
     router.navigate(['admin/servicios/generales/mantenimiento']);
