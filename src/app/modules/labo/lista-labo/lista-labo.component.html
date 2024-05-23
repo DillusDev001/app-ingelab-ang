@@ -1,0 +1,101 @@
+<div class="relative w-full h-full shadow-lg overflow-auto p-4">
+    <app-recepcion-frx *ngIf="showRecepcionFRX"
+        [typeRecive]="showFormularioFRX" 
+        [codeRecive]="codeFormularioFRX"
+        (response)="recepcionResponse($event)" >
+    </app-recepcion-frx>
+
+    <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+    <div *ngIf="!isLoading && !showRecepcionFRX" class="flex flex-col gap-2 w-full h-full">
+        <!-- Botones y buscador -->
+        <div class="flex flex-wrap gap-2 h-max border rounded-lg border-color-text p-2 divide-x">
+            <div class="flex-grow">
+                <form [formGroup]="formBusqueda" class="flex gap-1">
+                    <app-custom-drop-box 
+                        [id]="'id_pregunta'" 
+                        [label]="'Búsqueda...'"
+                        [control]="formBusqueda.controls.busqueda" 
+                        [class]="'w-max'" 
+                        [data]="dataBusquedaCotizacion">
+                    </app-custom-drop-box>
+
+                    <app-custom-input class="flex-grow"
+                            [id]="'id_busqueda_value'" 
+                            [label]="'Búsqueda...'" 
+                            [type]="'text'" 
+                            [autocomplete]="''"
+                            [class]="'w-full flex-grow'"
+                            [control]="formBusqueda.controls.value" 
+                            [icon]="''">
+                    </app-custom-input>
+
+                    <app-custom-icon
+                        [icon]="'fa-solid fa-magnifying-glass fa-xl align-bottom cursor-pointer'" 
+                        [class]="'h-full '"
+                        (click)="onClickBusqueda()">
+                    </app-custom-icon>
+
+                </form>
+            </div>
+
+            <app-custom-button *ngIf="false"
+                class="pl-6"
+                [label]="'Nueva Cotización'"
+                [type]="'accept'"
+                [icon]="''" 
+                [class]="'h-full'"
+                [valid]="formBusqueda.valid"  
+                (click)="onClickAgregar()">
+            </app-custom-button>
+        </div>
+
+        <div class="flex flex-col gap-4 w-full h-full">
+            <!-- Table y Nav -->
+            <div class="overflow-auto shadow-md border rounded-lg grow">
+                <table class="w-max md:w-full text-sm text-center rtl:text-right text-primary-500 table-fixed md:table-auto">
+                    <thead class="text-sm text-primary-800 uppercase bg-primary-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Código Cotización</th>
+                            <th scope="col" class="px-6 py-3">Fecha Recepción</th>
+                            <th scope="col" class="px-6 py-3">Usuario Recepción</th>
+                            <th scope="col" class="px-6 py-3">Asignado</th>
+                            <th scope="col" class="px-6 py-3">Fecha Inicio</th>
+                            <th scope="col" class="px-6 py-3">Fecha Finalización</th>
+                            <th scope="col" class="px-6 py-3"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="text-primary-800 bg-white border-b hover:bg-primary-50"
+                            *ngFor="let item of dataRecepcion; index as i" >
+                            <td class="px-2 py-2 cursor-pointer" (click)="onClickListaElement(i)">{{ item.cod_cotizacion }}</td>
+                            <td class="px-2 py-2">{{ item.fec_recepcion | date: 'dd-MM-yyyy' }}</td>
+                            <td class="px-2 py-2">{{ item.user_recepcion }}</td>
+                            <td class="px-2 py-2">
+                                <p *ngIf="item.user_asignado == ''" class="underline underline-offset-1 cursor-pointer" (click)="onClickIniciar(i)">
+                                    Iniciar
+                                </p>
+                                <p *ngIf="item.user_asignado !== ''">{{ item.user_asignado }}</p>
+                            </td>
+                            <td class="px-2 py-2">{{ item.fec_ini | date: 'dd-MM-yyyy' }}</td>
+                            <td class="px-2 py-2">{{ item.fec_fin | date: 'dd-MM-yyyy' }}</td>
+                            <td class="px-2 py-2 cursor-pointer">
+                                <p *ngIf="item.fec_ini != '' && item.fec_fin == ''" class="underline underline-offset-1" (click)="onClickFinalizar(i)">
+                                    Finalizar
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <nav class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
+                aria-label="Table navigation">
+                
+            </nav>
+        </div>
+    </div>
+
+</div>

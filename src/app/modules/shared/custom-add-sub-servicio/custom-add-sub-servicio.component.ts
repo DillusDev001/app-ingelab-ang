@@ -21,9 +21,7 @@ export class CustomAddSubServicioComponent {
   // ================  ================ //
   formCustom = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
-    descripcion: new FormControl('', [Validators.required]),
-    costo_directo: new FormControl('', [Validators.required]),
-    costo_variable: new FormControl('', [Validators.required])
+    descripcion: new FormControl('', [Validators.required])
   });
 
 
@@ -37,8 +35,6 @@ export class CustomAddSubServicioComponent {
     if (this.subServicio !== null) {
       this.formCustom.controls.nombre.setValue(this.subServicio.nombre);
       this.formCustom.controls.descripcion.setValue(this.subServicio.descripcion);
-      this.formCustom.controls.costo_directo.setValue(String(this.subServicio.costo_directo));
-      this.formCustom.controls.costo_variable.setValue(String(this.subServicio.costo_variable));
     }
   }
 
@@ -49,17 +45,13 @@ export class CustomAddSubServicioComponent {
     if (bool) {
       if (this.formCustom.valid) {
         const nombre = letraCapital(String(this.formCustom.controls.nombre.value)).trim();
-        const descripcion = letraCapitalInicial(String(this.formCustom.controls.descripcion.value)).trim();
-        const costo_directo = Number(this.formCustom.controls.costo_directo.value);
-        const costo_variable = Number(this.formCustom.controls.costo_variable.value);
+        const descripcion = letraCapitalInicial(String(this.formCustom.controls.descripcion.value)).trim()
 
         this.onResponseSubServicio.emit({
           bool,
           data: {
             nombre: nombre,
-            descripcion: descripcion,
-            costo_directo: costo_directo,
-            costo_variable: costo_variable
+            descripcion: descripcion
           }
         });
       }

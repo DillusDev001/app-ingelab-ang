@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { AuthService } from 'src/app/shared/services/sesion-module/auth/auth.service';
 import { goAdminHome, goForGotPassword } from 'src/app/shared/utils/local.router';
 import { setLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   };
 
   // loading spinner
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   // Info Alert
   alertInfo: boolean = false;

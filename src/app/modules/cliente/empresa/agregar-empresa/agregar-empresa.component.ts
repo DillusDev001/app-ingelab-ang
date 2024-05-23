@@ -8,9 +8,9 @@ import { Empresa } from 'src/app/shared/interfaces/app/cliente-module/empresa';
 import { Persona } from 'src/app/shared/interfaces/app/cliente-module/persona';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { EmpresaService } from 'src/app/shared/services/cliente/empresa/empresa.service';
-import { PersonaService } from 'src/app/shared/services/cliente/persona/persona.service';
-import { arrayCiudad, arrayPais } from 'src/app/shared/utils/local.array';
+import { EmpresaService } from 'src/app/shared/services/cliente-module/empresa/empresa.service';
+import { PersonaService } from 'src/app/shared/services/cliente-module/persona/persona.service';
+import { arrayCiudad, arrayPais, arrayTipoEmpresa } from 'src/app/shared/utils/local.array';
 import { goAdminMantenimientoCliente, goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
@@ -60,7 +60,7 @@ export class AgregarEmpresaComponent implements OnInit {
   userLogeado!: Usuario;
 
   // loading spinner
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   // Info Alert
   alertInfo: boolean = false;
@@ -96,10 +96,12 @@ export class AgregarEmpresaComponent implements OnInit {
     ciudad: new FormControl('La Paz', [Validators.required]),
     pais: new FormControl('Bolivia', [Validators.required]),
     nit: new FormControl('', [Validators.required]),
+    tipo: new FormControl('', [Validators.required]),
   });
 
   dataCiudad = arrayCiudad;
   dataPais = arrayPais;
+  dataTipoEmpresa = arrayTipoEmpresa;
 
   showBusquedaEmpresa: boolean = false;
 
@@ -110,7 +112,7 @@ export class AgregarEmpresaComponent implements OnInit {
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   onClickGuardar() {
     if (this.formPersona.valid) {
-      console.log('id_empresa: ', this.formPersona.controls.id_empresa.value);
+      this.isLoading = true;
       if (Number(this.formPersona.controls.id_empresa.value) === 0) {
         // Agregar Empresa
         if (String(this.formEmpresa.controls.razon_social.value) !== '') {
@@ -145,6 +147,7 @@ export class AgregarEmpresaComponent implements OnInit {
       ciudad: String(this.formEmpresa.controls.ciudad.value),
       pais: String(this.formEmpresa.controls.pais.value),
       nit: String(this.formEmpresa.controls.nit.value),
+      tipo: String(this.formEmpresa.controls.tipo.value),
       user_crea: this.userLogeado.user,
       user_mod: this.userLogeado.user,
     } as Empresa;
@@ -205,6 +208,7 @@ export class AgregarEmpresaComponent implements OnInit {
       this.formEmpresa.controls.ciudad.setValue(obj.ciudad);
       this.formEmpresa.controls.pais.setValue(obj.pais);
       this.formEmpresa.controls.nit.setValue(obj.nit);
+      this.formEmpresa.controls.tipo.setValue(obj.tipo);
 
       this.formEmpresa.controls.id_empresa.disable();
       this.formEmpresa.controls.razon_social.disable();
@@ -214,6 +218,10 @@ export class AgregarEmpresaComponent implements OnInit {
       this.formEmpresa.controls.ciudad.disable();
       this.formEmpresa.controls.pais.disable();
       this.formEmpresa.controls.nit.disable();
+      this.formEmpresa.controls.tipo.disable();
+
+      this.formPersona.controls.razon.setValue(obj.razon_social);
+      this.formPersona.controls.nit.setValue(obj.nit);
 
       this.formPersona.controls.id_empresa.setValue(obj.id_empresa);
 

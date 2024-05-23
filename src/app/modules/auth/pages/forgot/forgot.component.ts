@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { AuthService } from 'src/app/shared/services/sesion-module/auth/auth.service';
 import { arrayPreguntas } from 'src/app/shared/utils/local.array';
 import { goLogin } from 'src/app/shared/utils/local.router';
 

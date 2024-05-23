@@ -7,6 +7,8 @@ export interface CotizacionGeneralSubServicio{
     costo_sub_servicio: number;
     sub_servicio: SubServicio;
 
+    observacion: string;
+
     fec_crea: string;
     user_crea: string;
     fec_mod: string;

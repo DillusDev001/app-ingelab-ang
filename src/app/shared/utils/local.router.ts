@@ -66,6 +66,15 @@ export function goAdminServiciosGeneralesAgregar(router: Router) {
     router.navigate(['admin/servicios/generales/agregar']);
 }
 
+// GASTOS
+export function goAdminGastos(router: Router) {
+    router.navigate(['admin/gastos']);
+}
+
+// PROOVEDORES
+export function goAdminMantenimientoProovedores(router: Router) {
+    router.navigate(['admin/proovedor/lista-proovedores']);
+}
 
 
 
@@ -73,9 +82,7 @@ export function goAdminServiciosGeneralesAgregar(router: Router) {
 
 
 // ============== COTIZACION =============== //
-export function goAdminCotizacionLaboratorio(router: Router) {
-    router.navigate(['admin/cotizacion/laboratorio']);
-}
+
 
 export function goAdminCotizacionServicio(router: Router) {
     router.navigate(['admin/cotizacion/servicio']);

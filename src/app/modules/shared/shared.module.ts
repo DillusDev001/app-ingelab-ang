@@ -34,6 +34,10 @@ import { CustomAlertSearchParametroComponent } from './custom-alert-search-param
 import { CustomAlertSearchServicioComponent } from './custom-alert-search-servicio/custom-alert-search-servicio.component';
 import { CustomAddMuestraComponent } from './custom-add-muestra/custom-add-muestra.component';
 import { CustomAlertSearchEmpresaComponent } from './custom-alert-search-empresa/custom-alert-search-empresa.component';
+import { CustomAlertSearchProveedorComponent } from './custom-alert-search-proveedor/custom-alert-search-proveedor.component';
+import { CustomInput2Component } from './custom-input2/custom-input2.component';
+import { CustomInput3Component } from './custom-input3/custom-input3.component';
+import { CustomCardCuentaComponent } from './custom-card-cuenta/custom-card-cuenta.component';
 
 
 
@@ -53,14 +57,19 @@ import { CustomAlertSearchEmpresaComponent } from './custom-alert-search-empresa
     CustomAlertSearchComponent,
     CustomAlertSearchEmpresaComponent,
     CustomAlertSearchParametroComponent,
+    CustomAlertSearchProveedorComponent,
     CustomAlertSearchServicioComponent,
     CustomButtonComponent,
+
+    CustomCardCuentaComponent,
     CustomCardServicioComponent,
     CustomCardSubServicioComponent,
+
     CustomCodeComponent,
     CustomDropBoxComponent,
     CustomIconComponent,
     CustomInputComponent,
+    CustomInput2Component,
     CustomLabel0Component,
     CustomLabel1Component,
     CustomLabel2Component,
@@ -72,6 +81,7 @@ import { CustomAlertSearchEmpresaComponent } from './custom-alert-search-empresa
     CustomSubTitleComponent,
     CustomTabButtonComponent,
     CustomTitleComponent,
+    CustomInput3Component,    
 
   ],
   exports: [
@@ -88,14 +98,20 @@ import { CustomAlertSearchEmpresaComponent } from './custom-alert-search-empresa
     CustomAlertSearchComponent,
     CustomAlertSearchEmpresaComponent,
     CustomAlertSearchParametroComponent,
+    CustomAlertSearchProveedorComponent,
     CustomAlertSearchServicioComponent,
+
     CustomButtonComponent,
+
+    CustomCardCuentaComponent,
     CustomCardServicioComponent,
     CustomCardSubServicioComponent,
+
     CustomCodeComponent,
     CustomDropBoxComponent,
     CustomIconComponent,
     CustomInputComponent,
+    CustomInput2Component,
     CustomLabel0Component,
     CustomLabel1Component,
     CustomLabel2Component,
@@ -113,7 +129,7 @@ import { CustomAlertSearchEmpresaComponent } from './custom-alert-search-empresa
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class SharedModule { }

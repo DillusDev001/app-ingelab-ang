@@ -11,9 +11,9 @@ import { goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
 import { Servicio } from 'src/app/shared/interfaces/app/servicio-module/servicio';
 import { SubServicio } from 'src/app/shared/interfaces/app/servicio-module/sub-servicio';
-import { ServicioService } from 'src/app/shared/services/servicio/servicio.service';
-import { TipoServicioService } from 'src/app/shared/services/tipo-servicio/tipo-servicio.service';
-import { SubServicioService } from 'src/app/shared/services/sub-servicio/sub-servicio.service';
+import { ServicioService } from 'src/app/shared/services/servicio-module/servicio/servicio.service';
+import { TipoServicioService } from 'src/app/shared/services/servicio-module/tipo-servicio/tipo-servicio.service';
+import { SubServicioService } from 'src/app/shared/services/servicio-module/sub-servicio/sub-servicio.service';
 
 @Component({
   selector: 'app-mantenimiento-generales',
@@ -73,6 +73,12 @@ export class MantenimientoComponent implements OnInit {
   objServicioEdit: Servicio | null = null;
   objSubServicioEdit: SubServicio | null = null;
 
+  showCardCuenta: boolean = false;
+
+  labelCuenta: string = '';
+
+  idServicioSend: number = -1;
+
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
     private router: Router,
@@ -98,6 +104,7 @@ export class MantenimientoComponent implements OnInit {
   /** ---------------------------------------- OnInit ----------------------------------------- **/
   ngOnInit(): void {
     initFlowbite();
+
     this.getListaServicios();
   }
 
@@ -143,6 +150,7 @@ export class MantenimientoComponent implements OnInit {
     this.servicioService.servicioGetListaByTipoServicio(this._ID_TIPO_SERVICIO_GENERAL).subscribe(result => {
       result as ApiResult;
       this.dataServicios = result.data;
+      this.isLoading = false;
     });
   }
 
@@ -156,6 +164,7 @@ export class MantenimientoComponent implements OnInit {
     }
     this.servicioService.servicioRegistro(data).subscribe(result => {
       result as ApiResult;
+      console.log(result);
 
       if (result.boolean) {
         this.customSuccessToast(result.message);
@@ -193,13 +202,11 @@ export class MantenimientoComponent implements OnInit {
     });
   }
 
-  agregarSubServicio(nombre: string, descripcion: string, costo_directo: number, costo_variable: number) {
+  agregarSubServicio(nombre: string, descripcion: string) {
     const data = {
+      id_servicio: this.id_servicio_selected,
       nombre: nombre,
       descripcion: descripcion,
-      costo_directo: costo_directo,
-      costo_variable: costo_variable,
-      id_servicio: this.id_servicio_selected,
       user_crea: this.userLogeado.user,
       user_mod: this.userLogeado.user,
     }
@@ -216,12 +223,10 @@ export class MantenimientoComponent implements OnInit {
     });
   }
 
-  editarSubServicio(nombre: string, descripcion: string, costo_directo: number, costo_variable: number) {
+  editarSubServicio(nombre: string, descripcion: string) {
     const data = {
       nombre: nombre,
       descripcion: descripcion,
-      costo_directo: costo_directo,
-      costo_variable: costo_variable,
       user_mod: this.userLogeado.user,
     }
 
@@ -266,14 +271,14 @@ export class MantenimientoComponent implements OnInit {
     if (event.bool) {
       if (this.showAlertTypeSubServicio === 'Agregar') {
         this.showAlertAddSubServicio = false;
-        this.agregarSubServicio(event.data['nombre'], event.data['descripcion'], event.data['costo_directo'], event.data['costo_variable']);
+        this.agregarSubServicio(event.data['nombre'], event.data['descripcion']);
       } else if (this.showAlertTypeSubServicio === 'Editar') {
         this.showAlertAddSubServicio = false;
         this.lblTitleSubServicio = 'Agregar Sub-Servicio';
         this.showAlertTypeSubServicio = 'Agregar';
         this.objSubServicioEdit = null;
 
-        this.editarSubServicio(event.data['nombre'], event.data['descripcion'], event.data['costo_directo'], event.data['costo_variable']);
+        this.editarSubServicio(event.data['nombre'], event.data['descripcion']);
       }
     } else {
       // CANCELAR
@@ -284,20 +289,30 @@ export class MantenimientoComponent implements OnInit {
     }
   }
 
-  reciveEditButton(event: ResponseEvent) {
+  reciveButton(event: ResponseEvent) {
     if (event.bool) {
-      this.lblTitleServicio = 'Actualizar Servicio';
-      this.objServicioEdit = this.dataServicios[event.data['index']];
-      this.showAlertAddServicio = true;
+      switch (event.data.type) {
+        case 'editar':
+          this.lblTitleServicio = 'Actualizar Servicio';
+          this.objServicioEdit = this.dataServicios[event.data['index']];
+          this.showAlertAddServicio = true;
 
-      this.showAlertTypeServicio = 'Editar';
+          this.showAlertTypeServicio = 'Editar';
+          break;
 
-
-
+        case 'cuenta':
+          this.labelCuenta = this.dataServicios[event.data['index']].nombre;
+          this.idServicioSend = this.dataServicios[event.data['index']].id_servicio;
+          this.showCardCuenta = true;
+          break;
+      }
       //console.log('index: ',event.data['index']);
     }
   }
 
+  responseCuenta(event: boolean){
+    this.showCardCuenta = false;
+  }
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
   customSuccessToast(msg: string) {
     this.toast.success(msg, {

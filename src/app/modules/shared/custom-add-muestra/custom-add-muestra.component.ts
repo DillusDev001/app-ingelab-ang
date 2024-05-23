@@ -18,7 +18,7 @@ export class CustomAddMuestraComponent {
 
   // ================  ================ //
   formMuestra = new FormGroup({
-    cod_interno: new FormControl('', [Validators.required]),
+    cod_interno: new FormControl('', []),
     descripcion: new FormControl('', [Validators.required]),
     observacion: new FormControl('', [Validators.required]),
   });

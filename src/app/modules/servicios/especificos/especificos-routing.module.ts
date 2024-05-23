@@ -11,6 +11,7 @@ const routes: Routes = [
     children: [
       { path: 'lista-frx', component: ListaFrxComponent },
       { path: 'agregar/frx', component: FrxComponent, },
+      { path: 'recepcion', loadChildren: () => import('./../../recepcion/recepcion.module').then(m => m.RecepcionModule) }
     ]
   },
   { path: 'mantenimiento/parametro', component: ParametroComponent, }

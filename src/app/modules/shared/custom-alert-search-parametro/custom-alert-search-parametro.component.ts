@@ -24,6 +24,8 @@ export class CustomAlertSearchParametroComponent implements OnInit {
 
   dataResult!: Parametro[];
 
+  isLoading: boolean = true;
+
   // ================  ================ //
   tableHeadParametro: string[] = ['#', 'Parámetro', 'Costo Directo', 'Costo Variable'];
 
@@ -45,6 +47,8 @@ export class CustomAlertSearchParametroComponent implements OnInit {
   /** ---------------------------------------- OnInit ----------------------------------------- **/
   ngOnInit(): void {
     initFlowbite();
+
+    this.getListaParametros();
   }
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
@@ -52,19 +56,10 @@ export class CustomAlertSearchParametroComponent implements OnInit {
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   async onClickBuscar() {
     if (this.formBusqueda.valid) {
+      this.isLoading = true;
       const value = String(this.formBusqueda.controls.value.value);
 
-      this.parametroFrxService.parametroGet(value).subscribe(result => {
-        result as ApiResult;
-
-        if (result.boolean) {
-          this.dataResult = result.data as Parametro[];
-          this.customSuccessToast(result.message);
-        } else {
-          this.dataResult = [];
-          this.customErrorToast(result.message);
-        }
-      });
+      this.buscarParametro(value);
     }
   }
 
@@ -77,6 +72,35 @@ export class CustomAlertSearchParametroComponent implements OnInit {
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
+  buscarParametro(value: string) {
+    this.parametroFrxService.parametroGet(value).subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        this.dataResult = result.data as Parametro[];
+        this.customSuccessToast(result.message);
+      } else {
+        this.dataResult = [];
+        this.customErrorToast(result.message);
+      }
+      this.isLoading = false;
+    });
+  }
+
+  getListaParametros() {
+    this.parametroFrxService.parametroGetLista().subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        this.dataResult = result.data as Parametro[];
+        //this.customSuccessToast(result.message);
+      } else {
+        this.dataResult = [];
+        this.customErrorToast(result.message);
+      }
+      this.isLoading = false;
+    });
+  }
 
   /** ---------------------------------- Onclick file import ---------------------------------- **/
 

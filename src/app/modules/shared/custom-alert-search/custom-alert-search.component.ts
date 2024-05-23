@@ -5,7 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Persona } from 'src/app/shared/interfaces/app/cliente-module/persona';
-import { PersonaService } from 'src/app/shared/services/cliente/persona/persona.service';
+import { PersonaService } from 'src/app/shared/services/cliente-module/persona/persona.service';
 import { arrayBusquedaPersona } from 'src/app/shared/utils/local.array';
 
 @Component({
@@ -49,6 +49,8 @@ export class CustomAlertSearchComponent {
 
   dataResult!: Persona[];
 
+  isLoading: boolean = false;
+
   // ================  ================ //
   tableHeadCliente: string[] = ['Nombre', 'Celular', 'Email', 'Razón/Empresa', 'NIT'];
   tableHeadParametro: string[] = ['#', 'Parámetro', 'Costo Directo', 'Costo Variable'];
@@ -66,6 +68,7 @@ export class CustomAlertSearchComponent {
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   async onClickBuscar() {
     if (this.formBusqueda.valid) {
+      this.isLoading = true;
       const attribute = String(this.formBusqueda.controls.busqueda.value);
       const value = String(this.formBusqueda.controls.value.value);
 
@@ -79,6 +82,7 @@ export class CustomAlertSearchComponent {
           this.dataResult = [];
           this.customErrorToast(result.message);
         }
+        this.isLoading = false;
       });
     }
   }

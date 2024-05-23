@@ -10,14 +10,27 @@
         {{ servicio.descripcion }}
     </p>
 
-    <app-custom-button
-        *ngIf="servicio.nombre == selected"
-        [id] ="'id_btn_editar_servicio'"
-        [label] ="'Editar'"
-        [type] ="'cancel'"
-        [icon] ="'fa-solid fa-pen-to-square fa-lg'"
-        [class] ="''"
-        [valid] ="true"
-        (click)="onClickEdit()" >
-    </app-custom-button>
+    <div class="flex gap-4">
+        <app-custom-button
+            *ngIf="servicio.nombre == selected"
+            [id] ="'id_btn_editar_servicio'"
+            [label] ="'Editar'"
+            [type] ="'cancel'"
+            [icon] ="'fa-solid fa-pen-to-square fa-lg'"
+            [class] ="''"
+            [valid] ="true"
+            (click)="onClickEdit()" >
+        </app-custom-button>
+
+        <app-custom-button
+            *ngIf="servicio.nombre == selected"
+            [id] ="'id_btn_editar_servicio'"
+            [label] ="'Cuenta'"
+            [type] ="'cancel'"
+            [icon] ="'fa-solid fa-building-columns fa-lg'"
+            [class] ="''"
+            [valid] ="true"
+            (click)="onClickVerCuenta()" >
+        </app-custom-button>
+    </div>
 </div>

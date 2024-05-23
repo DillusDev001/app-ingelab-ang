@@ -31,13 +31,13 @@
                     <app-custom-icon
                         [icon]="'fa-solid fa-magnifying-glass fa-xl align-bottom cursor-pointer'" 
                         [class]="'h-full '"
-                        (click)="onClickAgregar()">
+                        (click)="onClickBusqueda()">
                     </app-custom-icon>
 
                 </form>
             </div>
 
-            <app-custom-button
+            <app-custom-button *ngIf="false"
                 class="pl-6"
                 [label]="'Agregar Usuario'"
                 [type]="'accept'"

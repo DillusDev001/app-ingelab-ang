@@ -17,6 +17,33 @@ import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils
   styleUrls: ['./parametro.component.css']
 })
 export class ParametroComponent implements OnInit {
+  /** -------------------------------------- Constructor -------------------------------------- **/
+  constructor(
+    private router: Router,
+    private parametroFrxService: ParametroFrxService,
+    private toast: HotToastService
+  ) {
+    if (getLocalDataLogged() != null) {
+      this.dataLocalStorage = getLocalDataLogged();
+      if (this.dataLocalStorage.usuario != null) {
+        this.userLogeado = this.dataLocalStorage.usuario;
+      } else {
+        deleteLocalStorageData();
+        goLogin(this.router);
+      }
+    } else {
+      deleteLocalStorageData();
+      goLogin(this.router);
+    }
+  }
+
+  /** ---------------------------------------- OnInit ----------------------------------------- **/
+  ngOnInit(): void {
+    initFlowbite();
+
+    this.getParametros();
+  }
+
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   // ================ INICIO ================ //
   // Data Local Storeage - Variable
@@ -69,33 +96,6 @@ export class ParametroComponent implements OnInit {
 
   // al editar
   isEditing: boolean = false;
-
-  /** -------------------------------------- Constructor -------------------------------------- **/
-  constructor(
-    private router: Router,
-    private parametroFrxService: ParametroFrxService,
-    private toast: HotToastService
-  ) {
-    if (getLocalDataLogged() != null) {
-      this.dataLocalStorage = getLocalDataLogged();
-      if (this.dataLocalStorage.usuario != null) {
-        this.userLogeado = this.dataLocalStorage.usuario;
-      } else {
-        deleteLocalStorageData();
-        goLogin(this.router);
-      }
-    } else {
-      deleteLocalStorageData();
-      goLogin(this.router);
-    }
-  }
-
-  /** ---------------------------------------- OnInit ----------------------------------------- **/
-  ngOnInit(): void {
-    initFlowbite();
-
-    this.getParametros();
-  }
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
   showListaNext(n: number) {
@@ -166,7 +166,7 @@ export class ParametroComponent implements OnInit {
   }
 
   onClickGuardar() {
-    if(this.formParametro.valid){
+    if (this.formParametro.valid) {
       if (this.btnLabel === 'Agregar') {
         this.agregarParametro();
       } else if (this.btnLabel === 'Guardar') {

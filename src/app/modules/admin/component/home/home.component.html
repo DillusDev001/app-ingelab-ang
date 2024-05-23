@@ -1,56 +1,64 @@
 <div class="relative p-4 w-full h-full border shadow-lg overflow-auto">
-    <div class="flex flex-col md:grid lg:grid-cols-2 xl:grid-cols-3 gap-4 w-full h-max">
+    <div class="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full h-max">
 
-        <app-card
-            (click)="onClickCard('Cotización')"
+        <!--<app-card *ngIf="false"
+            class="h-full"
+            (click)="onClickCard('FRX')"
             [id] = "'id_card_cotizacion'"
-            [label] = "'Cotización Laboratorio'"
-            [description] = "'Hola diego junior'"
+            [label] = "'FRX'"
+            [description] = "'Cotización Laboratorio FRX'"
             [class] = "'cursor-pointer'"
-            [icon] = "'fa-solid fa-file-lines fa-3x'">
+            [icon] = "'fa-solid fa-file-lines fa-2x'">
         </app-card>
 
-        <app-card
+        <app-card *ngIf="false"
+            class="h-full"
             (click)="onClickCard('Servicios')"
             [id] = "'id_card_cotizacion'"
-            [label] = "'Cotización Servicios'"
-            [description] = "'Hola diego junior'"
+            [label] = "'Servicios'"
+            [description] = "'Cotización Servicios Generales'"
             [class] = "'cursor-pointer'"
-            [icon] = "'fa-solid fa-file-lines fa-3x'">
+            [icon] = "'fa-solid fa-file-lines fa-2x'">
         </app-card>
 
         <app-card
-            (click)="onClickCard('Recepción')"
+            class="h-full"
+            (click)="onClickCard('RecepcionFRX')"
             [id] = "'id_card_recepcion'"
-            [label] = "'Recepción'"
-            [description] = "'Hola diego junior'"
+            [label] = "'Recepción FRX'"
+            [description] = "'Mi lista de Recepción de FRX'"
             [class] = "'cursor-pointer'"
-            [icon] = "'fa-solid fa-hand-holding fa-3x'">
+            [icon] = "'fa-solid fa-hand-holding fa-2x'">
         </app-card>
 
         <app-card
-            (click)="onClickCard('Pruebas')"
+            class="h-full"
+            (click)="onClickCard('RecepcioGenerales')"
             [id] = "'id_card_pruebas'"
-            [label] = "'Pruebas'"
-            [description] = "'Hola diego junior'"
+            [label] = "'Recepción Servicios Generales'"
+            [description] = "'Mi lista de Recepción Servicios Generales'"
             [class] = "'cursor-pointer'"
-            [icon] = "'fa-solid fa-file-lines fa-3x'">
+            [icon] = "'fa-solid fa-file-lines fa-2x'">
+        </app-card>-->
+
+        <app-card
+            class="h-full"
+            [id] = "'id_card_frx_asignado'"
+            [label] = "'FRX Asignado'"
+            [description] = "'Mi lista de Pruebas FRX Asignados.'"
+            [class] = "'cursor-pointer'"
+            [icon] = "'fa-solid fa-file-lines fa-2x'"
+            (click)="onClickCard('FRX Asignado')" >
         </app-card>
 
         <app-card
-            [id] = "'id_card_pruebasterminadas'"
-            [label] = "'P. Terminadas'"
+            class="h-full"
+            [id] = "'id_card_frx_aproada'"
+            [label] = "'FRX Aprobados'"
             [description] = "'Hola diego junior'"
             [class] = "'cursor-pointer'"
-            [icon] = "'fa-solid fa-file-lines fa-3x'">
-        </app-card>
-
-        <app-card
-            [id] = "'id_card_pruebasaprobadas'"
-            [label] = "'P. Aprobadas'"
-            [description] = "'Hola diego junior'"
-            [class] = "'cursor-pointer'"
-            [icon] = "'fa-solid fa-file-lines fa-3x'">
+            [icon] = "'fa-solid fa-file-lines fa-2x'"
+            (click)="onClickCard('FRX Aprobados')" >
         </app-card>
 
     </div>

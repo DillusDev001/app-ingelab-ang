@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
+import { ResponseEvent } from 'src/app/shared/interfaces/event/response.event';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { goAdminCotizacionLaboratorio, goAdminCotizacionServicio, goLogin } from 'src/app/shared/utils/local.router';
+import { goAdminServiciosEspecificosListaFRX, goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
+import { laboMiLista } from 'src/app/shared/utils/routers/mi.-lista.route';
+import { admiRecepcionFRXLista, admiRecepcionGeneralLista } from 'src/app/shared/utils/routers/recepcion.route';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +18,7 @@ import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils
 })
 export class HomeComponent implements OnInit {
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
+  @Output() onResponse = new EventEmitter<ResponseEvent>();
   // ================ INICIO ================ //
   // Data Local Storeage - Variable
   dataLocalStorage: DataLocalStorage = {
@@ -77,19 +81,28 @@ export class HomeComponent implements OnInit {
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   onClickCard(val: string) {
     switch (val) {
-      case 'Cotización':
-        goAdminCotizacionLaboratorio(this.router);
+      case 'FRX':
+        goAdminServiciosEspecificosListaFRX(this.router);
         break;
 
       case 'Servicios':
-        goAdminCotizacionServicio(this.router);
-        console.log(val)
+
         break;
 
-      case 'Recepción':
+      case 'RecepcionFRX':
+        admiRecepcionFRXLista(this.router);
         break;
 
-      case 'Pruebas':
+      case 'RecepcioGenerales':
+        admiRecepcionGeneralLista(this.router);
+        break;
+
+
+      case 'FRX Asignado':
+        laboMiLista(this.router);
+        break;
+
+      case 'FRX Aprobados':
         break;
     }
   }

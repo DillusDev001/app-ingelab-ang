@@ -6,7 +6,7 @@ import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Persona } from 'src/app/shared/interfaces/app/cliente-module/persona';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { PersonaService } from 'src/app/shared/services/cliente/persona/persona.service';
+import { PersonaService } from 'src/app/shared/services/cliente-module/persona/persona.service';
 import { goAdminMantenimientoClienteAgregar, goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
@@ -90,6 +90,7 @@ export class ListaPersonaComponent implements OnInit {
         this.customErrorToast(result.message);
       }
 
+      this.isLoading = false;
     });
   }
 

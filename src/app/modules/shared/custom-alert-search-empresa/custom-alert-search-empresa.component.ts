@@ -5,7 +5,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Empresa } from 'src/app/shared/interfaces/app/cliente-module/empresa';
-import { EmpresaService } from 'src/app/shared/services/cliente/empresa/empresa.service';
+import { EmpresaService } from 'src/app/shared/services/cliente-module/empresa/empresa.service';
 import { arrayBusquedaEmpresa } from 'src/app/shared/utils/local.array';
 
 @Component({
@@ -14,8 +14,6 @@ import { arrayBusquedaEmpresa } from 'src/app/shared/utils/local.array';
   styleUrls: ['./custom-alert-search-empresa.component.css']
 })
 export class CustomAlertSearchEmpresaComponent {
-  @Output() response: EventEmitter<Empresa | null> = new EventEmitter();
-
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
     private router: Router,
@@ -29,11 +27,15 @@ export class CustomAlertSearchEmpresaComponent {
   }
 
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
+  @Output() response: EventEmitter<Empresa | null> = new EventEmitter();
+
   result!: ApiResult;
 
   dataBusqueda = arrayBusquedaEmpresa;
 
   dataResult!: Empresa[];
+
+  isLoading: boolean = false;
 
   // ================  ================ //
   tableHead: string[] = ['#', 'Razón Social', 'NIT', 'Teléfono', 'Ciudad', 'País'];
@@ -47,8 +49,10 @@ export class CustomAlertSearchEmpresaComponent {
   /** ---------------------------------------- Methods ---------------------------------------- **/
 
   /** ------------------------------------ Methods onClick ------------------------------------ **/
-  async onClickBuscar() {
+  onClickBuscar() {
     if (this.formBusqueda.valid) {
+      this.isLoading = true;
+
       const attribute = String(this.formBusqueda.controls.busqueda.value);
       const value = String(this.formBusqueda.controls.value.value);
 
@@ -62,6 +66,7 @@ export class CustomAlertSearchEmpresaComponent {
           this.dataResult = [];
           this.customErrorToast(result.message);
         }
+        this.isLoading = false;
       });
     }
   }

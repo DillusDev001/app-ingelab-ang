@@ -6,7 +6,7 @@ import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Parametro } from 'src/app/shared/interfaces/app/frx-module/parametro';
 import { Servicio } from 'src/app/shared/interfaces/app/servicio-module/servicio';
-import { ServicioService } from 'src/app/shared/services/servicio/servicio.service';
+import { ServicioService } from 'src/app/shared/services/servicio-module/servicio/servicio.service';
 import { arrayBusquedaParametro } from 'src/app/shared/utils/local.array';
 
 @Component({
@@ -25,6 +25,8 @@ export class CustomAlertSearchServicioComponent implements OnInit {
   dataBusqueda = arrayBusquedaParametro;
 
   dataResult!: Servicio[];
+
+  isLoading:boolean = true;
 
   // ================  ================ //
   tableHeadParametro: string[] = ['#', 'Servicio', 'Descripción'];
@@ -56,6 +58,7 @@ export class CustomAlertSearchServicioComponent implements OnInit {
   /** ------------------------------------ Methods onClick ------------------------------------ **/
   async onClickBuscar() {
     if (this.formBusqueda.valid) {
+      this.isLoading = true;
       const value = String(this.formBusqueda.controls.value.value);
       this.getListaByNombre(value);
     }
@@ -81,6 +84,7 @@ export class CustomAlertSearchServicioComponent implements OnInit {
         this.dataResult = [];
         this.customErrorToast(result.message);
       }
+      this.isLoading = false;
     });
   }
 

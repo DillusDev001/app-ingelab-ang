@@ -9,7 +9,7 @@
 
         <!-- Menu -->
         <nav class="p-4 z-20 top:0 fixed top-0 bottom-0 duration-300 w-max h-full bg-white shadow-2xl
-        lg:left-0 lg:my-0 lg:w-80 lg:relative border-r border-gray-200"
+        lg:left-0 lg:my-0 lg:w-80 lg:relative border-r border-gray-200 overflow-auto"
             [ngClass]="{ 'left-0'  : open == true, 'left-[-330px]' : open == false }">
 
             <div class="flex flex-col h-full divide-y divide-color-divide">
@@ -92,6 +92,32 @@
                         </div>
                     </div>
 
+                    <!-- Menu GASTOS -->
+                    <div class="py-4">
+                        <app-custom-menu-button
+                            [id]="'id_menu_gastos'"
+                            [label]="'Gastos'"
+                            [icon]="'fa-solid fa-circle-dollar-to-slot fa-lg'"
+                            [submenu]="true"
+                            [spanClass]="' hidden'"
+                            [selected]="menuSelected" 
+                            (click)="onClickSetMenuSelected('Gastos', null)">
+                        </app-custom-menu-button>
+                        
+                        <!-- SubMenu -->
+                        <div class="flex flex-col ml-12 overflow-hidden h-0">
+                            <!-- Gastos 
+                            <app-custom-sub-menu-button
+                                [id]="'id_submenu_servicios_especificos'"
+                                [label]="'Lista'"
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Gastos', 'Lista')" >
+                            </app-custom-sub-menu-button> -->
+                        </div>
+                    </div>
+
                     <!-- Menu MATENIMIENTO -->
                     <div class="py-4">
                         <app-custom-menu-button
@@ -149,6 +175,15 @@
                                 [submenu]="true"
                                 [selected]="subMenuSelected"
                                 (click)="onClickSetSubMenuSelected('Mantenimiento', 'Usuarios')" >
+                            </app-custom-sub-menu-button>
+
+                            <app-custom-sub-menu-button 
+                                [id]="'id_submenu_mantenimiento_proovedores'"
+                                [label]="'Proovedores'"  
+                                [icon]="''"
+                                [submenu]="true"
+                                [selected]="subMenuSelected"
+                                (click)="onClickSetSubMenuSelected('Mantenimiento', 'Proovedores')" >
                             </app-custom-sub-menu-button>
                         </div>
                     </div>
@@ -233,7 +268,7 @@
                                 <p>Celular:{{ userLogeado.code }} {{ userLogeado.celular }}</p>
                                 <p>Estado: {{ userLogeado.estado }}</p>
                                 <div class="flex gap-3 w-full">
-                                    <app-custom-button class="w-full"
+                                    <app-custom-button class="w-full" *ngIf="false"
                                         [id]="'id_profile'"
                                         [label]="'Perfil'"
                                         [type]="'cancel'"
@@ -244,7 +279,7 @@
 
                                     <app-custom-button class="w-full"
                                         [id]="'id_log_out'"
-                                        [label]="'Salir'"
+                                        [label]="'Cerrar Sesión'"
                                         [type]="'accept'"
                                         [icon]="''" 
                                         [class]="''"

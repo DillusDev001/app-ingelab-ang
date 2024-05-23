@@ -7,6 +7,7 @@ import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
 import { goAdminServiciosEspecificosAgregar, goAdminServiciosEspecificosListaFRX, goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
+import { admiRecepcionFRXLista } from 'src/app/shared/utils/routers/recepcion.route';
 
 @Component({
   selector: 'app-index-especificos',
@@ -71,6 +72,11 @@ export class IndexComponent {
 
       case 'Lista FRX':
         goAdminServiciosEspecificosListaFRX(this.router);
+        this.selectedTab = value;
+        break;
+
+      case 'Recepción':
+        admiRecepcionFRXLista(this.router);
         this.selectedTab = value;
         break;
 

@@ -1,6 +1,7 @@
-<div class="flex flex-col gap-4 w-full  h-full overflow-auto">
+<div class="relative flex flex-col gap-4 w-full h-full overflow-auto">
+    
     <!-- Parametro -->
-    <div class="flex flex-col border border-dashed border-color-text rounded-lg w-max h-max p-2">
+    <div *ngIf="!isLoading" class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
         <!-- Subtitle / Cabecera -->
         <div class="flex w-full mb-2">
             <app-custom-sub-title
@@ -71,7 +72,9 @@
         </div>
     </div>
 
-    <div *ngIf="!isEditing" class="flex flex-col gap-4 w-full h-full">
+    <app-custom-loading *ngIf="isLoading" ></app-custom-loading>
+
+    <div *ngIf="!isEditing && !isLoading" class="flex flex-col gap-4 w-full h-full">
         <!-- Table y Nav -->
         <div class="overflow-auto shadow-md border rounded-lg grow ">
             <table class="w-full text-sm text-center rtl:text-right text-primary-500">

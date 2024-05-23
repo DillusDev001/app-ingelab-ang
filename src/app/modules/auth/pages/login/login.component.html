@@ -1,6 +1,6 @@
 <div class="relative w-full h-full overflow-auto bg-white">
 
-    <div class="w-full h-full flex items-center">
+    <div *ngIf="!isLoading" class="w-full h-full flex items-center">
         <div class="grid grid-cols-3 items-center w-2/5 h-max m-auto gap-5 rounded-lg border border-gray-200 shadow-lg bg-white">
             <div class="flex flex-col">
                 <img class="h-full" src="./../../../../../assets/draw_login.svg" alt="">
@@ -59,6 +59,9 @@
             </form>
         </div>
     </div>
+
+
+    <app-custom-loading *ngIf="isLoading" ></app-custom-loading>
 
     <app-custom-alert-confirmation *ngIf="alertConfirmacion" [msgAlert]="'Desea eliminar?'"
         [strBtn1]="'Si, estoy seguro'" [strBtn2]="'Jamás'" (alerConfirmationEven)="listenAlertConfirmation($event)">

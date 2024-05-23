@@ -7,7 +7,13 @@
 
     <app-custom-loading *ngIf="isLoading"></app-custom-loading>
 
-    <div *ngIf="!isLoading && !showAgregar" class="flex flex-col gap-2 w-full h-full">
+    <app-custom-card-cuenta *ngIf="showCardCuenta" 
+        [label]="'Servicio FRX'" 
+        [id_servicio]="ID_SERVICIO"
+        (response)="responseCuenta($event)" >
+    </app-custom-card-cuenta>
+
+    <div *ngIf="!isLoading && !showAgregar && !showCardCuenta" class="flex flex-col gap-2 w-full h-full">
         <!-- Botones y buscador -->
         <div class="flex flex-col md:flex-row gap-2 h-max border rounded-lg border-color-text p-2  md:divide-x">
             <div class="flex flex-grow w-full">
@@ -94,15 +100,15 @@
                             *ngFor="let item of dataCotizacion; index as i" (click)="onClickListaElement(i)">
                             <td class="px-2 py-2">{{ item.cod_cotizacion }}</td>
 
-                            <td class="px-2 py-2">{{ item.fec_solicitud }}</td>
+                            <td class="px-2 py-2">{{ item.fec_solicitud | date: 'dd-MM-yyyy' }}</td>
 
-                            <td class="px-2 py-2">{{ item.fec_emision }}</td>
+                            <td class="px-2 py-2">{{ item.fec_emision | date: 'dd-MM-yyyy' }}</td>
 
-                            <td class="px-2 py-2">{{ item.costo_total }}</td>
+                            <td class="px-2 py-2">{{ item.costo_total | currency:'BOB':'Bs. ' }}</td>
 
-                            <td class="px-2 py-2">{{ item.descuento }} %</td>
+                            <td class="px-2 py-2">{{ item.descuento | currency:'BOB':'Bs. ' }}</td>
 
-                            <td class="px-2 py-2">{{ item.total_pagar }}</td>
+                            <td class="px-2 py-2">{{ item.total_pagar | currency:'BOB':'Bs. ' }}</td>
 
                             <td class="px-2 py-2"><p class="underline underline-offset-1" (click)="onClickActulizar(i)">Actualizar</p></td>
                         </tr>
@@ -113,7 +119,17 @@
 
             <nav class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
                 aria-label="Table navigation">
-                <div class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                <app-custom-button
+                    [id] ="'id_btn_cuenta'"
+                    [label] ="'Cuenta'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="''"
+                    [valid] ="true" 
+                    (click)="onClickVerCuenta()">
+                </app-custom-button>
+
+                <div *ngIf="false" class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                     <a [ngClass]="{ 'cursor-pointer' : posPaginacion > 1 }" (click)="anteriorLista()"
                         class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-dark-500 bg-white border border-dark-300 rounded-s-lg hover:bg-dark-100 hover:text-dark-700">Anterior</a>
 

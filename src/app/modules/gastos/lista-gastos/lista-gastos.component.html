@@ -1,0 +1,124 @@
+<div class="relative w-full h-full shadow-lg overflow-auto p-4">
+    
+    <app-agregar-gastos *ngIf="showAgregar"
+        [typeRecive]="agregarGastoType" 
+        [codeRecive]="codigoGasto"
+        (response)="agregarGastoResponse($event)" >
+    </app-agregar-gastos>
+
+    <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+    <div *ngIf="!isLoading && !showAgregar" class="flex flex-col gap-2 w-full h-full">
+        <!-- Botones y buscador -->
+        <div class="flex flex-wrap gap-2 h-max border rounded-lg border-color-text p-2 divide-x">
+            <div class="flex-grow">
+                <form [formGroup]="formBusqueda" class="flex gap-1 content-center">
+                    <app-custom-drop-box 
+                        [id]="'id_pregunta'" 
+                        [label]="'Búsqueda...'"
+                        [control]="formBusqueda.controls.busqueda" 
+                        [class]="'w-max'" 
+                        [data]="dataBusquedaGasto">
+                    </app-custom-drop-box>
+
+                    <app-custom-input class="flex-grow"
+                            [id]="'id_busqueda_value'" 
+                            [label]="'Búsqueda...'" 
+                            [type]="'text'" 
+                            [autocomplete]="''"
+                            [class]="'w-full flex-grow'"
+                            [control]="formBusqueda.controls.value" 
+                            [icon]="''">
+                    </app-custom-input>
+
+                    <app-custom-icon
+                        [icon]="'fa-solid fa-magnifying-glass fa-xl align-bottom cursor-pointer'" 
+                        [class]="'h-full text-primary-600 '"
+                        (click)="onClickBusqueda()">
+                    </app-custom-icon>
+
+                </form>
+            </div>
+
+            <app-custom-button 
+                class="pl-6"
+                [label]="'Nueva Cotización'"
+                [type]="'accept'"
+                [icon]="''" 
+                [class]="'h-full'"
+                [valid]="formBusqueda.valid"  
+                (click)="onClickAgregar()">
+            </app-custom-button>
+        </div>
+
+        <div class="flex flex-col gap-4 w-full h-full">
+            <!-- Table y Nav -->
+            <div class="overflow-auto shadow-md border rounded-lg grow">
+                <table class="w-max md:w-full text-sm text-center rtl:text-right text-primary-500 table-fixed md:table-auto">
+                    <thead class="text-sm text-primary-800 uppercase bg-primary-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">#</th>
+
+                            <th scope="col" class="px-6 py-3">Código</th>
+
+                            <th scope="col" class="px-6 py-3">Tipo</th>
+
+                            <th scope="col" class="px-6 py-3">Área</th>
+
+                            <th scope="col" class="px-6 py-3">Fecha Emisión</th>
+
+                            <th scope="col" class="px-6 py-3">Total Bs</th>
+
+                            <th scope="col" class="px-6 py-3">Total $us</th>
+
+                            <th scope="col" class="px-6 py-3">
+                                
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="text-primary-800 bg-white border-b hover:bg-primary-50 cursor-pointer"
+                            *ngFor="let item of dataGastos; index as i" (click)="onClickListaElement(i)">
+                            <td class="px-2 py-2">{{ i + 1 }}</td>
+
+                            <td class="px-2 py-2">{{ item.codigo_gasto }}</td>
+
+                            <td class="px-2 py-2">{{ item.tipo_gasto }}</td>
+
+                            <td class="px-2 py-2">{{ item.area }}</td>
+
+                            <td class="px-2 py-2">{{ item.fec_emision }}</td>
+
+                            <td class="px-2 py-2">{{ item.total_bs }}</td>
+
+                            <td class="px-2 py-2">{{ item.total_sus }}</td>
+
+                            <td class="px-2 py-2"></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <nav *ngIf="false" class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
+                aria-label="Table navigation">
+                <div class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                    <a [ngClass]="{ 'cursor-pointer' : posPaginacion > 1 }" (click)="anteriorLista()"
+                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-dark-500 bg-white border border-dark-300 rounded-s-lg hover:bg-dark-100 hover:text-dark-700">Anterior</a>
+
+                    <ul class="inline-flex" *ngFor="let n of paginationArray">
+                        <li>
+                            <a [ngClass]="{ 'text-dark-600 bg-dark-50'  : n == posPaginacion, 'text-dark-500 bg-white cursor-pointer' : n != posPaginacion }"
+                                class="flex items-center justify-center px-3 h-8 border border-dark-300 hover:bg-dark-100 hover:text-dark-700">{{
+                                n }}</a>
+                        </li>
+                    </ul>
+
+                    <a [ngClass]="{ 'cursor-pointer' : posPaginacion < paginationArray.length }" (click)="siguienteLista()"
+                        class="flex items-center justify-center px-3 h-8 leading-tight text-dark-500 bg-white border border-dark-300 rounded-e-lg hover:bg-dark-100 hover:text-dark-700">Siguiente</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>

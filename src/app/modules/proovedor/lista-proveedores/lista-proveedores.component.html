@@ -1,0 +1,177 @@
+<div class="flex flex-col gap-4 w-full  h-full overflow-auto">
+
+    <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+    <!-- Proovedor -->
+    <div *ngIf="!isLoading" class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+        <!-- Subtitle / Cabecera -->
+        <div class="flex w-full mb-2">
+            <app-custom-sub-title
+                [id]="''"
+                [label]="titleLabel"
+                [class]="''">
+            </app-custom-sub-title>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- Razon -->
+            <app-custom-input
+                [id]="'id_input_razon'"
+                [label]="'Razón'"
+                [type]="'text'"
+                [autocomplete]="'text'"
+                [class]="''"
+                [control]="formProovedor.controls.razon"
+                [icon]="''" >
+            </app-custom-input>
+
+            <!-- NIT -->
+            <app-custom-input
+                [id]="'id_input_nit'"
+                [label]="'NIT'"
+                [type]="'text'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formProovedor.controls.nit"
+                [icon]="''" >
+            </app-custom-input>
+
+            <!-- Banco -->
+            <app-custom-drop-box
+                [id]="'id_drop_box_banco'"
+                [label]="'Banco'"
+                [control]="formProovedor.controls.banco"
+                [class]="''"
+                [data]="dataBanco" >
+            </app-custom-drop-box>
+
+            <!-- Nro Cuenta -->
+            <app-custom-input
+                [id]="'id_input_nro_cuenta'"
+                [label]="'Número de cuenta'"
+                [type]="'text'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formProovedor.controls.nro_cuenta"
+                [icon]="''" >
+            </app-custom-input>
+
+            <!-- Beneficiario -->
+            <app-custom-input
+                [id]="'id_input_beneficiario'"
+                [label]="'Beneficiario'"
+                [type]="'text'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formProovedor.controls.beneficiario"
+                [icon]="''" >
+            </app-custom-input>
+
+            <!-- Moneda -->
+            <app-custom-drop-box
+                [id]="'id_drop_moneda'"
+                [label]="'Moneda'"
+                [control]="formProovedor.controls.moneda"
+                [class]="''"
+                [data]="dataMoneda" >
+            </app-custom-drop-box>
+
+            <app-custom-button
+                class="h-full w-40"
+                [id] ="'id_btn_agregar'"
+                [label] ="btnLabel"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="formProovedor.valid"
+                (click)="onClickGuardar()" >
+            </app-custom-button>
+
+            <app-custom-button
+                *ngIf="isEditing"
+                class="h-full w-40"
+                [id] ="'id_btn_cancelar'"
+                [label] ="'Cancelar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="'bg-color-error hover:bg-color-error-hover'"
+                [valid] ="formProovedor.valid"
+                (click)="onClickCancelar()" >
+            </app-custom-button>
+        </div>
+    </div>
+
+    <div *ngIf="!isEditing && !isLoading" class="flex flex-col gap-4 w-full h-full">
+        <!-- Table y Nav -->
+        <div class="overflow-auto shadow-md border rounded-lg grow ">
+            <table class="w-full text-sm text-center rtl:text-right text-primary-500">
+                <thead class="text-sm text-primary-800 uppercase bg-primary-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">#</th>
+
+                        <th scope="col" class="px-6 py-3">Razón</th>
+
+                        <th scope="col" class="px-6 py-3">NIT</th>
+
+                        <th scope="col" class="px-6 py-3">Banco</th>
+
+                        <th scope="col" class="px-6 py-3">Nro Cuenta</th>
+
+                        <th scope="col" class="px-6 py-3">Beneficiario</th>
+
+                        <th scope="col" class="px-6 py-3">Moneda</th>
+
+                        <th scope="col" class="px-6 py-3">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="text-primary-800 bg-white border-b hover:bg-primary-50"
+                        *ngFor="let item of dataProovedores; index as i">
+                        <td class="p-2">{{ i + 1 }}</td>
+
+                        <td class="px-2 py-2">{{ item.razon }}</td>
+
+                        <td class="px-2 py-2">{{ item.nit }}</td>
+
+                        <td class="px-2 py-2">{{ item.banco }}</td>
+
+                        <td class="px-2 py-2">{{ item.nro_cuenta }}</td>
+
+                        <td class="px-2 py-2">{{ item.beneficiario }}</td>
+
+                        <td class="px-2 py-2">{{ item.moneda }}</td>
+
+                        <td class="px-2 py-2">
+                            <app-custom-icon
+                                    [icon]="'fa-solid fa-pen-to-square fa-lg'"
+                                    [class]="'text-color-info cursor-pointer hover:text-color-info-hover'"
+                                    (click)="onClickEditar(i)" >
+                                </app-custom-icon>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <nav *ngIf="false" class="flex items-center flex-column flex-wrap h-max md:flex-row justify-between"
+            aria-label="Table navigation">
+            <div class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                <a [ngClass]="{ 'cursor-pointer' : posPaginacion > 1 }" (click)="anteriorLista()"
+                    class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-primary-500 bg-white border border-primary-300 rounded-s-lg hover:bg-primary-100 hover:text-primary-700">Anterior</a>
+
+                <ul class="inline-flex" *ngFor="let n of paginationArray">
+                    <li>
+                        <a [ngClass]="{ 'text-primary-600 bg-primary-50'  : n == posPaginacion, 'text-primary-500 bg-white cursor-pointer' : n != posPaginacion }"
+                            class="flex items-center justify-center px-3 h-8 border border-primary-300 hover:bg-primary-100 hover:text-primary-700">{{
+                            n }}</a>
+                    </li>
+                </ul>
+
+                <a [ngClass]="{ 'cursor-pointer' : posPaginacion < paginationArray.length }" (click)="siguienteLista()"
+                    class="flex items-center justify-center px-3 h-8 leading-tight text-primary-500 bg-white border border-primary-300 rounded-e-lg hover:bg-primary-100 hover:text-primary-700">Siguiente</a>
+            </div>
+        </nav>
+    </div>
+</div>

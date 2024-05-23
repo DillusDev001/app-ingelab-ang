@@ -17,7 +17,7 @@ import { ParametroNombrePipe } from './pipes/parametroNombre/parametro-nombre.pi
     FrxComponent,
     ListaFrxComponent,
     ParametroComponent,
-    ParametroNombrePipe
+    ParametroNombrePipe,
   ],
   imports: [
     CommonModule,

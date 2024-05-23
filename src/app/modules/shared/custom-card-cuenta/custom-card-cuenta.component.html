@@ -1,0 +1,91 @@
+<div class="flex justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 p-4">
+    <div class="bg-white rounded-lg w-full md:w-max h-max md:h-max">
+
+        <div class="h-full flex flex-col gap-4 p-4 justify-center text-center">
+            
+            <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+            <!-- Content -->
+            <app-custom-title
+                *ngIf="!isLoading"
+                [id]="'id_sub_title_servicio'"
+                [label]="label"
+                [class]="''" >
+            </app-custom-title>
+
+            <app-custom-drop-box
+                *ngIf="!isLoading"
+                [id]="'id_drop_box_banco'"
+                [label]="'Banco...'"
+                [control]="formCuenta.controls.banco"
+                [class]="''"
+                [data]="dataBanco" >
+            </app-custom-drop-box>
+
+            <app-custom-input
+                *ngIf="!isLoading"
+                [id]="'id_input_nro_cuenta'"
+                [label]="'Nro. Cuenta'"
+                [type]="'text'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formCuenta.controls.nro_cuenta"
+                [icon]="'fa-solid fa-building-columns fa-lg'" >
+            </app-custom-input>
+
+            <app-custom-input
+                *ngIf="!isLoading"
+                [id]="'id_input_a_nombre'"
+                [label]="'Beneficiario'"
+                [type]="'text'"
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formCuenta.controls.a_nombre"
+                [icon]="'fa-solid fa-person fa-lg'" >
+            </app-custom-input>
+
+            <div class="flex flex-col w-full items-center" *ngIf="!isLoading">
+                <app-custom-loading *ngIf="showLoadingImage"></app-custom-loading>
+                <img width="150" *ngIf="previsualizar && !isLoading" [src]="previsualizar" alt="qr" (load)="onImageLoad()">
+            </div>
+
+            <input *ngIf="typeView != 'ver' && !isLoading" type="file" accept="image/png, , image/jpg" (change)="capturarImagen($event)" />
+
+            <div class="flex gap-4 w-full" *ngIf="!isLoading">
+                <app-custom-button *ngIf="typeView != 'ver'"
+                    class="w-full"
+                    [id] ="'id_btn_guardar'"
+                    [label] ="'Guardar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="''"
+                    [valid] ="formCuenta.valid"
+                    (click)="onClickAgregarCuenta()" >
+                </app-custom-button>
+    
+                <app-custom-button
+                    class="w-full"
+                    [id] ="'id_btn_cancelar'"
+                    [label] ="typeView=='ver'? 'Cerrar': 'Cancelar'"
+                    [type] ="'cancel'"
+                    [icon] ="''"
+                    [class] ="''"
+                    [valid] ="true"
+                    (click)="onClickCancel()" >
+                </app-custom-button>
+    
+                <app-custom-button
+                    class="w-full"
+                    *ngIf="typeView == 'ver'"
+                    [id] ="'id_btn_cancelar'"
+                    [label] ="'Actualizar'"
+                    [type] ="'accept'"
+                    [icon] ="''"
+                    [class] ="''"
+                    [valid] ="true"
+                    (click)="onClickActualizar()" >
+                </app-custom-button>
+            </div>
+        </div>
+    </div>
+</div>

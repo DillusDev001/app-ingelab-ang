@@ -1,0 +1,415 @@
+<div class="w-full h-full overflow-auto">
+    <app-custom-alert-input *ngIf="showAlertDescuento"
+        [id]="'id_input_number'"
+        [title]="'Descuento'"
+        [label]="'Descuento Bs.'"
+        [type]="'number'"
+        [class]="''"
+        [icon]="''"
+        (onResponse)="inputDescuentoResponse($event)" >
+    </app-custom-alert-input>
+
+    <app-custom-alert-search-proveedor class="w-full h-full" *ngIf="showBusqueda"
+    (response)="busquedaProveedorResponse($event)">
+    </app-custom-alert-search-proveedor>
+
+    <app-custom-alert-date-picker *ngIf="showDatePicker"
+        [label]="labelDatePicker"
+        [fecha]="fechaSendDatePicker"
+        [type]="typeDatePicker"
+        (response)="fechaSelectResponse($event)">
+    </app-custom-alert-date-picker>
+
+    <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+    <form *ngIf="!isLoading && !showBusqueda && !showDatePicker && !showAlertDescuento" class="flex flex-col gap-4 w-full h-max overflow-auto">
+        
+        <!-- Title -->
+        <app-custom-title
+            class="w-full text-center"
+            [id]="'id_titlte'"
+            [label]="'ORDEN DE COMPRA'"
+            [class]="'uppercase w-full h-full text-3xl'">
+        </app-custom-title>
+
+        <!-- Codigo - Version - Fec Vigencia - Registro -->
+        <div class="flex justify-between gap-4 border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Codigo Gasto -->
+            <app-custom-input 
+                class="w-full"
+                [id]="'id_input_codigo_gasto'" 
+                [label]="'Código'" 
+                [type]="'text'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.codigo_gasto" 
+                [icon]="''">
+            </app-custom-input>
+
+            <!-- Version -->
+            <app-custom-input
+                class="w-full"
+                [id]="'id_input_version'" 
+                [label]="'Versión'" 
+                [type]="'text'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.version" 
+                [icon]="''">
+            </app-custom-input>
+
+            <!-- Fecha Vigente -->
+            <app-custom-input
+                class="w-full"
+                [id]="'id_input_fecha_vigencia'" 
+                [label]="'Fecha Vigencia'" 
+                [type]="'date'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.fec_vigencia" 
+                [icon]="''">
+            </app-custom-input>
+
+            <!-- Registro -->
+            <app-custom-input
+                class="w-full"
+                [id]="'id_input_registro'" 
+                [label]="'Registro'" 
+                [type]="'text'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.registro" 
+                [icon]="''">
+            </app-custom-input>
+        </div>
+
+        <!-- Area - Proveedor - Fec Emision -->
+        <div class="flex justify-between gap-4 border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Area -->
+            <app-custom-drop-box
+                (change)="onChangeArea($event)"
+                class="w-max"
+                [id]="'id_drop_box_area'"
+                [label]="'Área...'"
+                [control]="formGasto.controls.area"
+                [class]="''" 
+                [data]="dataArea">
+            </app-custom-drop-box>
+
+            <!-- Proveedor -->
+            <div class="flex gap-2 w-full items-center">
+                <app-custom-input2
+                    class="w-full"
+                    [id]="'id_input_proveedor'" 
+                    [label]="'Proveedor'"
+                    [text]="gastoObj.proveedor.razon"
+                    [class]="''"
+                    [icon]="''">
+                </app-custom-input2>
+
+                <app-custom-input2
+                    class="w-full"
+                    [id]="'id_input_proveedor_nit'" 
+                    [label]="'NIT'"
+                    [text]="gastoObj.proveedor.nit"
+                    [class]="''"
+                    [icon]="''">
+                </app-custom-input2>
+
+                <app-custom-icon
+                    *ngIf="typeRecive == 'agregar'"
+                    [icon]="'fa-solid fa-magnifying-glass fa-lg cursor-pointer'" 
+                    [class]="'h-full text-color-icon-2 hover:bg-primary-100 rounded'"
+                    (click)="onClickBusquedaProveedor()">
+                </app-custom-icon>
+            </div>
+
+            <!-- Fecha Emision -->
+            <app-custom-input
+                [id]="'id_input_fecha_emision'" 
+                [label]="'Fecha Emisión'" 
+                [type]="'date'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.fec_emision" 
+                [icon]="''">
+            </app-custom-input>
+        </div>
+
+        <!-- Tipo Cambio - Tipo pago - Tiempo Credito - Descripción - Fecha Entrega -->
+        <div class="flex justify-between gap-4 border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Tipo Cambio -->
+            <app-custom-input
+                [id]="'id_input_tipo_cambio'" 
+                [label]="'Tipo Cambio'" 
+                [type]="'number'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.tipo_cambio" 
+                [icon]="''">
+            </app-custom-input>
+
+            <!-- Tipo pago -->
+            <app-custom-drop-box
+                class="w-max"
+                [id]="'id_drop_box_area'"
+                [label]="'Tipo de Pago...'"
+                [control]="formGasto.controls.tipo_pago"
+                [class]="''" 
+                [data]="dataTipoPago">
+            </app-custom-drop-box>
+
+            <!-- Tiempo Credito -->
+            <app-custom-input
+                [id]="'id_input_tiempo_credito'" 
+                [label]="'Tiempo de Crédito'" 
+                [type]="'text'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.tiempo_credito" 
+                [icon]="''">
+            </app-custom-input>
+
+            <!-- Descripcion -->
+            <app-custom-input
+                [id]="'id_input_tiempo_credito'" 
+                [label]="'Descripción'" 
+                [type]="'text'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.descripcion" 
+                [icon]="''">
+            </app-custom-input>
+
+            <!-- Fecha Entrega -->
+            <app-custom-input
+                [id]="'id_input_fecha_entrega'" 
+                [label]="'Fecha de Entrega'" 
+                [type]="'date'" 
+                [autocomplete]="''"
+                [class]="''"
+                [control]="formGasto.controls.fec_entrega" 
+                [icon]="''">
+            </app-custom-input>
+        </div>
+
+        <!-- Detalle -->
+        <div class="flex flex-col gap-4 border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Title -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="'id_title_detalle'"
+                    [label]="'Datos de Compra'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <!-- Table -->
+            <div class="w-full h-max">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 border shadow-lg">
+                    <!-- Header -->
+                    <thead class="text-xs text-color-text uppercase bg-primary-100">
+                        <tr>
+                            <th scope="col" class="px-2 py-2 text-center" style="width: 2%;">#</th>
+
+                            <th scope="col" class="px-2 py-2" style="width: fit-content;">Descripción</th>
+
+                            <th scope="col" class="px-2 py-2" style="width: fit-content;">Cantidad</th>
+
+                            <th scope="col" class="px-2 py-2 w-max text-center">Unidad de Medida</th>
+                            
+                            <th scope="col" class="px-2 py-2 w-max text-center">Precio Unitario</th>
+
+                            <th scope="col" class="px-2 py-2 w-max text-center">Total Compras</th>
+
+                            <th scope="col" class="px-2 py-2 w-max text-center"></th>
+                        </tr>
+                    </thead>
+
+                    <!-- Body -->
+                    <tbody>
+                        <ng-container *ngFor="let item of gastoObj.detalle, index as i">
+                            <tr class="bg-white border-y" fragment="">
+                                <th class="px-2 py-2 font-medium text-gray-900 text-center">{{ i + 1 }}</th>
+    
+                                <th class="px-2 py-2 font-medium text-gray-900">{{ item.descripcion }}</th>
+    
+                                <td class="px-2 py-2">{{ item.cantidad }}</td>
+    
+                                <td class="px-2 py-2 text-center">{{ item.unidad_medida }}</td>
+
+                                <td class="px-2 py-2 text-center">{{ item.precio_unidad }}</td>
+
+                                <td class="px-2 py-2 text-center">{{ item.precio_total }}</td>
+
+                                <td class="px-2 py-2 text-center" >
+                                    <p *ngIf="typeRecive != 'ver'" class="cursor-pointer underline underline-offset-2 text-color-info" (click)="onClickEliminarItem(i)">
+                                        Eliminar
+                                    </p>
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                        <tr *ngIf="typeRecive != 'ver'">
+                            <th class="px-2 py-2 font-medium text-gray-900 text-center"></th>
+    
+                            <th class="px-2 py-2 font-medium text-gray-900">
+                                <!-- Descripcion -->
+                                <app-custom-input 
+                                    [id]="'id_add_descripcion'" 
+                                    [label]="'Descripción'" 
+                                    [type]="'text'" 
+                                    [autocomplete]="''"
+                                    [class]="''"
+                                    [control]="formAddDetalle.controls.descripcion" 
+                                    [icon]="''">
+                                </app-custom-input>
+                            </th>
+
+                            <td class="px-2 py-2">
+                                <!-- Cantidad -->
+                                <app-custom-input 
+                                    [id]="'id_add_cantidad'" 
+                                    [label]="'Cantidad'" 
+                                    [type]="'number'" 
+                                    [autocomplete]="''"
+                                    [class]="''"
+                                    [control]="formAddDetalle.controls.cantidad" 
+                                    [icon]="''"
+                                    (input)="onChange($event)">
+                                </app-custom-input>
+                            </td>
+    
+                            <td class="px-2 py-2 text-center">
+                                <!-- Tipo Medida -->
+                                <app-custom-drop-box
+                                    [id]="'id_drop_box_tipo_medida'"
+                                    [label]="'Unidad de medida...'"
+                                    [control]="formAddDetalle.controls.unidad_medida"
+                                    [class]="''" 
+                                    [data]="dataUnidadMedida">
+                                </app-custom-drop-box>
+                            </td>
+
+                            <td class="px-2 py-2 text-center">
+                                <!-- Precio Unitario -->
+                                <app-custom-input 
+                                    [id]="'id_add_precio'" 
+                                    [label]="'Precio Unitario'" 
+                                    [type]="'number'" 
+                                    [autocomplete]="''"
+                                    [class]="''"
+                                    [control]="formAddDetalle.controls.precio_unidad" 
+                                    [icon]="''"
+                                    (input)="onChange($event)">
+                                </app-custom-input>
+                            </td>
+
+                            <td class="px-2 py-2 text-center">
+                                <!-- Total Compras -->
+                                <app-custom-input 
+                                    [id]="'id_add_total_compras'" 
+                                    [label]="'Total Compras'" 
+                                    [type]="'number'" 
+                                    [autocomplete]="''"
+                                    [class]="''"
+                                    [control]="formAddDetalle.controls.precio_total" 
+                                    [icon]="''">
+                                </app-custom-input>
+                            </td>
+
+                            <td class="px-2 py-2 text-center">
+                                <app-custom-button
+                                    [id] ="'id_btn_add_detalle'"
+                                    [label] ="'Agregar'"
+                                    [type] ="'cancel'"
+                                    [icon] ="''"
+                                    [class] ="''"
+                                    [valid] ="formAddDetalle.valid"
+                                    (click)="onClickAddDetalle()" >
+                                </app-custom-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Costos -->
+        <div class="flex gap-4 flex-row-reverse">
+            <div class="flex flex-col gap-2 w-max">
+                <app-custom-label0
+                    [id] = "'id_label_total_pagar'"
+                    [label] = "'SubTotal Compras'"
+                    [text] = "transformCostos('Sub Total') | currency:'BOB':'Bs. '"
+                    [class]="'w-full'" >
+                </app-custom-label0>
+
+                <app-custom-label0
+                    [ngClass]="{'cursor-pointer': typeRecive == 'agregar'}"
+                    [id] = "'id_label_descuento'"
+                    [label] = "'Descuento'"
+                    [text] = "transformCostos('Descuento') | currency:'BOB':'Bs. '"
+                    [class]="'w-full'"
+                    (click)="onClickDescuento()" >
+                </app-custom-label0>
+
+                <app-custom-label0
+                    [id] = "'id_label_total_compras_bs'"
+                    [label] = "'Total Compras'"
+                    [text] = "transformCostos('Total Bs') | currency:'BOB':'Bs. '"
+                    [class]="'w-full'">
+                </app-custom-label0>
+
+                <app-custom-label0
+                    [id] = "'id_label_total_compras_sus'"
+                    [label] = "'Total Compras'"
+                    [text] = "transformCostos('Total Sus') | currency:'USD':'USD '"
+                    [class]="'w-full'">
+                </app-custom-label0>
+            </div>
+        </div>
+
+        <div class="flex gap-4 w-full">
+            <app-custom-button *ngIf="typeRecive != 'ver'"
+                [id] ="'id_btn_guardar'"
+                [label] ="'Guardar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="formGasto.valid"
+                (click)="onClickAgregarGasto()" >
+            </app-custom-button>
+
+            <app-custom-button
+                [id] ="'id_btn_cancelar'"
+                [label] ="typeRecive=='ver'? 'Cerrar': 'Cancelar'"
+                [type] ="'cancel'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickCancel()" >
+            </app-custom-button>
+
+            <app-custom-button *ngIf="typeRecive == 'ver'"
+                [id] ="'id_btn_imprimir'"
+                [label] ="'Imprimir'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickPDF('imprimir')" >
+            </app-custom-button>
+
+            <app-custom-button *ngIf="typeRecive == 'ver'"
+                [id] ="'id_btn_imprimir'"
+                [label] ="'Descargar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickPDF('descargar')" >
+            </app-custom-button>
+        </div>
+    </form>
+</div>

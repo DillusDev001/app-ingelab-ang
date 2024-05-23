@@ -1,1 +1,1 @@
-export interface RecepcionFrx { }
+export interface RecepcisonFrx { }

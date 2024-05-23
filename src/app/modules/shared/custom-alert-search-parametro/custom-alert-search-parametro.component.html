@@ -1,7 +1,9 @@
 <!-- Confirmacion Alert -->
 <div class="flex justify-center items-center w-full h-full bg-gray-400 bg-opacity-60 p-4">
     <div class="bg-white rounded-lg w-full md:w-max h-full md:h-max">
-        <div class="h-full flex flex-col gap-4 p-4 text-center">
+        <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+        <div *ngIf="!isLoading" class="h-full flex flex-col gap-4 p-4 text-center">
             <!-- Content -->
             <div class="flex flex-col md:flex-row w-full gap-4 items-center">
                 <app-custom-drop-box

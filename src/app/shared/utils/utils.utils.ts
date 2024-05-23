@@ -45,9 +45,11 @@ export function inicialesCapital(str: string): string {
 
 // Devuelve cadena de numeros con ceros a la izquierda
 export function addCerosIzquierda(num: number): string {
-    if (num < 10) {
+    if (num >= 1 && num < 10) {
+        return "000" + num;
+    } else if (num >= 10 && num < 100) {
         return "00" + num;
-    } else if (num < 100) {
+    } else if (num >= 100 && num < 1000) {
         return "0" + num;
     } else {
         return String(num)

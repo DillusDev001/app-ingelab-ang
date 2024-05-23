@@ -5,7 +5,7 @@ import { initFlowbite } from 'flowbite';
 import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { UsuarioService } from 'src/app/shared/services/usuario/usuario.service';
+import { UsuarioService } from 'src/app/shared/services/sesion-module/usuario/usuario.service';
 import { arrayBusquedaUsuario } from 'src/app/shared/utils/local.array';
 import { goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';

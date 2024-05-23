@@ -1,0 +1,362 @@
+<div class="relative w-full h-full">
+
+    <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+    <div *ngIf="!isLoading" class="flex flex-col gap-4 w-full h-max overflow-auto p-4">
+        <!-- Title -->
+        <app-custom-title
+            class="w-full text-center"
+            [id]="'id_titlte'"
+            [label]="'FORMULARIO DE RECEPCIÓN'"
+            [class]="'uppercase w-full h-full text-3xl'">
+        </app-custom-title>
+
+        <!-- Datos Recepcion -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+            <!-- Subtitle / Cabecera -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Datos Recepción'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex gap-4 flex-wrap ">
+                <!-- Codigo Cotizacion FRX -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Código FRX'"
+                    [text]="objRecepcion.cod_cotizacion"
+                    [class]="''" >
+                </app-custom-label1>
+
+                <!-- Fec Recepcion -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Fecha Recepción'"
+                    [text]="transformFecha('Recepcion')"
+                    [class]="''" >
+                </app-custom-label1>
+
+                <!-- User Recepcion -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Técnico Recepción'"
+                    [text]="objTecnicoRecepcion.nombres + ' ' + objTecnicoRecepcion.apellidos"
+                    [class]="''" >
+                </app-custom-label1>
+            </div>
+        </div>
+
+        <!-- Datos Asignacion -->
+        <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2" *ngIf="objRecepcion.fec_ini !== ''">            
+            <!-- Subtitle / Cabecera -->
+            <div class="flex w-full mb-2">
+                <app-custom-sub-title
+                    [id]="''"
+                    [label]="'Datos Asignación'"
+                    [class]="''">
+                </app-custom-sub-title>
+            </div>
+
+            <div class="flex gap-4 flex-wrap" >
+                <!-- Fec Recepcion -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Fecha Inicio'"
+                    [text]="transformFecha('Inicio')"
+                    [class]="''" >
+                </app-custom-label1>
+
+                <!-- User Recepcion -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Fecha Finalización'"
+                    [text]="transformFecha('Fin')"
+                    [class]="''" >
+                </app-custom-label1>
+
+                <!-- User Asignacion -->
+                <app-custom-label1
+                    [id]="''"
+                    [label]="'Técnico Asignado'"
+                    [text]="objTecnicoAsignado.nombres + ' ' + objTecnicoAsignado.apellidos"
+                    [class]="''" >
+                </app-custom-label1>
+            </div>
+        </div>
+
+        <!-- Subtitle / Cabecera -->
+        <div class="flex w-full">
+            <app-custom-sub-title
+                class="w-full text-center mt-2"
+                [id]="''"
+                [label]="'Datos Orden Servicio'"
+                [class]="''">
+            </app-custom-sub-title>
+        </div>
+
+        <!-- Imprimir recepcion -->
+        <form class="flex flex-col gap-4 w-full h-max">
+            <div class="flex gap-4 w-full">
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'El servicio se realizará:'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Desde Fecha -->
+                        <app-custom-input
+                            class="w-full"
+                            [id]="'id_input_'"
+                            [label]="'Desde fecha'"
+                            [type]="'date'"
+                            [autocomplete]="''"
+                            [class]="''"
+                            [control]="formImpresion.controls.desde_fecha"
+                            [icon]="''" >
+                        </app-custom-input>
+        
+                        <!-- Hasta Fecha -->
+                        <app-custom-input
+                            class="w-full"
+                            [id]="'id_input_'"
+                            [label]="'Hasta fecha'"
+                            [type]="'date'"
+                            [autocomplete]="''"
+                            [class]="''"
+                            [control]="formImpresion.controls.hasta_fecha"
+                            [icon]="''" >
+                        </app-custom-input>
+                    </div>
+                </div>
+
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'Lugar Servicio / Gastos Logísticos'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Desde Fecha -->
+                        <app-custom-drop-box
+                                class="w-full"
+                                [id]="''"
+                                [label]="'Lugar Servicio...'"
+                                [control]="formImpresion.controls.lugar"
+                                [class]="''"
+                                [data]="dataLugarServicio" >
+                        </app-custom-drop-box>
+        
+                        <app-custom-drop-box
+                            class="w-full"
+                            [id]="''"
+                            [label]="'Gastos Logísticos...'"
+                            [control]="formImpresion.controls.asumido"
+                            [class]="''"
+                            [data]="dataGastosLogisticos" >
+                        </app-custom-drop-box>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full">
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'Reporte Incertidumbre'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Desde Fecha -->
+                        <app-custom-drop-box
+                            class="w-full"
+                            [id]="''"
+                            [label]="'Reporte Incertidumbre...'"
+                            [control]="formImpresion.controls.incertidumbre"
+                            [class]="''"
+                            [data]="dataYesNo" >
+                        </app-custom-drop-box>
+                    </div>
+                </div>
+
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'Entrega de informe'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Fecha Resultados -->
+                        <app-custom-input
+                            class="w-full"
+                            [id]="'id_input_resultado_fecha'"
+                            [label]="'Fecha Resultados'"
+                            [type]="'date'"
+                            [autocomplete]="''"
+                            [class]="''"
+                            [control]="formImpresion.controls.entrega"
+                            [icon]="''" >
+                        </app-custom-input>
+                    </div>
+                </div>
+
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'Mediante'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Desde Fecha -->
+                        <app-custom-drop-box
+                            class="w-full"
+                            [id]="''"
+                            [label]="'Mediante...'"
+                            [control]="formImpresion.controls.mediante"
+                            [class]="''"
+                            [data]="dataMediante" >
+                        </app-custom-drop-box>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 w-full">
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'El pago por el servicio se realizará:'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Desde Fecha -->
+                        <app-custom-drop-box
+                            class="w-full"
+                            [id]="''"
+                            [label]="'...'"
+                            [control]="formImpresion.controls.pago"
+                            [class]="''"
+                            [data]="dataElPago" >
+                        </app-custom-drop-box>
+        
+                        <!-- Hasta Fecha -->
+                        <app-custom-input
+                            class="w-full"
+                            [id]="'id_input_'"
+                            [label]="'Hasta fecha'"
+                            [type]="'date'"
+                            [autocomplete]="''"
+                            [class]="''"
+                            [control]="formImpresion.controls.pago_hasta"
+                            [icon]="''" >
+                        </app-custom-input>
+                    </div>
+                </div>
+
+                <div class="flex flex-col border border-dashed border-color-text rounded-lg w-full h-max p-2">
+                    <!-- Subtitle / Cabecera -->
+                    <div class="flex w-full mb-2">
+                        <app-custom-sub-title
+                            [id]="''"
+                            [label]="'Factura por el servicio se emitirá:'"
+                            [class]="''">
+                        </app-custom-sub-title>
+                    </div>
+        
+                    <div class="flex gap-4 w-full">
+                        <!-- Desde Fecha -->
+                        <app-custom-drop-box
+                                class="w-full"
+                                [id]="''"
+                                [label]="'...'"
+                                [control]="formImpresion.controls.factura"
+                                [class]="''"
+                                [data]="dataLaFactura" >
+                        </app-custom-drop-box>
+        
+                        <app-custom-input
+                            class="w-full"
+                            [id]="'id_input_'"
+                            [label]="'Hasta fecha'"
+                            [type]="'date'"
+                            [autocomplete]="''"
+                            [class]="''"
+                            [control]="formImpresion.controls.factura_hasta"
+                            [icon]="''" >
+                        </app-custom-input>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Botones -->
+        <div class="flex gap-4 w-full">
+            <app-custom-button
+                [id] ="'id_btn_guardar'"
+                [label] ="'Imprimir'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="formImpresion.valid"
+                (click)="onClickPDF('imprimir')" >
+            </app-custom-button>
+
+            <app-custom-button
+                [id] ="'id_btn_guardar'"
+                [label] ="'Descargar'"
+                [type] ="'cancel'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="formImpresion.valid"
+                (click)="onClickPDF('descargar')" >
+            </app-custom-button>
+
+            <app-custom-button
+                [id] ="'id_btn_guardar'"
+                [label] ="'Cerrar'"
+                [type] ="'accept'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickCerrar()" >
+            </app-custom-button>
+
+            <app-custom-button
+                *ngIf="ordenPagoIsSaved && objRecepcion.user_asignado === ''"
+                [id] ="'id_btn_guardar'"
+                [label] ="'Agregar a Asignación'"
+                [type] ="'cancel'"
+                [icon] ="''"
+                [class] ="''"
+                [valid] ="true"
+                (click)="onClickAgregarMiLista()" >
+            </app-custom-button>
+        </div>
+    </div>
+</div>

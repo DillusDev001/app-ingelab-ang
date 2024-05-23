@@ -40,7 +40,7 @@ export class CustomInputComponent implements OnInit {
     this.classDiv = 'border-color-border';
     this.classIcon = 'text-color-icon-1';
     this.classInput = 'text-color-text';
-    
+
     this.isHidden = !this.isHidden;
 
     if (this.isHidden) {
@@ -59,14 +59,16 @@ export class CustomInputComponent implements OnInit {
   }
   onBlur(): void {
     this.inputFocus = false;
-    if (this.control.errors && this.control.touched) {
-      this.classDiv = 'border-color-border-red text-color-error';
-      this.classIcon = 'text-color-icon-red';
-      this.classInput = 'text-color-error';
-    } else if(!this.control.errors && this.control.touched) {
-      this.classDiv = 'border-color-border-unfocus text-color-text-unfocus'
-      this.classIcon = 'text-color-icon-unfocus';
-      this.classInput = 'text-color-text';
+    if (this.control !== null) {
+      if (this.control.errors && this.control.touched) {
+        this.classDiv = 'border-color-border-red text-color-error';
+        this.classIcon = 'text-color-icon-red';
+        this.classInput = 'text-color-error';
+      } else if (!this.control.errors && this.control.touched) {
+        this.classDiv = 'border-color-border-unfocus text-color-text-unfocus'
+        this.classIcon = 'text-color-icon-unfocus';
+        this.classInput = 'text-color-text';
+      }
     }
   }
 }

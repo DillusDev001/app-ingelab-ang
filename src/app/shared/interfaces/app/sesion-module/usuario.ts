@@ -24,7 +24,7 @@ export interface Usuario {
         
     estado: number;
 
-    fec_crea: Date;
+    fec_crea: String;
     user_mod: string;
-    fec_mod: Date;
+    fec_mod: String;
 }

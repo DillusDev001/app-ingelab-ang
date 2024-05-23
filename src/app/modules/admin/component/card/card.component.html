@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4 border p-4 rounded-lg shadow-lg bg-color-bg-submenu"
+<div class="flex flex-col gap-4 border p-4 rounded-lg shadow-lg bg-color-bg-submenu overflow-hidden"
     [class]="class">
     <div class="flex flex-grow gap-3 items-center w-full h-max ">
         <span class="p-1 text-color-icon-1">
@@ -11,5 +11,5 @@
             [class]="'uppercase w-full h-full text-2xl'">
         </app-custom-title>
     </div>
-    <p class="text-color-text font-regular text-lg tracking-wider">Descripción.</p>
+    <p class="text-color-text font-regular text-lg tracking-wider">{{ description }}</p>
 </div>

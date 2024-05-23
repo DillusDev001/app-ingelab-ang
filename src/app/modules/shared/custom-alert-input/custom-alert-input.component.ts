@@ -48,10 +48,10 @@ export class CustomAlertInputComponent {
           value = String(this.formCustom.controls.value.value);
         }
 
-        this.onResponse.emit({ bool, data: value });
+        this.onResponse.emit({ bool: bool, data: value });
       }
     } else {
-      this.onResponse.emit({ bool, data: 0 });
+      this.onResponse.emit({ bool: bool, data: null });
     }
   }
 

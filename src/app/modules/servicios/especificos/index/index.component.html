@@ -14,6 +14,17 @@
         <app-custom-tab-button
             class="w-max"
             [id]="'id_servicios_generales_mantenimiento'"
+            [label]="'Recepción'"
+            [icon]="''"
+            [class]="'cursor-pointer'"
+            [spanClass]="''"
+            [selected]="selectedTab"
+            (click)="onClickButton('Recepción')" >
+        </app-custom-tab-button>
+
+        <app-custom-tab-button
+            class="w-max"
+            [id]="'id_servicios_generales_mantenimiento'"
             [label]="'Mantenimiento'"
             [icon]="''"
             [class]="'cursor-not-allowed'"

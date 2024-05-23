@@ -57,7 +57,7 @@ export class ListaComponent implements OnInit {
   userLogeado!: Usuario;
 
   // loading spinner
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   // Info Alert
   alertInfo: boolean = false;
@@ -90,11 +90,11 @@ export class ListaComponent implements OnInit {
   // Agregar Usuario
   showAgregar: boolean = false;
 
-    // Como mostrar FRX FORMULARIO
-    showFormularioFRX: string = '';
+  // Como mostrar FRX FORMULARIO
+  showFormularioFRX: string = '';
 
-    // CodeFormulario Send
-    codeFormularioFRX: string = '';
+  // CodeFormulario Send
+  codeFormularioFRX: string = '';
 
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
@@ -138,35 +138,30 @@ export class ListaComponent implements OnInit {
     this.showAgregar = true;
   }
 
-  onClickListaElement(index: number){
+  onClickListaElement(index: number) {
     this.showFormularioFRX = 'ver';
     this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
     this.showAgregar = true;
   }
 
-  onClickActulizar(index: number){
+  onClickActulizar(index: number) {
     this.showFormularioFRX = 'editar';
     this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
     this.showAgregar = true;
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
-  getListaCotizacionGeneral(){
+  getListaCotizacionGeneral() {
     this.dataCotizacion = []
     this.cotizacionGeneralService.cotizacionGetLista().subscribe(result => {
       result as ApiResult;
 
       if (result.rows > 0) {
-        for(let i = result.data.length - 1; i >= 0; i--){
-          this.dataCotizacion.push(result.data[i] as CotizacionGeneral);
-        }
-
-        // Paginación
-        let nPaginacion = Math.trunc(this.dataCotizacion.length / 10) + 1;
-        this.paginationArray = Array.from({ length: nPaginacion }, (_, i) => i + 1);
+        this.dataCotizacion = result.data;
       } else {
         this.customErrorToast(result.message);
       }
+      this.isLoading = false;
     });
   }
 
@@ -175,12 +170,12 @@ export class ListaComponent implements OnInit {
   /** ---------------------------------------- Receiver --------------------------------------- **/
   cotizacionGeneralResponse(event: boolean) {
     if (event) {
-      //this.isLoading = true;
+      this.isLoading = true;
       this.getListaCotizacionGeneral();
     }
 
     this.showAgregar = false;
-  }  
+  }
 
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
   customSuccessToast(msg: string) {

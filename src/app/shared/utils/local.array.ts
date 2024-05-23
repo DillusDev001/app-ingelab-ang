@@ -1055,12 +1055,12 @@ export const arrayRol = [
         data: 'Developer',
         value: 'Developer',
         autorizacion: 0
-    },
-    {
-        data: 'Propietario',
-        value: 'Propietario',
-        autorizacion: 1
     },*/
+    {
+        data: 'Gerencia',
+        value: 'Gerencia',
+        autorizacion: 1
+    },
     {
         data: 'Administrador',
         value: 'Administrador',
@@ -1207,6 +1207,28 @@ export const arrayBanco = [
     },
 ]
 
+export const arrayMoneda = [
+    { value: 'Bolivianos', data: 'Bolivianos' },
+    { value: 'Dólar Americano', data: 'Dólar Americano' },
+    { value: 'Euro', data: 'Euro' }
+]
+
+export const arrayArea = [
+    { value: 'LAB', data: 'Laboratorio' },
+    { value: 'ADM', data: 'Administración' }
+]
+
+export const arrayTipoPago = [
+    { value: 'Efectivo', data: 'Efectivo' },
+    { value: 'Transferencia', data: 'Transferencia' },
+    { value: 'Tarjeta de Débito', data: 'Tarjeta de Débito' },
+    { value: 'Tarjeta de Crédito', data: 'Tarjeta de Crédito' }
+]
+
+export const arrayUnidadMedida = [
+    { value: 'Servicio', data: 'Servicio' },
+]
+
 export const arraySexo = [
     {
         value: 'F',
@@ -1244,6 +1266,14 @@ export const arrayBusquedaEmpresa = [
     { value: 'ciudad', data: 'Ciudad' },
     { value: 'pais', data: 'País' },
     { value: 'nit', data: 'NIT' },
+]
+
+export const arrayBusquedaProveedor = [
+    { value: 'razon', data: 'Razón Social' },
+    { value: 'nit', data: 'NIT' },
+    { value: 'banco', data: 'Banco' },
+    { value: 'beneficiario', data: 'Beneficiario' },
+    { value: 'moneda', data: 'Moneda' },
 ]
 
 export const arrayBusquedaParametro = [
@@ -2286,4 +2316,64 @@ export const arrayPais = [
         "data": "Zimbabue",
         "value": "Zimbabue"
     }
+]
+
+export const arrayTipoEmpresa = [
+    {
+        "data": "Empresa",
+        "value": "Empresa"
+    },
+    {
+        "data": "Cooperativa",
+        "value": "Cooperativa"
+    }
+]
+
+export const arrayBusquedaGasto = [
+    {
+        data: 'Código de Gasto',
+        value: 'codigo_gasto'
+    },
+    {
+        data: 'Área',
+        value: 'area'
+    },
+]
+
+// Orden de trabajo
+export const arrayLugarServicio = [
+    { value: 'Instalaciones de la empresa', data: 'Instalaciones de la empresa' },
+    { value: 'Laboratorio INGENIALAB', data: 'Laboratorio INGENIALAB' },
+    { value: 'A coordinar con el solicitante', data: 'A coordinar con el solicitante' }
+]
+
+export const arrayGastosLogisticos = [
+    { value: 'SOLICITANTE', data: 'SOLICITANTE' },
+    { value: 'INGENIALAB SRL', data: 'INGENIALAB SRL' }
+]
+
+export const arrayMediante = [
+    { value: 'formato fisico', data: 'formato fisico' },
+    { value: 'formato fisico - digital (escaneado) via whatsapp', data: 'formato fisico - digital (escaneado) via whatsapp' },
+    { value: 'formato fisico - digital (escaneado) via e-mail', data: 'formato fisico - digital (escaneado) via e-mail' }
+]
+
+export const arrayElPago = [
+    { value: 'previa realizacion de servicio', data: 'previa realizacion de servicio' },
+    { value: 'previa solicitud del informe', data: 'previa solicitud del informe' },
+    { value: 'posterior emision de factura', data: 'posterior emision de factura' }
+]
+
+export const arrayLaFactura = [
+    { value: 'Posterior emision informe', data: 'Posterior emision informe' }
+]
+
+export const arrayYesNo = [
+    { value: 'Si', data: 'Si' },
+    { value: 'No', data: 'No' }
+]
+
+export const array = [
+    { value: '', data: '' },
+    { value: '', data: '' }
 ]

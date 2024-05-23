@@ -15,21 +15,20 @@ import { SubServicio } from 'src/app/shared/interfaces/app/servicio-module/sub-s
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { ResponseEvent } from 'src/app/shared/interfaces/event/response.event';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { PersonaService } from 'src/app/shared/services/cliente/persona/persona.service';
+import { PersonaService } from 'src/app/shared/services/cliente-module/persona/persona.service';
 import { CotizacionGeneralSubServicioService } from 'src/app/shared/services/servicio-generale-module/cotizacion-general-sub-servicio/cotizacion-general-sub-servicio.service';
 import { CotizacionGeneralService } from 'src/app/shared/services/servicio-generale-module/cotizacion-general/cotizacion-general.service';
-import { SubServicioService } from 'src/app/shared/services/sub-servicio/sub-servicio.service';
-import { UsuarioService } from 'src/app/shared/services/usuario/usuario.service';
+import { SubServicioService } from 'src/app/shared/services/servicio-module/sub-servicio/sub-servicio.service';
+import { UsuarioService } from 'src/app/shared/services/sesion-module/usuario/usuario.service';
 import { goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
 import { getCodigoServicioNum } from 'src/app/shared/utils/utils.utils';
 
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { Margins, Alignment, PageSize, PageOrientation } from 'pdfmake/interfaces';
-import { style } from '@angular/animations';
-
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+import { CotizacionGeneralSubServicios } from 'src/app/shared/interfaces/app/servicio-module/cotizacion_general_sub_servicios';
+import { CuentaService } from 'src/app/shared/services/servicio-module/cuenta/cuenta.service';
+import { Cuenta } from 'src/app/shared/interfaces/app/servicio-module/cuenta';
+import { ServicioService } from 'src/app/shared/services/servicio-module/servicio/servicio.service';
+import { pdfCotizacionGeneral } from 'src/app/shared/utils/pdf/cotizacion.general.pdf';
 
 @Component({
   selector: 'app-cotizacion',
@@ -40,12 +39,14 @@ export class CotizacionComponent implements OnInit {
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
     private router: Router,
+    private servicioService: ServicioService,
     private subServicioService: SubServicioService,
     private cotizacionGeneralService: CotizacionGeneralService,
     private cotizacionGeneralSubServicioService: CotizacionGeneralSubServicioService,
     private personaService: PersonaService,
     private usuarioService: UsuarioService,
-    private toast: HotToastService
+    private cuentaService: CuentaService,
+    private toast: HotToastService,
   ) {
     if (getLocalDataLogged() != null) {
       this.dataLocalStorage = getLocalDataLogged();
@@ -74,6 +75,7 @@ export class CotizacionComponent implements OnInit {
       case 'ver':
         this.formCotizacion.controls.cod_cotizacion.setValue(this.codeRecive);
         this.formCotizacion.controls.observacion.disable();
+        this.formCotizacion.controls.precio_servicio.disable();
         this.getCotizacion();
         break;
 
@@ -101,7 +103,7 @@ export class CotizacionComponent implements OnInit {
   userLogeado!: Usuario;
 
   // loading spinner
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   // Info Alert
   alertInfo: boolean = false;
@@ -120,10 +122,22 @@ export class CotizacionComponent implements OnInit {
   // ================  ================ //
   // ================  ================ //
   _ID_TIPO_SERVICIO: number = 1; // General
-  servicioSelected: Servicio | null = null;
-  _ID_SERVICIO: number = 1; // FRX
+  servicioSelected: Servicio = {
+    id_servicio: 0,
+    nombre: '',
+    descripcion: '',
+    id_tipo_servicio: 0,
+    fec_crea: '',
+    user_crea: '',
+    fec_mod: '',
+    user_mod: ''
+  };
 
   tecnicoUser!: Usuario;
+
+  formEmpty = new FormGroup({
+    empty: new FormControl('')
+  });
 
   formCotizacion = new FormGroup({
     cod_cotizacion: new FormControl('', [Validators.required]),
@@ -131,6 +145,7 @@ export class CotizacionComponent implements OnInit {
     fec_emision: new FormControl(''), // 'yyyy-MM-dd'
     id_servicio: new FormControl(0, [Validators.required]),
     id_persona: new FormControl(0, [Validators.required]),
+    precio_servicio: new FormControl(0, [Validators.required]),
     observacion: new FormControl(''),
     costo_total: new FormControl(0, [Validators.required]),
     descuento: new FormControl(0, [Validators.required]),
@@ -164,6 +179,8 @@ export class CotizacionComponent implements OnInit {
     ciudad: '',
     pais: '',
     nit: '',
+    tipo: '',
+
     fec_crea: '',
     user_crea: '',
     fec_mod: '',
@@ -179,6 +196,37 @@ export class CotizacionComponent implements OnInit {
   fechaSendDatePicker: string = '';
 
   dataSubServicios: AsSubServicioSelectable[] = [];
+
+  indexSubServicio: number = -1;
+
+  typeAlertInput: string = '';
+
+  labelAlertInput: string = '';
+
+  iconlAlertInput: string = '';
+
+  alertInputType: string = '';
+
+  emitResponse: boolean = false;
+
+  // Para Imprimir
+  objCotizacion: CotizacionGeneral = {
+    cod_cotizacion: '',
+    fec_solicitud: '',
+    fec_emision: '',
+    id_servicio: 0,
+    id_persona: 0,
+    precio_servicio: 0,
+    observacion: '',
+    costo_total: 0,
+    descuento: 0,
+    total_pagar: 0,
+    fec_crea: '',
+    user_crea: '',
+    fec_mod: '',
+    user_mod: ''
+  }
+
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
   generarCodCotizacion(sec: string) {
@@ -232,13 +280,21 @@ export class CotizacionComponent implements OnInit {
     let suma = 0;
     for (let i = 0; i < this.dataSubServicios.length; i++) {
       if (this.dataSubServicios[i].boolean) {
-        suma += this.dataSubServicios[i].sub_servicio.costo_directo;
+        suma += this.dataSubServicios[i].sub_servicio.costo_sub_servicio;
       }
     }
 
-    this.formCotizacion.controls.total_pagar.setValue(suma);
-    const desc = Number(this.formCotizacion.controls.descuento.value);
-    this.formCotizacion.controls.costo_total.setValue(suma - ((suma * desc) / 100));
+    const precio = Number(this.formCotizacion.controls.precio_servicio.value);
+    suma = suma + precio;
+
+    if (suma > 0) {
+      this.formCotizacion.controls.total_pagar.setValue(suma);
+      const desc = Number(this.formCotizacion.controls.descuento.value);
+      this.formCotizacion.controls.costo_total.setValue(suma - desc);
+    } else {
+      this.formCotizacion.controls.total_pagar.setValue(suma);
+      this.formCotizacion.controls.costo_total.setValue(0);
+    }
 
   }
 
@@ -260,8 +316,19 @@ export class CotizacionComponent implements OnInit {
       this.showDatePicker = true;
     }
   }
+
   onClickBusquedaCliente() {
     this.showBusqueda = true;
+  }
+
+  onClickEditarCosto(value: string, index: number, inputType: string) {
+    if (this.typeRecive === 'agregar') {
+      this.labelAlertInput = value;
+      this.typeAlertInput = value;
+      this.indexSubServicio = index;
+      this.showAlertDescuento = true;
+      this.alertInputType = inputType;
+    }
   }
 
   setValueCheckBox(index: number, value: boolean) {
@@ -270,33 +337,54 @@ export class CotizacionComponent implements OnInit {
     this.actualizarCostos();
   }
 
-
-  onClickDescuento() {
+  onClickDescuento(value: string) {
     if (this.typeRecive === 'agregar') {
+      this.labelAlertInput = 'Descuento Bs.';
+      this.typeAlertInput = value;
       this.showAlertDescuento = true;
     }
   }
 
-
+  onChange(event: any) {
+    this.actualizarCostos();
+  }
   // ============= OnClick Guardar Cotizacion =============\\
+
   onClickAgregarCotizacion() {
-    if (this.typeRecive === 'agregar') {
-      this.agregarCotizacion();
-    } else {
-      this.editarCotizacion();
+    if (this.formCotizacion.valid) {
+      this.isLoading = true;
+      if (this.typeRecive === 'agregar') {
+        this.agregarCotizacion();
+      } else {
+        this.editarCotizacion();
+      }
     }
   }
 
   onClickCancel() {
-    this.response.emit(false);
+    this.response.emit(this.emitResponse);
   }
 
   onClickPDF(type: string) {
-    if (this.empresaC.id_empresa !== 0) {
-      this.createPDF_Empresa(type);
-    } else {
-      //this.createPDF_Persona();
-    }
+    this.isLoading = true;
+
+    this.cuentaService.cuentaGet(this.servicioSelected?.id_servicio).subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        const cuenta = result.data[0] as Cuenta;
+        this.isLoading = false;
+        this.goPdf(type, cuenta);
+      } else {
+        this.customErrorToast(result.message);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onClickActualizar() {
+    this.typeRecive = 'Actualizar';
+    this.formCotizacion.controls.observacion.enable();
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
@@ -305,23 +393,28 @@ export class CotizacionComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
-        let suma = 0;
         for (let i = 0; i < result.data.length; i++) {
-          const subServicio = result.data[i] as SubServicio;
+          let subServicio = result.data[i] as SubServicio;
 
           const newObj = {
-            boolean: true,
-            sub_servicio: subServicio
+            boolean: false,
+            sub_servicio: {
+              cod_cotizacion: String(this.formCotizacion.controls.cod_cotizacion.value),
+              id_sub_servicio: subServicio.id_sub_servicio,
+              costo_sub_servicio: 0,
+              observacion: '',
+
+              nombre: subServicio.nombre,
+              descripcion: subServicio.descripcion,
+
+              fec_crea: '',
+              user_crea: '',
+              fec_mod: '',
+              user_mod: '',
+            }
           }
           this.dataSubServicios.push(newObj);
-
-          suma += subServicio.costo_directo;
         }
-
-        this.formCotizacion.controls.total_pagar.setValue(suma);
-        const desc = Number(this.formCotizacion.controls.descuento.value);
-        this.formCotizacion.controls.costo_total.setValue(suma - ((suma * desc) / 100));
-
       } else {
         this.customErrorToast(result.message);
       }
@@ -350,8 +443,9 @@ export class CotizacionComponent implements OnInit {
       cod_cotizacion: String(this.formCotizacion.controls.cod_cotizacion.value),
       fec_solicitud: String(this.formCotizacion.controls.fec_solicitud.value),
       fec_emision: String(this.formCotizacion.controls.fec_emision.value),
-      id_servicio: this._ID_SERVICIO,
+      id_servicio: this.servicioSelected.id_servicio,
       id_persona: Number(this.formCotizacion.controls.id_persona.value),
+      precio_servicio: Number(this.formCotizacion.controls.precio_servicio.value),
       observacion: String(this.formCotizacion.controls.observacion.value),
       costo_total: Number(this.formCotizacion.controls.costo_total.value),
       descuento: Number(this.formCotizacion.controls.descuento.value),
@@ -364,10 +458,17 @@ export class CotizacionComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
-        this.response.emit(true);
+        this.emitResponse = true;
+        this.customSuccessToast('Se agregó correctamente!!!');
+        this.typeRecive = 'ver';
+        this.formCotizacion.controls.observacion.disable();
+
+        this.objCotizacion.fec_emision = data.fec_emision;
+        this.objCotizacion.observacion = data.observacion;
       } else {
         this.customErrorToast(result.message);
       }
+      this.isLoading = false;
     });
   }
 
@@ -376,8 +477,9 @@ export class CotizacionComponent implements OnInit {
       cod_cotizacion: String(this.formCotizacion.controls.cod_cotizacion.value),
       fec_solicitud: String(this.formCotizacion.controls.fec_solicitud.value),
       fec_emision: String(this.formCotizacion.controls.fec_emision.value),
-      id_servicio: this.servicioSelected?.id_servicio,
+      id_servicio: this.servicioSelected.id_servicio,
       id_persona: Number(this.formCotizacion.controls.id_persona.value),
+      precio_servicio: Number(this.formCotizacion.controls.precio_servicio.value),
       observacion: String(this.formCotizacion.controls.observacion.value),
       costo_total: Number(this.formCotizacion.controls.costo_total.value),
       descuento: Number(this.formCotizacion.controls.descuento.value),
@@ -390,9 +492,11 @@ export class CotizacionComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
+        this.objCotizacion = result.data[0] as CotizacionGeneral;
         this.agregarSubServicios();
       } else {
         this.customErrorToast(result.message);
+        this.isLoading = false;
       }
     });
   }
@@ -405,7 +509,9 @@ export class CotizacionComponent implements OnInit {
         const obj = {
           cod_cotizacion: String(this.formCotizacion.controls.cod_cotizacion.value),
           id_sub_servicio: this.dataSubServicios[i].sub_servicio.id_sub_servicio,
-          costo_sub_servicio: this.dataSubServicios[i].sub_servicio.costo_directo,
+          costo_sub_servicio: this.dataSubServicios[i].sub_servicio.costo_sub_servicio,
+
+          observacion: this.dataSubServicios[i].sub_servicio.observacion,
 
           user_crea: this.userLogeado.user,
           user_mod: this.userLogeado.user,
@@ -419,14 +525,19 @@ export class CotizacionComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
-        this.response.emit(true);
+        this.emitResponse = true;
+        this.isLoading = false;
+        this.customSuccessToast('Se agregó correctamente!!!');
+        this.typeRecive = 'ver';
       } else {
         this.customErrorToast(result.message);
       }
+      this.isLoading = false;
     });
   }
 
   getCotizacion() {
+    this.isLoading = true;
     this.cotizacionGeneralService.cotizacionGet(this.codeRecive).subscribe(result => {
       result as ApiResult;
 
@@ -438,10 +549,13 @@ export class CotizacionComponent implements OnInit {
         this.formCotizacion.controls.fec_emision.setValue(obj.fec_emision);
         this.formCotizacion.controls.id_servicio.setValue(obj.id_servicio);
         this.formCotizacion.controls.id_persona.setValue(obj.id_persona);
+        this.formCotizacion.controls.precio_servicio.setValue(obj.precio_servicio);
         this.formCotizacion.controls.observacion.setValue(obj.observacion);
         this.formCotizacion.controls.costo_total.setValue(obj.costo_total);
         this.formCotizacion.controls.descuento.setValue(obj.descuento);
         this.formCotizacion.controls.total_pagar.setValue(obj.total_pagar);
+
+        this.objCotizacion = obj;
 
         this.getTecnico(obj.user_crea);
       }
@@ -473,28 +587,53 @@ export class CotizacionComponent implements OnInit {
         if (this.personaC.id_persona !== 0) {
           this.empresaC = per.id_empresa as Empresa;
         }
-
-        this.getSubServicios();
+        this.getServicio();
       }
     });
   }
 
-  getSubServicios() {
+  getServicio() {
+    this.servicioService.servicioGetByID(Number(this.formCotizacion.controls.id_servicio.value)).subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        this.servicioSelected = result.data[0] as Servicio;
+      }
+      this.getSubServiciosCotizacion();
+    });
+  }
+
+  getSubServiciosCotizacion() {
     this.cotizacionGeneralSubServicioService.cotizacionSubServicioGet(this.codeRecive).subscribe(result => {
       result as ApiResult;
 
       if (result.rows > 0) {
         for (let i = 0; i < result.data.length; i++) {
-          const obj = result.data[i] as CotizacionGeneralSubServicio;
+          let obj = result.data[i] as CotizacionGeneralSubServicio;
+
 
           const newObj = {
             boolean: true,
-            sub_servicio: obj.sub_servicio as SubServicio
+            sub_servicio: {
+              cod_cotizacion: obj.cod_cotizacion,
+              id_sub_servicio: obj.id_sub_servicio,
+              costo_sub_servicio: obj.costo_sub_servicio,
+              observacion: obj.observacion,
+
+              nombre: obj.sub_servicio.nombre,
+              descripcion: obj.sub_servicio.descripcion,
+
+              fec_crea: obj.fec_crea,
+              user_crea: obj.user_crea,
+              fec_mod: obj.fec_mod,
+              user_mod: obj.user_mod,
+            } as CotizacionGeneralSubServicios
           } as AsSubServicioSelectable;
 
           this.dataSubServicios.push(newObj);
         }
       }
+      this.isLoading = false;
     });
   }
 
@@ -522,7 +661,7 @@ export class CotizacionComponent implements OnInit {
       }
       this.showBusqueda = false;
       // Mostrar Servicio Alert
-      if (this.servicioSelected === null) {
+      if (this.servicioSelected.id_servicio === 0) {
         this.showBusquedaServicio = true;
       }
     }
@@ -554,9 +693,32 @@ export class CotizacionComponent implements OnInit {
   }
 
   inputDescuentoResponse(event: ResponseEvent) {
-    if (event.bool) {
-      this.formCotizacion.controls.descuento.setValue(event.data);
-      this.actualizarCostos();
+
+    switch (this.typeAlertInput) {
+      case 'Descuento':
+        if (event.bool) {
+          this.formCotizacion.controls.descuento.setValue(event.data);
+          this.actualizarCostos();
+        }
+        break;
+
+      case 'Costo':
+        if (event.bool) {
+          if (Number(event.data) > 0) {
+            this.dataSubServicios[this.indexSubServicio].boolean = true;
+          } else {
+            this.dataSubServicios[this.indexSubServicio].boolean = false;
+          }
+          this.dataSubServicios[this.indexSubServicio].sub_servicio.costo_sub_servicio = event.data
+          this.actualizarCostos();
+        }
+        break;
+
+      case 'Observación':
+        if (event.bool) {
+          this.dataSubServicios[this.indexSubServicio].sub_servicio.observacion = event.data;
+        }
+        break;
     }
     this.showAlertDescuento = false;
   }
@@ -616,300 +778,63 @@ export class CotizacionComponent implements OnInit {
     }
   }
 
-  createPDF_Empresa(type: string) {
+  goPdf(type: string, cuenta: Cuenta) {
 
-    const color_gray_50 = '#f8fafc';
-    const color_info_50 = '#f0f7fe';
-    const color_primary_50 = '#f0fafb';
-    const color_primary_500 = '#3494a6';
-    const color_primary_800 = '#2b535f';
+    let serviciosLista = [];
+
+    for (let i = 0; i < this.dataSubServicios.length; i++) {
+      const s = this.dataSubServicios[i];
+      if (s.boolean) {
+        const data = {
+          nombre: s.sub_servicio.nombre,
+          descripcion: s.sub_servicio.descripcion,
+          observacion: s.sub_servicio.observacion,
+          costo: s.sub_servicio.costo_sub_servicio
+        }
+        serviciosLista.push(data);
+      }
+    }
 
     let tableData = [];
 
-    let borderColor = [color_primary_800, color_primary_800, color_primary_800, color_primary_800];
-
-
     tableData.push(
       [
-        { text: '#', style: 'cellHeader', borderColor: borderColor },
-        { text: 'Nombre', style: 'cellHeader', borderColor: borderColor },
-        { text: 'Descripción', style: 'cellHeader', borderColor: borderColor },
-        { text: 'Costo', style: 'cellHeader', borderColor: borderColor },
+        { text: 'Nro', style: 'titletable' },
+        { text: 'SERVICIO', style: 'titletable' },
+        { text: 'DESCRIPCIÓN', style: 'titletable' },
+        { text: 'OBSERVACIÓN', style: 'titletable' },
+        { text: 'COSTO BS.', style: 'titletable' },
       ]
     );
 
-    for (let i = 0; i < this.dataSubServicios.length; i++) {
-      const d = this.dataSubServicios[i];
-      // push de muestras
+    if(this.objCotizacion.precio_servicio >0){
       tableData.push(
         [
-          { text: i + 1, style: 'cellContent' },
-          { text: d.sub_servicio.nombre, style: 'cellContent' },
-          { text: d.sub_servicio.descripcion, style: 'cellContent' },
-          { text: "Bs. " + d.sub_servicio.costo_directo, style: 'cellContent' },
+          { text: 0, style: 'texttable' },
+          { text: 'Precio del Servicio', style: 'texttable' },
+          { text: '', style: 'texttable' },
+          { text: '', style: 'texttable' },
+          { text: this.objCotizacion.precio_servicio, style: 'texttable' },
         ]
       );
     }
 
-
-
-    var pdfCreation = {
-      pageSize: 'LETTER' as PageSize,
-      //pageOrientation: 'landscape' as PageOrientation,
-      //pageMargins: [5, 5, 5, 5] as Margins,
-      content: [
-
-        // Titulo
-        {
-          margin: [0, 0, 0, 15] as Margins,
-          columns: [
-            { qr: String(this.formCotizacion.controls.cod_cotizacion.value), foreground: color_primary_800, fit: 100 },
-            {
-              width: 'auto',
-              margin: [0, 0, 0, 15] as Margins,
-              text: 'COTIZACIÓN FRX',
-              style: 'header',
-              alignment: 'center' as Alignment,
-              color: color_primary_500
-            },
-            {
-              width: '*',
-              text: ''
-            }
-          ]
-        },
-        // Codigo cotizacion y area
-        {
-          columns: [
-            {
-              margin: [0, 0, 0, 10] as Margins,
-              text: [
-                { text: 'Código cotización: ', color: color_primary_800 },
-                { text: String(this.formCotizacion.controls.cod_cotizacion.value), bold: true, color: color_primary_800 },
-              ],
-            },
-            {
-              width: 'auto',
-              text: [
-                { text: 'Área: ' },
-                { text: 'Laboratorio FRX', bold: true }
-              ],
-              color: color_primary_800, alignment: 'right' as Alignment
-            }
-          ]
-        },
-        // Fechas
-        {
-          text: [
-            { text: 'Fecha solitud: ', color: color_primary_800, margin: [0, 0, 0, 5] as Margins, },
-            { text: this.convertDate(String(this.formCotizacion.controls.fec_solicitud.value)), color: color_primary_800, bold: true },
-            '\n',
-            { text: 'Fecha emisión: ', color: color_primary_800 },
-            { text: this.convertDate(String(this.formCotizacion.controls.fec_emision.value)), color: color_primary_800, bold: true },
-          ]
-        },
-        // Tecnico
-        {
-          columns: [
-            { text: 'Técnico', margin: [0, 15, 0, 2] as Margins, bold: true, color: color_primary_800 }
-          ]
-        },
-        {
-          columns: [
-            {
-              margin: [0, 0, 0, 10] as Margins,
-              table: {
-                widths: ['*', 'auto', '*'],
-                body: [
-                  [
-                    { text: [{ text: 'Nombre: ' }, { text: this.userLogeado.nombres + ' ' + this.userLogeado.apellidos, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins },
-                    { text: [{ text: 'Celualr: ' }, { text: this.userLogeado.celular, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins },
-                    { text: [{ text: 'Rol: ' }, { text: this.userLogeado.rol, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }
-                  ],
-                ],
-              }
-            }
-          ]
-        },
-        // Cliente
-        {
-          columns: [
-            { text: 'Cliente', margin: [0, 0, 0, 2] as Margins, bold: true, color: color_primary_800 },
-            { text: 'Empresa', margin: [7.5, 0, 0, 2] as Margins, bold: true, color: color_primary_800 }
-          ]
-        },
-        {
-          columns: [
-            {
-              margin: [0, 0, 7.5, 0] as Margins,
-              table: {
-                widths: ['*'],
-                body: [
-                  [{ text: [{ text: 'Persona: ' }, { text: this.personaC.nombre_persona, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Celular: ' }, { text: this.personaC.celular, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Email: ' }, { text: this.personaC.email, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Teléfono: ' }, { text: this.empresaC.telefono, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                ],
-              }
-            },
-            {
-              margin: [7.5, 0, 0, 10] as Margins,
-              table: {
-                widths: ['*'],
-                body: [
-                  [{ text: [{ text: 'Empresa: ' }, { text: this.empresaC.razon_social, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'NIT: ' }, { text: this.empresaC.nit, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Ciudad: ' }, { text: this.empresaC.ciudad, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'País: ' }, { text: this.empresaC.pais, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                ],
-              }
-            }
-          ]
-        },
-        // Detalle
-        {
-          text: 'DETALLE', alignment: 'center' as Alignment, bold: true, color: color_primary_800, margin: [0, 0, 0, 2] as Margins
-        },
-        {
-          table: {
-            fontSize: 8,
-            margin: [0, 0, 0, 0] as Margins,
-            widths: ['auto', '*', '*', 'auto'],
-            body: tableData
-          },
-          layout: 'lightHorizontalLines'
-        },
-        // Costos
-        {
-          columns: [
-            {
-              margin: [0, 0, 0, 10] as Margins,
-              text: [
-                { text: '' }
-              ],
-            },
-            {
-              margin: [0, 15, 0, 0] as Margins,
-              width: 'auto',
-              table: {
-                widths: ['auto', 'auto', '*'],
-                body: [
-                  [
-                    {
-                      borderColor: borderColor,
-                      border: [true, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: 'Total a Pagar'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: ':'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, true, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'right',
-                      text: 'Bs. ' + String(this.formCotizacion.controls.total_pagar.value)
-                    }
-                  ],
-                  [
-                    {
-                      borderColor: borderColor,
-                      border: [true, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: 'Descuento'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: ':'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, true, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'right',
-                      text: String(this.formCotizacion.controls.descuento.value) + ' %'
-                    }
-                  ],
-                  [
-                    {
-                      borderColor: borderColor,
-                      border: [true, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: 'Costo Total'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: ':'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, true, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'right',
-                      text: 'Bs. ' + String(this.formCotizacion.controls.costo_total.value)
-                    }
-                  ],
-                ]
-              },
-              color: color_primary_800, alignment: 'right' as Alignment
-            }
-          ]
-        },
-
-
-      ],
-      styles: {
-        header: {
-          fontSize: 36,
-          bold: true,
-          alignment: 'center' as Alignment
-        },
-        cellHeader: {
-          bold: true,
-          alignment: 'center' as Alignment,
-          color: color_primary_800,
-          fillColor: color_primary_50,
-        },
-        cellDetalleHeader: {
-          bold: true,
-          alignment: 'center' as Alignment,
-          color: color_primary_800,
-          fillColor: color_info_50,
-        },
-        cellContent: {
-          bold: true,
-          alignment: 'center' as Alignment,
-          color: color_primary_800,
-          fillColor: color_gray_50,
-        },
-      }
+    for (let i = 0; i < serviciosLista.length; i++) {
+      const d = serviciosLista[i];
+      // push de muestras
+      tableData.push(
+        [
+          { text: i + 1, style: 'texttable' },
+          { text: d.nombre, style: 'texttable' },
+          { text: d.descripcion, style: 'texttable' },
+          { text: d.observacion, style: 'texttable' },
+          { text: d.costo, style: 'texttable' },
+        ]
+      );
     }
 
-    if (type === 'descargar') {
-      pdfMake.createPdf(pdfCreation).download(String(this.formCotizacion.controls.cod_cotizacion.value) + '.pdf');
-    } else {
-      pdfMake.createPdf(pdfCreation).open();
-    }
+    let servicios = String(this.servicioSelected.nombre);
 
+    pdfCotizacionGeneral(type, this.objCotizacion, this.personaC, servicios, tableData, cuenta);
   }
 }

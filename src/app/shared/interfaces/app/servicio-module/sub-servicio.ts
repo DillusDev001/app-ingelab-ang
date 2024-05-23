@@ -3,8 +3,6 @@ export interface SubServicio {
     id_servicio: number;
     nombre: string;
     descripcion: string;
-    costo_directo: number;
-    costo_variable: number;
     
     fec_crea: string;
     user_crea: string;

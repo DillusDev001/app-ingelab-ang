@@ -19,6 +19,8 @@ import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils
 })
 export class ListaFrxComponent implements OnInit {
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
+  ID_SERVICIO: number = 1;
+
   // ================ INICIO ================ //
   // Data Local Storeage - Variable
   dataLocalStorage: DataLocalStorage = {
@@ -30,7 +32,7 @@ export class ListaFrxComponent implements OnInit {
   userLogeado!: Usuario;
 
   // loading spinner
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   // Info Alert
   alertInfo: boolean = false;
@@ -69,7 +71,7 @@ export class ListaFrxComponent implements OnInit {
   // CodeFormulario Send
   codeFormularioFRX: string = '';
 
-
+  showCardCuenta: boolean = false;
 
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
@@ -132,23 +134,30 @@ export class ListaFrxComponent implements OnInit {
   }
 
   /** ------------------------------------ Methods onClick ------------------------------------ **/
-  onClickBusqueda() { }
+  onClickBusqueda() {
+    const value = String(this.formBusqueda.controls.value.value);
+    this.buscarCotizacionFRX(value);
+  }
 
   onClickAgregar() {
     this.showFormularioFRX = 'agregar';
     this.showAgregar = true;
   }
 
-  onClickListaElement(index: number){
+  onClickListaElement(index: number) {
     this.showFormularioFRX = 'ver';
     this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
     this.showAgregar = true;
   }
 
-  onClickActulizar(index: number){
+  onClickActulizar(index: number) {
     this.showFormularioFRX = 'editar';
     this.codeFormularioFRX = this.dataCotizacion[index].cod_cotizacion;
     this.showAgregar = true;
+  }
+
+  onClickVerCuenta() {
+    this.showCardCuenta = true;
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
@@ -158,13 +167,20 @@ export class ListaFrxComponent implements OnInit {
       result as ApiResult;
 
       if (result.rows > 0) {
-        for(let i = result.data.length - 1; i >= 0; i--){
-          this.dataCotizacion.push(result.data[i] as CotizacionFrx);
-        }
+        this.dataCotizacion = result.data;
+      } else {
+        this.customErrorToast(result.message);
+      }
+      this.isLoading = false;
+    });
+  }
 
-        // Paginación
-        let nPaginacion = Math.trunc(this.dataCotizacion.length / 10) + 1;
-        this.paginationArray = Array.from({ length: nPaginacion }, (_, i) => i + 1);
+  buscarCotizacionFRX(value: string) {
+    this.cotizacionFrxService.cotizacionGet(value).subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        this.dataCotizacion = result.data;
       } else {
         this.customErrorToast(result.message);
       }
@@ -189,6 +205,9 @@ export class ListaFrxComponent implements OnInit {
     }
   }
 
+  responseCuenta(event: boolean){
+    this.showCardCuenta = false;
+  }
 
   /** --------------------------------------- ShowAlerts -------------------------------------- **/
   customSuccessToast(msg: string) {

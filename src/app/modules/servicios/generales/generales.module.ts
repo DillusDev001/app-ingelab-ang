@@ -15,7 +15,7 @@ import { MantenimientoComponent } from './mantenimiento/mantenimiento.component'
     IndexComponent,
     ListaComponent,
     CotizacionComponent,
-    MantenimientoComponent
+    MantenimientoComponent,
   ],
   imports: [
     CommonModule,

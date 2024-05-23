@@ -7,6 +7,7 @@ export interface Empresa {
     ciudad: string;
     pais: string;
     nit: string;
+    tipo: string;
 
     fec_crea: string;
     user_crea: string;

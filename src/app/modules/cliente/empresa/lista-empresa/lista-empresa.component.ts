@@ -6,7 +6,7 @@ import { ApiResult } from 'src/app/shared/interfaces/api/api.result';
 import { Empresa } from 'src/app/shared/interfaces/app/cliente-module/empresa';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { EmpresaService } from 'src/app/shared/services/cliente/empresa/empresa.service';
+import { EmpresaService } from 'src/app/shared/services/cliente-module/empresa/empresa.service';
 import { goAdminMantenimientoClienteAgregar, goLogin } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils/local.storage';
 
@@ -15,7 +15,7 @@ import { deleteLocalStorageData, getLocalDataLogged } from 'src/app/shared/utils
   templateUrl: './lista-empresa.component.html',
   styleUrls: ['./lista-empresa.component.css']
 })
-export class ListaEmpresaComponent implements OnInit  {
+export class ListaEmpresaComponent implements OnInit {
   /** -------------------------------------- Constructor -------------------------------------- **/
   constructor(
     private router: Router,
@@ -77,7 +77,7 @@ export class ListaEmpresaComponent implements OnInit  {
   /** ---------------------------------------- Methods ---------------------------------------- **/
 
   /** ------------------------------------ Methods onClick ------------------------------------ **/
-  
+
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
   getListaEmpresas() {
     this.empresaService.empresaGetAll().subscribe(result => {
@@ -89,7 +89,7 @@ export class ListaEmpresaComponent implements OnInit  {
       } else {
         this.customErrorToast(result.message);
       }
-
+      this.isLoading = false;
     });
   }
 

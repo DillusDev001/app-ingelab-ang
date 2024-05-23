@@ -1,9 +1,10 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Event, NavigationEnd, Router, RouterEvent, RoutesRecognized } from '@angular/router';
 import { initFlowbite } from 'flowbite';
+import { filter } from 'rxjs';
 import { Usuario } from 'src/app/shared/interfaces/app/sesion-module/usuario';
 import { DataLocalStorage } from 'src/app/shared/interfaces/local/data-local-storage';
-import { goAdminCotizacionLaboratorio, goAdminGraficosGeneral, goAdminHome, goAdminMantenimientoCliente, goAdminMantenimientoClienteAgregar, goAdminMantenimientoEmpresa, goAdminServiciosEspecificosListaFRX, goAdminServiciosEspecificosMantenimientoParametro, goAdminServiciosGeneralesLista, goIndex, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
+import { goAdminGastos, goAdminGraficosGeneral, goAdminHome, goAdminMantenimientoCliente, goAdminMantenimientoClienteAgregar, goAdminMantenimientoEmpresa, goAdminMantenimientoProovedores, goAdminServiciosEspecificosListaFRX, goAdminServiciosEspecificosMantenimientoParametro, goAdminServiciosGeneralesLista, goIndex, goLogin, goUsuarios } from 'src/app/shared/utils/local.router';
 import { deleteLocalStorageData, getLocalDataLogged, localStorageLogOut } from 'src/app/shared/utils/local.storage';
 
 @Component({
@@ -68,6 +69,8 @@ export class DashboardComponent implements OnInit {
       deleteLocalStorageData();
       goLogin(this.router);
     }
+
+    
   }
 
   /** ---------------------------------------- OnInit ----------------------------------------- **/
@@ -115,6 +118,16 @@ export class DashboardComponent implements OnInit {
         }
         break;
 
+      case 'Gastos':
+        this.title = eventTitle;
+
+        this.menuSelected = eventTitle;
+        this.subMenuSelected = '';
+
+        goAdminGastos(this.router);
+        this.open = false;
+        break;
+
       case 'Mantenimiento':
         // this.onClickSetSubMenuSelected(eventTitle, 'Parámetro');
         this.booleanMantenimieto = !this.booleanMantenimieto;
@@ -139,25 +152,18 @@ export class DashboardComponent implements OnInit {
       case 'Generales': goAdminServiciosGeneralesLista(this.router); break;
       case 'Específicos': goAdminServiciosEspecificosListaFRX(this.router); break;
 
-      // 
-      case 'Cotización': goAdminCotizacionLaboratorio(this.router); break;
-
-      case 'Recepción': break;
-
-      case 'Pruebas': break;
+      // Gastos
 
       // Mantenimiento
       case 'Parámetro': goAdminServiciosEspecificosMantenimientoParametro(this.router); break;
-
       case 'Agregar Cliente': goAdminMantenimientoClienteAgregar(this.router); break;
       case 'Clientes': goAdminMantenimientoCliente(this.router); break;
       case 'Empresas': goAdminMantenimientoEmpresa(this.router); break;
-
       case 'Usuarios': goUsuarios(this.router); break;
+      case 'Proovedores': goAdminMantenimientoProovedores(this.router); break;
 
-      case 'Servicios Específicos': goUsuarios(this.router); break;
-
-      case 'Servicios Generales': goUsuarios(this.router); break;
+      // case 'Servicios Específicos': goUsuarios(this.router); break;
+      //case 'Servicios Generales': goUsuarios(this.router); break;
     }
 
     this.open = false;

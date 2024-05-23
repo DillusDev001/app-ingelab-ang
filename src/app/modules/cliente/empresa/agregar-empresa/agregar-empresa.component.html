@@ -3,7 +3,9 @@
         (response)="empresaSearchResponse($event)">
     </app-custom-alert-search-empresa>
 
-    <form class="flex flex-col gap-4 w-full h-full overflow-auto" *ngIf="!showBusquedaEmpresa">    
+    <app-custom-loading *ngIf="isLoading"></app-custom-loading>
+
+    <form class="flex flex-col gap-4 w-full h-full overflow-auto" *ngIf="!showBusquedaEmpresa && !isLoading">    
         <app-custom-button
           [id] ="'id_btn_agregar'"
           [label] ="'Agregar'"
@@ -165,6 +167,14 @@
                     [control]="formEmpresa.controls.nit"
                     [icon]="''" >
                 </app-custom-input>
+
+                <app-custom-drop-box
+                    [id]="'id_input_pais'"
+                    [label]="'Tipo...'"
+                    [control]="formEmpresa.controls.tipo"
+                    [class]="''"
+                    [data]="dataTipoEmpresa" >
+                </app-custom-drop-box>
             </div>
         </div>
     </form>

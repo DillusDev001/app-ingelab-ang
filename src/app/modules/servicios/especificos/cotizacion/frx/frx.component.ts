@@ -21,16 +21,14 @@ import { getCodigoServicioNum } from 'src/app/shared/utils/utils.utils';
 import { MuestraFrxService } from 'src/app/shared/services/frx-module/muestra-frx/muestra-frx.service';
 import { MuestraParametroFrxService } from 'src/app/shared/services/frx-module/muestra-parametro-frx/muestra-parametro-frx.service';
 
-import { PersonaService } from 'src/app/shared/services/cliente/persona/persona.service';
-import { UsuarioService } from 'src/app/shared/services/usuario/usuario.service';
+import { PersonaService } from 'src/app/shared/services/cliente-module/persona/persona.service';
+import { UsuarioService } from 'src/app/shared/services/sesion-module/usuario/usuario.service';
 import { ResponseEvent } from 'src/app/shared/interfaces/event/response.event';
-
-import * as pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { Margins, Alignment, PageSize, PageOrientation, Size } from 'pdfmake/interfaces';
-import { style } from '@angular/animations';
-
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+import { Cuenta } from 'src/app/shared/interfaces/app/servicio-module/cuenta';
+import { CuentaService } from 'src/app/shared/services/servicio-module/cuenta/cuenta.service';
+import { RecepcionFrxService } from 'src/app/shared/services/frx-module/recepcionFrx/recepcion-frx.service';
+import { admiRecepcionFRXLista } from 'src/app/shared/utils/routers/recepcion.route';
+import { pdfCotizacionFRX } from 'src/app/shared/utils/pdf/cotizacion.frx.pdf';
 
 @Component({
   selector: 'app-frx',
@@ -47,6 +45,8 @@ export class FrxComponent implements OnInit {
     private muestraParametroFrxService: MuestraParametroFrxService,
     private personaService: PersonaService,
     private usuarioService: UsuarioService,
+    private cuentaService: CuentaService,
+    private recepcionFrxService: RecepcionFrxService
   ) {
     if (getLocalDataLogged() != null) {
       this.dataLocalStorage = getLocalDataLogged();
@@ -67,13 +67,11 @@ export class FrxComponent implements OnInit {
   ngOnInit(): void {
     initFlowbite();
 
-
     switch (this.typeRecive) {
       case 'agregar':
         this.tecnicoUser = this.userLogeado;
         this.showBusqueda = true;
         break;
-
 
       case 'ver':
         this.formCotizacion.controls.cod_cotizacion.setValue(this.codeRecive);
@@ -87,6 +85,7 @@ export class FrxComponent implements OnInit {
         break
     }
   }
+
   /** ---------------------------------- Variables de Inicio ---------------------------------- **/
   @Input() typeRecive!: string;
   @Input() codeRecive!: string;
@@ -103,7 +102,7 @@ export class FrxComponent implements OnInit {
   userLogeado!: Usuario;
 
   // loading spinner
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   // Info Alert
   alertInfo: boolean = false;
@@ -157,12 +156,13 @@ export class FrxComponent implements OnInit {
   empresaC: Empresa = {
     id_empresa: 0,
     razon_social: '',
-    nit: '',
     direccion: '',
     telefono: '',
     web: '',
     ciudad: '',
     pais: '',
+    nit: '',
+    tipo: '',
 
     fec_crea: '',
     user_crea: '',
@@ -182,6 +182,28 @@ export class FrxComponent implements OnInit {
   muestraSecIndexAdd: number = 0;
 
   dataMuestras: MuestraFrx[] = [];
+
+
+  // Para Imprimir
+  objCotizacionFRX: CotizacionFrx = {
+    cod_cotizacion: '',
+    fec_solicitud: '',
+    fec_emision: '',
+    id_servicio: 0,
+    id_persona: 0,
+    observacion: '',
+    costo_total: 0,
+    descuento: 0,
+    total_pagar: 0,
+    fec_crea: '',
+    user_crea: '',
+    fec_mod: '',
+    user_mod: ''
+  };
+
+  emitResponse: boolean = false;
+
+  isRecepcionado: boolean = false;
 
   /** ---------------------------------------- Methods ---------------------------------------- **/
   generarCodCotizacion(sec: string) {
@@ -254,7 +276,7 @@ export class FrxComponent implements OnInit {
     }
 
     this.formCotizacion.controls.total_pagar.setValue(total_pagar);
-    costo_total = total_pagar - ((total_pagar * descuento) / 100);
+    costo_total = total_pagar - descuento;
     this.formCotizacion.controls.costo_total.setValue(costo_total);
   }
 
@@ -344,6 +366,11 @@ export class FrxComponent implements OnInit {
     }
   }
 
+  onClickRemoveParametro(mIndex: number, pIndex: number) {
+    this.dataMuestras[mIndex].muestra_parametros.splice(pIndex, 1);
+    this.actualizarCostos();
+  }
+
 
   onClickDescuento() {
     if (this.typeRecive === 'agregar') {
@@ -352,23 +379,45 @@ export class FrxComponent implements OnInit {
   }
   // ============= OnClick Guardar Cotizacion =============\\
   onClickAgregarCotizacion() {
-    if (this.typeRecive === 'agregar') {
-      this.agregarCotizacion();
-    } else {
-      this.editarCotizacion();
+    if (this.formCotizacion.valid) {
+      this.isLoading = true;
+      if (this.typeRecive === 'agregar') {
+        this.agregarCotizacion();
+      } else {
+        this.editarCotizacion();
+      }
     }
   }
 
   onClickCancel() {
-    this.response.emit(false);
+    this.response.emit(this.emitResponse);
   }
 
   onClickPDF(type: string) {
-    if (this.empresaC.id_empresa !== 0) {
-      this.createPDF_Empresa(type);
-    } else {
-      //this.createPDF_Persona();
-    }
+    this.isLoading = true;
+
+    this.cuentaService.cuentaGet(this._ID_SERVICIO).subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        const cuenta = result.data[0] as Cuenta;
+        this.isLoading = false;
+        this.goPdf(type, cuenta);
+      } else {
+        this.customErrorToast(result.message);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  onClickActualizar() {
+    this.typeRecive = 'Actualizar';
+    this.formCotizacion.controls.observacion.enable();
+  }
+
+  onClickRecepcionar() {
+    this.isLoading = true;
+    this.recepcionarDB();
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
@@ -406,10 +455,17 @@ export class FrxComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
-        this.response.emit(true);
+        this.emitResponse = true;
+        this.customSuccessToast('Se ha guardado correctamente!!!');
+        this.typeRecive = 'ver';
+        this.formCotizacion.controls.observacion.disable();
+
+        this.objCotizacionFRX.fec_emision = data.fec_emision;
+        this.objCotizacionFRX.observacion = data.observacion;
       } else {
         this.customErrorToast(result.message);
       }
+      this.isLoading = false;
     });
   }
 
@@ -432,9 +488,12 @@ export class FrxComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
+        this.objCotizacionFRX = result.data[0] as CotizacionFrx;
+
         this.agregarMuestra();
       } else {
         this.customErrorToast(result.message);
+        this.isLoading = false;
       }
     });
   }
@@ -465,6 +524,7 @@ export class FrxComponent implements OnInit {
         this.agregarMuestraParametro();
       } else {
         this.customErrorToast(result.message);
+        this.isLoading = false;
       }
     });
   }
@@ -495,10 +555,13 @@ export class FrxComponent implements OnInit {
       result as ApiResult;
 
       if (result.boolean) {
+        this.emitResponse = true;
+        this.isLoading = false;
         this.customSuccessToast('Se agregó correctamente!!!');
-        this.response.emit(true);
+        this.typeRecive = 'ver';
       } else {
         this.customErrorToast(result.message);
+        this.isLoading = false;
       }
     });
   }
@@ -506,6 +569,7 @@ export class FrxComponent implements OnInit {
 
 
   getCotizacion() {
+    this.isLoading = true;
     this.cotizacionFrxService.cotizacionGet(this.codeRecive).subscribe(result => {
       result as ApiResult;
 
@@ -522,8 +586,9 @@ export class FrxComponent implements OnInit {
         this.formCotizacion.controls.descuento.setValue(obj.descuento);
         this.formCotizacion.controls.total_pagar.setValue(obj.total_pagar);
 
-        this.getTecnico(obj.user_crea);
+        this.objCotizacionFRX = obj;
 
+        this.getTecnico(obj.user_crea);
       }
     });
   }
@@ -564,12 +629,41 @@ export class FrxComponent implements OnInit {
       result as ApiResult;
 
       if (result.rows > 0) {
-        this.dataMuestras = [];
-
-        for (let i = 0; i < result.data.length; i++) {
-          this.dataMuestras.push(result.data[i]);
-        }
+        this.dataMuestras = result.data;
       }
+      this.getIsRecepcion();
+    });
+  }
+
+  getIsRecepcion() {
+    this.recepcionFrxService.recepcionFrxGetUno(this.objCotizacionFRX.cod_cotizacion).subscribe(result => {
+      result as ApiResult;
+
+      this.isRecepcionado = result.boolean;
+      this.isLoading = false;
+    });
+  }
+
+  recepcionarDB(){
+    const data = {
+      cod_cotizacion: this.objCotizacionFRX.cod_cotizacion,
+      fec_recepcion: formatDate(new Date(),'yyyy-MM-dd','es'),
+      user_recepcion: this.userLogeado.user,
+
+      user_crea: this.userLogeado.user,
+      user_mod: this.userLogeado.user,
+    }
+    this.recepcionFrxService.recepcionFrxRegistro(data).subscribe(result => {
+      result as ApiResult;
+
+      if (result.boolean) {
+        this.customSuccessToast('Se agregó correctamente!!!');
+        this.isRecepcionado = true;
+        //admiRecepcionFRXLista(this.router);
+      } else {
+        this.customErrorToast(result.message);
+      }
+      this.isLoading = false;
     });
   }
 
@@ -743,402 +837,85 @@ export class FrxComponent implements OnInit {
     }
   }
 
-  crearItems(): any {
-    let tableData = [];
+  goPdf(type: string, cuenta: Cuenta) {
+
+    let serParametros = [];
+
     for (let i = 0; i < this.dataMuestras.length; i++) {
-      const d = this.dataMuestras[i];
-      tableData.push(
-        { text: i + 1 },
-        { text: d.descripcion },
-        { text: d.observacion },
-        { text: d.cod_interno },
-        { text: "Bs. " + d.costo_muestra },
-      );
+      const parametrosLista = this.dataMuestras[i].muestra_parametros as MuestraParametroFrx[];
 
+      for (let j = 0; j < parametrosLista.length; j++) {
+        const parametro = parametrosLista[j].parametro as Parametro;
 
-      let detalles = [];
-      for (let j = 0; j < d.muestra_parametros.length; j++) {
-        const m = d.muestra_parametros[j];
-        detalles.push(
-          { text: j + 1 },
-          { text: m.parametro.nombre },
-          { text: "Bs. " + m.costo_parametro_unitario },
-          { text: m.cantidad },
-          { text: "Bs. " + m.costo_parametro_total },
-        );
-      }
+        if (serParametros.length > 0) {
+          let existe = false;
 
-      let tableDetalle = [];
-      tableDetalle.push(
-        {
-          table: {
-            fontSize: 8,
-            margin: [0, 0, 0, 0] as Margins,
-            widths: ['auto', '*', '*', 'auto', 'auto'],
-            body: [
-              [
-                { text: '#', alignment: 'left', fontSize: 10, },
-                { text: 'Parámetro', alignment: 'center', fontSize: 10, },
-                { text: 'Costo Unitario', alignment: 'center', fontSize: 10, },
-                { text: 'Cantidad', alignment: 'center', fontSize: 10, },
-                { text: 'Costo Muestrá', alignment: 'center', fontSize: 10, }
-              ],
-              detalles
-            ]
+          for (let k = 0; k < serParametros.length; k++) {
+            if (serParametros[k].id === parametro.id_parametro) {
+              serParametros[k].cantidad = serParametros[k].cantidad + 1;
+              existe = true;
+              break;
+            }
           }
+
+          if (!existe) {
+            const data = {
+              id: parametro.id_parametro,
+              parametro: parametro.nombre,
+              precio: parametro.costo_directo,
+              cantidad: 1
+            }
+            serParametros.push(data);
+          }
+        } else {
+          const data = {
+            id: parametro.id_parametro,
+            parametro: parametro.nombre,
+            precio: parametro.costo_directo,
+            cantidad: 1
+          }
+          serParametros.push(data);
         }
-      );
-
-      tableData.push(tableDetalle);
+      }
     }
-  }
-
-  createPDF_Empresa(type: string) {
-
-    const color_gray_50 = '#f8fafc';
-    const color_info_50 = '#f0f7fe';
-    const color_primary_50 = '#f0fafb';
-    const color_primary_500 = '#3494a6';
-    const color_primary_800 = '#2b535f';
 
     let tableData = [];
-
-    let borderColor = [color_primary_800, color_primary_800, color_primary_800, color_primary_800];
-
 
     tableData.push(
       [
-        { text: 'Item', style: 'cellHeader', borderColor: borderColor },
-        { text: 'Descripción', style: 'cellHeader', borderColor: borderColor },
-        { text: 'Observación', style: 'cellHeader', borderColor: borderColor },
-        { text: 'Código Interno', style: 'cellHeader', borderColor: borderColor },
-        { text: 'CostoMuestra', style: 'cellHeader', borderColor: borderColor },
+        { text: 'Nro', style: 'titletable' },
+        { text: 'DESCRIPCIÓN DEL SERVICIO', style: 'titletable' },
+        { text: 'CANTIDAD', style: 'titletable' },
+        { text: 'COSTO\nUNITARIO BS.', style: 'titletable' },
+        { text: 'COSTO\nTOTAL BS.', style: 'titletable' },
       ]
     );
 
-    for (let i = 0; i < this.dataMuestras.length; i++) {
-      const d = this.dataMuestras[i];
+    for (let i = 0; i < serParametros.length; i++) {
+      const d = serParametros[i];
       // push de muestras
       tableData.push(
         [
-          { text: i + 1, style: 'cellContent' },
-          { text: d.descripcion, style: 'cellContent' },
-          { text: d.observacion, style: 'cellContent' },
-          { text: d.cod_interno, style: 'cellContent' },
-          { text: "Bs. " + d.costo_muestra, style: 'cellContent' },
+          { text: i + 1, style: 'texttable' },
+          { text: d.parametro, style: 'texttable' },
+          { text: d.cantidad, style: 'texttable' },
+          { text: "Bs. " + d.precio, style: 'texttable' },
+          { text: "Bs. " + d.precio * d.cantidad, style: 'texttable' },
         ]
       );
-
-      let detalles = [];
-      detalles.push(
-        [
-          { text: '#', style: 'cellDetalleHeader', borderColor: borderColor },
-          { text: 'Parámetro', style: 'cellDetalleHeader', borderColor: borderColor },
-          { text: 'Costo Unitario', style: 'cellDetalleHeader', borderColor: borderColor },
-          { text: 'Cantidad', style: 'cellDetalleHeader', borderColor: borderColor },
-          { text: 'Costo Muestrá', style: 'cellDetalleHeader', borderColor: borderColor }
-        ]
-      )
-
-      for (let j = 0; j < d.muestra_parametros.length; j++) {
-        const m = d.muestra_parametros[j];
-        detalles.push(
-          [
-            { text: j + 1, style: 'cellContent' },
-            { text: m.parametro.nombre, style: 'cellContent' },
-            { text: "Bs. " + m.costo_parametro_unitario, style: 'cellContent' },
-            { text: m.cantidad, style: 'cellContent' },
-            { text: "Bs. " + m.costo_parametro_total, style: 'cellContent' }
-          ]
-        );
-      }
-
-      // push de parametros
-      //let tableParametro = [];
-      tableData.push(
-        [
-          {
-            border: [false, false, false, false],
-            text: ''
-          },
-          {
-            border: [false, false, false, false],
-            text: ''
-          },
-          {
-            colSpan: 3,
-            border: [false, false, false, false],
-            table: {
-              fontSize: 8,
-              margin: [0, 0, 0, 0] as Margins,
-              widths: ['auto', '*', '*', '*', 'auto'],
-              body: detalles
-            }
-          }
-        ]
-      );
-      //tableData.push(tableParametro);
     }
 
+    let servicios = '';
+    for (let i = 0; i < serParametros.length; i++) {
+      const d = serParametros[i];
 
-
-    var pdfCreation = {
-      pageSize: 'Letter' as PageSize,
-      //pageOrientation: 'landscape' as PageOrientation,
-      //pageMargins: [5, 5, 5, 5] as Margins,
-      content: [
-
-        // Titulo
-        {
-          margin: [0, 0, 0, 15] as Margins,
-          columns: [
-            { qr: String(this.formCotizacion.controls.cod_cotizacion.value), foreground: color_primary_800, fit: 100 },
-            {
-              width: 'auto',
-              margin: [0, 0, 0, 15] as Margins,
-              text: 'COTIZACIÓN FRX',
-              style: 'header',
-              alignment: 'center' as Alignment,
-              color: color_primary_500
-            },
-            {
-              width: '*',
-              text: ''
-            }
-          ]
-        },
-        // Codigo cotizacion y area
-        {
-          columns: [
-            {
-              margin: [0, 0, 0, 10] as Margins,
-              text: [
-                { text: 'Código cotización: ', color: color_primary_800 },
-                { text: String(this.formCotizacion.controls.cod_cotizacion.value), bold: true, color: color_primary_800 },
-              ],
-            },
-            {
-              width: 'auto',
-              text: [
-                { text: 'Área: ' },
-                { text: 'Laboratorio FRX', bold: true }
-              ],
-              color: color_primary_800, alignment: 'right' as Alignment
-            }
-          ]
-        },
-        // Fechas
-        {
-          text: [
-            { text: 'Fecha solitud: ', color: color_primary_800, margin: [0, 0, 0, 5] as Margins, },
-            { text: this.convertDate(String(this.formCotizacion.controls.fec_solicitud.value)), color: color_primary_800, bold: true },
-            '\n',
-            { text: 'Fecha emisión: ', color: color_primary_800 },
-            { text: this.convertDate(String(this.formCotizacion.controls.fec_emision.value)), color: color_primary_800, bold: true },
-          ]
-        },
-        // Tecnico
-        {
-          columns: [
-            { text: 'Técnico', margin: [0, 15, 0, 2] as Margins, bold: true, color: color_primary_800 }
-          ]
-        },
-        {
-          columns: [
-            {
-              margin: [0, 0, 0, 10] as Margins,
-              table: {
-                widths: ['*', 'auto', '*'],
-                body: [
-                  [
-                    { text: [{ text: 'Nombre: ' }, { text: this.userLogeado.nombres + ' ' + this.userLogeado.apellidos, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins },
-                    { text: [{ text: 'Celualr: ' }, { text: this.userLogeado.celular, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins },
-                    { text: [{ text: 'Rol: ' }, { text: this.userLogeado.rol, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }
-                  ],
-                ],
-              }
-            }
-          ]
-        },
-        // Cliente
-        {
-          columns: [
-            { text: 'Cliente', margin: [0, 0, 0, 2] as Margins, bold: true, color: color_primary_800 },
-            { text: 'Empresa', margin: [7.5, 0, 0, 2] as Margins, bold: true, color: color_primary_800 }
-          ]
-        },
-        {
-          columns: [
-            {
-              margin: [0, 0, 7.5, 0] as Margins,
-              table: {
-                widths: ['*'],
-                body: [
-                  [{ text: [{ text: 'Persona: ' }, { text: this.personaC.nombre_persona, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Celular: ' }, { text: this.personaC.celular, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Email: ' }, { text: this.personaC.email, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Teléfono: ' }, { text: this.empresaC.telefono, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                ],
-              }
-            },
-            {
-              margin: [7.5, 0, 0, 10] as Margins,
-              table: {
-                widths: ['*'],
-                body: [
-                  [{ text: [{ text: 'Empresa: ' }, { text: this.empresaC.razon_social, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'NIT: ' }, { text: this.empresaC.nit, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'Ciudad: ' }, { text: this.empresaC.ciudad, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                  [{ text: [{ text: 'País: ' }, { text: this.empresaC.pais, bold: true }], color: color_primary_800, margin: [2, 2, 2, 2] as Margins }],
-                ],
-              }
-            }
-          ]
-        },
-        // Detalle
-        {
-          text: 'DETALLE', alignment: 'center' as Alignment, bold: true, color: color_primary_800, margin: [0, 0, 0, 2] as Margins
-        },
-        {
-          table: {
-            fontSize: 8,
-            margin: [0, 0, 0, 0] as Margins,
-            widths: ['auto', '*', '*', '*', 'auto'],
-            body: tableData
-          },
-          layout: 'lightHorizontalLines'
-        },
-        // Costos
-        {
-          columns: [
-            {
-              margin: [0, 0, 0, 10] as Margins,
-              text: [
-                { text: '' }
-              ],
-            },
-            {
-              margin: [0, 15, 0, 0] as Margins,
-              width: 'auto',
-              table: {
-                widths: ['auto', 'auto', '*'],
-                body: [
-                  [
-                    {
-                      borderColor: borderColor,
-                      border: [true, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: 'Total a Pagar'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: ':'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, true, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'right',
-                      text: 'Bs. ' + String(this.formCotizacion.controls.total_pagar.value)
-                    }
-                  ],
-                  [
-                    {
-                      borderColor: borderColor,
-                      border: [true, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: 'Descuento'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: ':'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, true, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'right',
-                      text: String(this.formCotizacion.controls.descuento.value) + ' %'
-                    }
-                  ],
-                  [
-                    {
-                      borderColor: borderColor,
-                      border: [true, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: 'Costo Total'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, false, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'left',
-                      bold: true,
-                      text: ':'
-                    },
-                    {
-                      borderColor: borderColor,
-                      border: [false, true, true, true],
-                      margin: [7, 2, 7, 2] as Margins,
-                      alignment: 'right',
-                      text: 'Bs. ' + String(this.formCotizacion.controls.costo_total.value)
-                    }
-                  ],
-                ]
-              },
-              color: color_primary_800, alignment: 'right' as Alignment
-            }
-          ]
-        },
-
-
-      ],
-      styles: {
-        header: {
-          fontSize: 36,
-          bold: true,
-          alignment: 'center' as Alignment
-        },
-        cellHeader: {
-          bold: true,
-          alignment: 'center' as Alignment,
-          color: color_primary_800,
-          fillColor: color_primary_50,
-        },
-        cellDetalleHeader: {
-          bold: true,
-          alignment: 'center' as Alignment,
-          color: color_primary_800,
-          fillColor: color_info_50,
-        },
-        cellContent: {
-          bold: true,
-          alignment: 'center' as Alignment,
-          color: color_primary_800,
-          fillColor: color_gray_50,
-        },
+      if (servicios.length === 0) {
+        servicios = serParametros[i].parametro;
+      } else {
+        servicios = servicios + ' - ' + serParametros[i].parametro;
       }
     }
 
-    if(type === 'descargar'){
-      pdfMake.createPdf(pdfCreation).download(String(this.formCotizacion.controls.cod_cotizacion.value) + '.pdf');
-    } else {
-      pdfMake.createPdf(pdfCreation).open();
-    }
-    
+    pdfCotizacionFRX(type, this.objCotizacionFRX, this.personaC, servicios, tableData, cuenta);
   }
 }

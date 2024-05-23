@@ -13,15 +13,28 @@ export class CustomCardServicioComponent {
   @Input() class!: string;
   @Input() selected!: string;
 
-  @Output() onEditClick: EventEmitter<any> = new EventEmitter<any>()
+  @Output() response: EventEmitter<any> = new EventEmitter<any>()
 
   onClickEdit() {
-    this.onEditClick.emit(
+    this.response.emit(
       {
         bool: true,
         data: {
           id_servicio: this.servicio.id_servicio,
-          index: this.index
+          index: this.index,
+          type: 'editar'
+        }
+      });
+  }
+
+  onClickVerCuenta() {
+    this.response.emit(
+      {
+        bool: true,
+        data: {
+          id_servicio: this.servicio.id_servicio,
+          index: this.index,
+          type: 'cuenta'
         }
       });
   }
