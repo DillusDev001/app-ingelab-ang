@@ -1226,6 +1226,10 @@ export const arrayTipoPago = [
 ]
 
 export const arrayUnidadMedida = [
+    { value: 'Capacitación', data: 'Capacitación' },
+    { value: 'Compra', data: 'Compra' },
+    { value: 'Curso', data: 'Curso' },
+    { value: 'Pago', data: 'Pago' },
     { value: 'Servicio', data: 'Servicio' },
 ]
 

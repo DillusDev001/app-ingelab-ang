@@ -12,7 +12,7 @@
           [type] ="'accept'"
           [icon] ="''"
           [class] ="''"
-          [valid] ="formEmpresa.valid"
+          [valid] ="(formPersona.valid && formEmpresa.valid) || (formPersona.valid && formEmpresa.controls.razon_social.value == '')"
           (click)="onClickGuardar()" >
         </app-custom-button>
     

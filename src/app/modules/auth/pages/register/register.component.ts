@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
   userLogeado!: Usuario;
 
   // loading spinner
-  isLoading: boolean = true;
+  isLoading: boolean = false;
 
   // Info Alert
   alertInfo: boolean = false;
@@ -69,21 +69,21 @@ export class RegisterComponent implements OnInit {
 
     codigo: new FormControl('', [Validators.required]),
 
-    nombres: new FormControl('Diego Junior', [Validators.required]),
-    apellidos: new FormControl('Llusco Chui', [Validators.required]),
+    nombres: new FormControl('', [Validators.required]),
+    apellidos: new FormControl('', [Validators.required]),
     code: new FormControl('+591', [Validators.required]),
-    celular: new FormControl('77255776', [Validators.required]),
+    celular: new FormControl('', [Validators.required]),
     telefono: new FormControl('', []),
-    ci: new FormControl('4741134', [Validators.required]),
-    exp: new FormControl('LP', [Validators.required]),
-    sexo: new FormControl('M', [Validators.required]),
-    est_civil: new FormControl('Soltero(a)', [Validators.required]),
-    fec_nac: new FormControl('1987-09-30', [Validators.required]),
+    ci: new FormControl('', [Validators.required]),
+    exp: new FormControl('', [Validators.required]),
+    sexo: new FormControl('', [Validators.required]),
+    est_civil: new FormControl('', [Validators.required]),
+    fec_nac: new FormControl('', [Validators.required]),
 
-    banco: new FormControl('Banco Central de Bolivia', [Validators.required]),
-    nro_cuenta: new FormControl('123', [Validators.required]),
+    banco: new FormControl('', [Validators.required]),
+    nro_cuenta: new FormControl('', [Validators.required]),
 
-    fec_ingreso: new FormControl('2024-01-01', [Validators.required]),
+    fec_ingreso: new FormControl('', [Validators.required]),
     fec_baja: new FormControl('', []),
     rol: new FormControl('', [Validators.required]),
     img: new FormControl('', []),
@@ -92,10 +92,10 @@ export class RegisterComponent implements OnInit {
   });
 
   formRegisterAuth = new FormGroup({
-    user: new FormControl('admin-dillus@ingenialab.com', [Validators.required, Validators.email]),
-    password: new FormControl('Mudanzas*123', [Validators.required]),
-    pregunta: new FormControl('¿Cómo se llama tu mamá?', [Validators.required]),
-    respuesta: new FormControl('Juanita', [Validators.required]),
+    user: new FormControl('@ingenialab.com', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
+    pregunta: new FormControl('', [Validators.required]),
+    respuesta: new FormControl('', [Validators.required]),
   });
 
   formAddContacto = new FormGroup({
@@ -254,99 +254,8 @@ export class RegisterComponent implements OnInit {
   onClickAgregarUsuario() {
     if (this.formRegisterAuth.valid) {
       if (this.formRegisterUsuario.valid) {
-        this.formRegisterUsuario.controls.user.setValue(String(this.formRegisterAuth.controls.user.value));
-        this.formRegisterUsuario.controls.user_mod.setValue(String(this.formRegisterAuth.controls.user.value));
-
-        const dataUsuario = {
-          user: String(this.formRegisterUsuario.controls.user.value),
-          codigo: this.generateCodigoEmpleado(),
-          nombres: letraCapital(String(this.formRegisterUsuario.controls.nombres.value).trim()),
-          apellidos: letraCapital(String(this.formRegisterUsuario.controls.apellidos.value).trim()),
-          code: String(this.formRegisterUsuario.controls.code.value),
-          celular: String(this.formRegisterUsuario.controls.celular.value),
-          telefono: String(this.formRegisterUsuario.controls.telefono.value),
-          ci: String(this.formRegisterUsuario.controls.ci.value).trim(),
-          exp: String(this.formRegisterUsuario.controls.exp.value),
-          fec_ingreso: String(this.formRegisterUsuario.controls.fec_ingreso.value),
-          fec_baja: String(this.formRegisterUsuario.controls.fec_baja.value),
-          banco: String(this.formRegisterUsuario.controls.banco.value),
-          nro_cuenta: String(this.formRegisterUsuario.controls.nro_cuenta.value).trim(),
-          sexo: String(this.formRegisterUsuario.controls.sexo.value),
-          est_civil: String(this.formRegisterUsuario.controls.est_civil.value),
-          fec_nac: String(this.formRegisterUsuario.controls.fec_nac.value),
-          rol: String(this.formRegisterUsuario.controls.rol.value),
-          img: String(this.formRegisterUsuario.controls.img.value),
-          user_mod: String(this.formRegisterUsuario.controls.user_mod.value),
-        }
-
-        // ========= Registrar el Usuario en tabla Usuario ========= \\
-        this.usuarioService.usuarioRegistro(dataUsuario).subscribe(resultUsuario => {
-          resultUsuario as ApiResult;
-
-          if (resultUsuario.boolean) {
-            const dataAuth = {
-              user: String(this.formRegisterAuth.controls.user.value).trim(),
-              password: String(this.formRegisterAuth.controls.password.value),
-              pregunta: String(this.formRegisterAuth.controls.pregunta.value),
-              respuesta: String(this.formRegisterAuth.controls.respuesta.value).trim(),
-            }
-
-            // ========= Registrar el Usuario en la tabla Auth ========= \\
-            this.authService.authRegistro(dataAuth).subscribe(resultAuth => {
-              resultAuth as ApiResult;
-
-              if (resultAuth.boolean) {
-                this.setUserArrayContacts(dataUsuario.user);
-
-                // ========= Registrar contactos de Usuario en la tabla Contacto ========= \\
-                this.contactoService.contactoRegistro(dataUsuario.user, this.arrayContactos).subscribe(resultContacto => {
-                  resultContacto as ApiResult;
-
-                  if (resultContacto.boolean) {
-                    this.limpiarFormRegister();
-
-                    // Editar Code recibido
-                    if (this.objCode.count - 1 === 0) {
-                      // Delete Code
-                      this.codeService.deleteCode(this.objCode.id).subscribe(resultCode => {
-                        resultCode as ApiResult;
-
-                        if (resultCode.boolean) {
-                          this.customSuccessToast('Se ha registrado correctamente.');
-                          this.cancelEvent.emit(true);
-                        } else {
-                          this.customErrorToast(resultCode.message);
-                        }
-                      });
-                    } else {
-                      // Editar Code
-                      this.objCode.count = this.objCode.count - 1;
-                      this.codeService.updateCode(this.objCode.id, this.objCode).subscribe(resultCode =>{
-                        resultCode as ApiResult;
-
-                        if (resultCode.boolean) {
-                          this.customSuccessToast('Se ha registrado correctamente.');
-                          this.cancelEvent.emit(true);
-                        } else {
-                          this.customErrorToast(resultCode.message);
-                        }
-                      });
-                    }
-                  } else {
-                    this.customErrorToast(resultUsuario.message);
-                  }
-                });
-
-              } else {
-                this.customErrorToast(resultAuth.message);
-              }
-            });
-
-          } else {
-            this.customErrorToast(resultUsuario.message);
-          }
-        });
-
+        this.isLoading = true;
+        this.agregarUsuario();
       } else {
         this.customErrorToast('Datos personales son requeridos.');
       }
@@ -381,6 +290,119 @@ export class RegisterComponent implements OnInit {
   }
 
   /** ----------------------------------- Consultas Sevidor ----------------------------------- **/
+  agregarUsuario() {
+    this.formRegisterUsuario.controls.user.setValue(String(this.formRegisterAuth.controls.user.value));
+    this.formRegisterUsuario.controls.user_mod.setValue(String(this.formRegisterAuth.controls.user.value));
+
+    const dataUsuario = {
+      user: String(this.formRegisterUsuario.controls.user.value),
+      codigo: this.generateCodigoEmpleado(),
+      nombres: letraCapital(String(this.formRegisterUsuario.controls.nombres.value).trim()),
+      apellidos: letraCapital(String(this.formRegisterUsuario.controls.apellidos.value).trim()),
+      code: String(this.formRegisterUsuario.controls.code.value),
+      celular: String(this.formRegisterUsuario.controls.celular.value),
+      telefono: String(this.formRegisterUsuario.controls.telefono.value),
+      ci: String(this.formRegisterUsuario.controls.ci.value).trim(),
+      exp: String(this.formRegisterUsuario.controls.exp.value),
+      fec_ingreso: String(this.formRegisterUsuario.controls.fec_ingreso.value),
+      fec_baja: String(this.formRegisterUsuario.controls.fec_baja.value),
+      banco: String(this.formRegisterUsuario.controls.banco.value),
+      nro_cuenta: String(this.formRegisterUsuario.controls.nro_cuenta.value).trim(),
+      sexo: String(this.formRegisterUsuario.controls.sexo.value),
+      est_civil: String(this.formRegisterUsuario.controls.est_civil.value),
+      fec_nac: String(this.formRegisterUsuario.controls.fec_nac.value),
+      rol: String(this.formRegisterUsuario.controls.rol.value),
+      img: String(this.formRegisterUsuario.controls.img.value),
+      user_mod: String(this.formRegisterUsuario.controls.user_mod.value),
+    }
+
+    this.usuarioService.usuarioRegistro(dataUsuario).subscribe(resultUsuario => {
+      resultUsuario as ApiResult;
+
+      if (resultUsuario.boolean) {
+        this.agregarAuth(dataUsuario);
+      } else {
+        this.customErrorToast(resultUsuario.message);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  agregarAuth(dataUsuario: any) {
+    const dataAuth = {
+      user: String(this.formRegisterAuth.controls.user.value).trim(),
+      password: String(this.formRegisterAuth.controls.password.value),
+      pregunta: String(this.formRegisterAuth.controls.pregunta.value),
+      respuesta: String(this.formRegisterAuth.controls.respuesta.value).trim(),
+    }
+    this.authService.authRegistro(dataAuth).subscribe(resultAuth => {
+      resultAuth as ApiResult;
+
+      if (resultAuth.boolean) {
+        this.setUserArrayContacts(dataUsuario.user);
+
+        if (this.arrayContactos.length > 0) {
+          this.agregarContactos(dataUsuario);
+        } else {
+          if (this.objCode.count - 1 === 0) {
+            this.deleteCode();
+          } else {
+            this.updateCode();
+          }
+        }
+      } else {
+        this.customErrorToast(resultAuth.message);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  agregarContactos(dataUsuario: any) {
+    this.contactoService.contactoRegistro(dataUsuario.user, this.arrayContactos).subscribe(resultContacto => {
+      resultContacto as ApiResult;
+
+      if (resultContacto.boolean) {
+        this.limpiarFormRegister();
+        if (this.objCode.count - 1 === 0) {
+          this.deleteCode();
+        } else {
+          this.updateCode();
+        }
+      } else {
+        this.customErrorToast(resultContacto.message);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  deleteCode() {
+    this.codeService.deleteCode(this.objCode.id).subscribe(resultCode => {
+      resultCode as ApiResult;
+
+      if (resultCode.boolean) {
+        this.customSuccessToast('Se ha registrado correctamente.');
+        this.cancelEvent.emit(true);
+      } else {
+        this.customErrorToast(resultCode.message);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  updateCode() {
+    this.objCode.count = this.objCode.count - 1;
+    this.codeService.updateCode(this.objCode.id, this.objCode).subscribe(resultCode => {
+      resultCode as ApiResult;
+
+      if (resultCode.boolean) {
+        this.customSuccessToast('Se ha registrado correctamente.');
+        this.cancelEvent.emit(true);
+      } else {
+        this.customErrorToast(resultCode.message);
+        this.isLoading = false;
+      }
+    });
+  }
 
   /** ---------------------------------- Onclick file import ---------------------------------- **/
 

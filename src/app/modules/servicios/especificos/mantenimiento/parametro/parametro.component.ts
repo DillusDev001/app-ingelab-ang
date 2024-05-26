@@ -167,6 +167,8 @@ export class ParametroComponent implements OnInit {
 
   onClickGuardar() {
     if (this.formParametro.valid) {
+      this.isLoading = true;
+
       if (this.btnLabel === 'Agregar') {
         this.agregarParametro();
       } else if (this.btnLabel === 'Guardar') {
@@ -212,6 +214,7 @@ export class ParametroComponent implements OnInit {
         this.labelSetAgregar();
       } else {
         this.customErrorToast(result.message);
+        this.isLoading = false;
       }
     })
   }
@@ -233,6 +236,7 @@ export class ParametroComponent implements OnInit {
         this.labelSetAgregar();
       } else {
         this.customErrorToast(result.message);
+        this.isLoading = false;
       }
     })
   }

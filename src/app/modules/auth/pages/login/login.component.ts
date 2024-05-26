@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
 
 
   formLogin = new FormGroup({
-    email: new FormControl('admin-dillus@ingenialab.com', [Validators.required, Validators.email]),
-    password: new FormControl('Mudanzas*123', [Validators.required])
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required])
   })
 
 

@@ -14,15 +14,15 @@
         <app-custom-tab-button
             class="w-max"
             [id]="'id_servicios_generales_mantenimiento'"
-            [label]="'Recepción'"
+            [label]="'Recepción FRX'"
             [icon]="''"
             [class]="'cursor-pointer'"
             [spanClass]="''"
             [selected]="selectedTab"
-            (click)="onClickButton('Recepción')" >
+            (click)="onClickButton('Recepción FRX')" >
         </app-custom-tab-button>
 
-        <app-custom-tab-button
+        <app-custom-tab-button *ngIf="false"
             class="w-max"
             [id]="'id_servicios_generales_mantenimiento'"
             [label]="'Mantenimiento'"

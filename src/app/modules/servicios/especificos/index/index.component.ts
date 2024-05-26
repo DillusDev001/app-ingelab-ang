@@ -75,7 +75,7 @@ export class IndexComponent {
         this.selectedTab = value;
         break;
 
-      case 'Recepción':
+      case 'Recepción FRX':
         admiRecepcionFRXLista(this.router);
         this.selectedTab = value;
         break;

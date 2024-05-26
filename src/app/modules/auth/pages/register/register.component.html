@@ -1,6 +1,8 @@
 <div class="relative w-full h-full bg-white p-4">
 
-    <form class="flex flex-col gap-4 w-full h-full border border-color-text rounded-lg p-6 overflow-y-auto">
+    <app-custom-loading *ngIf="isLoading" ></app-custom-loading>
+
+    <form *ngIf="!isLoading" class="flex flex-col gap-4 w-full h-full border border-color-text rounded-lg p-6 overflow-y-auto">
 
         <div class="flex w-full">
             <app-custom-title class="w-full"

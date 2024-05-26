@@ -411,7 +411,7 @@ export class AgregarGastosComponent implements OnInit {
   }
 
   onClickPDF(type: string) {
-    const imageUrl = 'assets/images/prueba.jpg';
+    const imageUrl = 'assets/images/logo.png';
     this.imgService.getImageBase64(imageUrl).subscribe(base64 => {
       pdfGastos(type, this.gastoObj, base64);
     });

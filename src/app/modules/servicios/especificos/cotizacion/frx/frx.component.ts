@@ -272,7 +272,7 @@ export class FrxComponent implements OnInit {
 
     for (let i = 0; i < this.dataMuestras.length; i++) {
       for (let j = 0; j < this.dataMuestras[i].muestra_parametros.length; j++)
-        total_pagar += this.dataMuestras[i].muestra_parametros[j].costo_parametro_total;
+        total_pagar += Number(this.dataMuestras[i].muestra_parametros[j].costo_parametro_total);
     }
 
     this.formCotizacion.controls.total_pagar.setValue(total_pagar);
@@ -368,6 +368,16 @@ export class FrxComponent implements OnInit {
 
   onClickRemoveParametro(mIndex: number, pIndex: number) {
     this.dataMuestras[mIndex].muestra_parametros.splice(pIndex, 1);
+
+    let _dataMuestraParametro = this.dataMuestras[mIndex].muestra_parametros;
+
+    let sum = 0;
+    for (let i = 0; i < _dataMuestraParametro.length; i++) {
+      sum += Number(_dataMuestraParametro[i].costo_parametro_total);
+    }
+
+    this.dataMuestras[mIndex].costo_muestra = sum;
+
     this.actualizarCostos();
   }
 
@@ -404,7 +414,7 @@ export class FrxComponent implements OnInit {
         this.isLoading = false;
         this.goPdf(type, cuenta);
       } else {
-        this.customErrorToast(result.message);
+        this.customErrorToast('Sin Cuenta Agregada');
         this.isLoading = false;
       }
     });
@@ -644,10 +654,10 @@ export class FrxComponent implements OnInit {
     });
   }
 
-  recepcionarDB(){
+  recepcionarDB() {
     const data = {
       cod_cotizacion: this.objCotizacionFRX.cod_cotizacion,
-      fec_recepcion: formatDate(new Date(),'yyyy-MM-dd','es'),
+      fec_recepcion: formatDate(new Date(), 'yyyy-MM-dd', 'es'),
       user_recepcion: this.userLogeado.user,
 
       user_crea: this.userLogeado.user,
@@ -736,6 +746,8 @@ export class FrxComponent implements OnInit {
         const cod = String(this.formCotizacion.controls.cod_cotizacion.value);
         const sec = this.dataMuestras[this.muestraSecIndexAdd].muestra_sec;
 
+        console.log(element)
+
         let _dataMuestraParametro = this.dataMuestras[this.muestraSecIndexAdd].muestra_parametros;
 
         let muestraParametro = {
@@ -744,8 +756,8 @@ export class FrxComponent implements OnInit {
           parametro_sec: _dataMuestraParametro.length == 0 ? 1 : _dataMuestraParametro[_dataMuestraParametro.length - 1].parametro_sec + 1,
           id_parametro: element.id_parametro,
           cantidad: 1,
-          costo_parametro_unitario: _dataMuestraParametro.length == 0 ? element.costo_directo : element.costo_variable,
-          costo_parametro_total: _dataMuestraParametro.length == 0 ? element.costo_directo : element.costo_variable,
+          costo_parametro_unitario: element.costo_directo,
+          costo_parametro_total: element.costo_directo,
           observacion: '',
           parametro: element,
 
@@ -759,7 +771,7 @@ export class FrxComponent implements OnInit {
 
         let sum = 0;
         for (let i = 0; i < _dataMuestraParametro.length; i++) {
-          sum += _dataMuestraParametro[i].costo_parametro_total;
+          sum += Number(_dataMuestraParametro[i].costo_parametro_total);
         }
 
         this.dataMuestras[this.muestraSecIndexAdd].costo_muestra = sum;

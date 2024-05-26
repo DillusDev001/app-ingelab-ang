@@ -78,8 +78,9 @@ export function pdfGastos(
                             {},
                             {
                                 image: image64,
-                                width: 50,
-                                rowSpan: 4
+                                width: 110,
+                                rowSpan: 4,
+                                alignment: 'center' as Alignment,
                             }
                         ],
                         [
